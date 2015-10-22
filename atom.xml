@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2015-10-22T15:00:23.536Z</updated>
+  <updated>2015-10-22T16:09:54.879Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://jxy.me/2015/10/12/hadoop-application-architectures/"/>
     <id>http://jxy.me/2015/10/12/hadoop-application-architectures/</id>
     <published>2015-10-12T14:51:14.000Z</published>
-    <updated>2015-10-22T14:43:40.000Z</updated>
+    <updated>2015-10-22T16:09:00.000Z</updated>
     <content type="html"><![CDATA[<p>非常赞的一本书，链接：<a href="http://shop.oreilly.com/product/0636920033196.do" target="_blank" rel="external">OReilly Shop</a>，6月才出的。话说OReilly真是业界良心。<br>我订阅了<a href="http://www.hadoopweekly.com" target="_blank" rel="external">Hadoop Weekly</a>，某天它推荐了一篇cloudera blog，具体链接忘了，部分内容就是节选自本书，讲了实时处理的一些架构，当时就感觉很赞。于是找来原书看看，顿觉相见恨晚。<br>断断续续看了2个月，550多页啊，全英文。简单总结下。</p>
 <a id="more"></a>
 <p>书如其名，讲的是如何利用hadoop生态圈中的各个组件，构建自己的应用，或者叫data pipeline。只讲架构，而不会太深入细节。</p>
@@ -95,7 +95,7 @@
 <h3 id="Lambda_Architecture">Lambda Architecture</h3>
 <p>storm作者提出的一种架构：<a href="https://en.wikipedia.org/wiki/Lambda_architecture" target="_blank" rel="external">wiki</a>。</p>
 <p>大意就是说基于hadoop的系统都要是这样一种架构：有批处理和流处理两条线，数据是不可变的，同时进入批处理系统和流处理系统。批处理用于处理历史数据，流处理用于处理近期的数据。查询时会同时从两个系统中查询并合并结果。</p>
-<p>这种架构已经经过实践检验了，据说linkedin内部一直是这样一种架构（我觉得是因为他们有kafka）。其实很多系统也会不自觉的向这种结构发展。</p>
+<p>这种架构已经经过实践检验了，据说linkedin内部一直是这样的架构（我觉得是因为他们有kafka）。其实很多系统也会不自觉的向这种结构发展。</p>
 <p>但这种架构争议也很多。最大的争议是处理逻辑变化时，要同时更改两个地方的代码。摘录一段：</p>
 <blockquote>
 <p>以类推方式，想想跨数据库ORM框架臭名昭著的困难，试图跨越这两个系统提供一个近似标准接口语言也会如此，试图在两个不同编程范式的顶部建立一个抽象层是非常难的。</p>
@@ -118,8 +118,8 @@
 <li>需要可实时读写的持久化存储时，考虑hbase。否则一般是hdfs。</li>
 <li>实时处理优先考虑spark streaming，不能满足需求再考虑trident，最次storm。</li>
 <li>kafka就像润滑剂一样，设计系统碰到困难时，试着扔个kafka进去。</li>
+<li>牢记，<strong>抱着spark的大腿总是没错的</strong>。</li>
 </ol>
-<p>牢记，<strong>抱着spark的大腿总是没错的</strong>。</p>
 <h2 id="实例">实例</h2>
 <p>书中给出了几个实例，具体的设计过程我就不列了。看看架构图吧。</p>
 <h3 id="点击流分析">点击流分析</h3>
@@ -142,7 +142,7 @@
 <p>详细的项目列表见<a href="https://hadoopecosystemtable.github.io" target="_blank" rel="external">这里</a>，虽然我觉得其中一些项目不属于hadoop生态圈。<br>纯粹凭感觉分类。对我来说，大部分项目属于第4类，只是能解决特定的问题。如果能做的更好，覆盖特定领域的大多数问题，就会进化到第3类，能独当一面。至于能否进化到第2类甚至第1类，不光看技术，也要看推广，甚至是运气。</p>
 <p>话说，前些年如火如荼的nosql运动好像沉寂很长时间了？我记得当时隔几天就有一个新项目冒出来，mongo/redis/riak/neo4j/cassandra/hypertable/couchbase，还有各种不知名的项目。<br>还是我太久没关注。。。<br>似乎只有mongo和redis活的还不错。</p>
 <h1 id="题外话">题外话</h1>
-<p>这篇文章写了近2周。近一万字，我特么都没想到写了这么多。。。<br>借着总结这本书的过程，沿着书中的脉络，也总结了自己的一些想法。夸张点说，我个人关于hadoop的所有理解，都总结在本文中了。<br>以后没事再来翻翻。</p>
+<p>这篇文章写了近2周。<br>近一万字，我特么都没想到写了这么多。。。<br>借着总结这本书的过程，沿着书中的脉络，也总结了自己的一些想法，想到哪写到哪，比较随意。<br>夸张点说，我个人关于hadoop的所有理解，都总结在本文中了。<br>以后没事再来翻翻。碰到一些架构上的问题时也可以做个参考。</p>
 <p>我看技术类书籍的习惯，喜欢在书上写写画画，文中很多内容其实是当时的笔记。<br>如果不能直接在书上写，一定要开着xmind，一边看一边总结。<br>个人觉得这样是比较好的读书方法。</p>
 ]]></content>
     <summary type="html">

@@ -3,7 +3,7 @@
   
   <url>
     <loc>http://jxy.me/2015/10/12/hadoop-application-architectures/</loc>
-    <lastmod>2015-10-22T14:43:40.000Z</lastmod>
+    <lastmod>2015-10-22T16:09:00.000Z</lastmod>
   </url>
   
   <url>
@@ -17,7 +17,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/10/linux-tips/</loc>
+    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -82,7 +82,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
+    <loc>http://jxy.me/2015/06/09/hdfs-data-visibility/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -92,7 +92,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/09/hdfs-data-visibility/</loc>
+    <loc>http://jxy.me/2015/03/21/hexo-theme-sync/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -122,27 +122,17 @@
   </url>
   
   <url>
+    <loc>http://jxy.me/2015/06/10/linux-tips/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/02/26/endless-tech/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/06/01/multiple-namenode/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/27/some-gossip/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/02/23/foolbear-hexo-init/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -157,7 +147,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/21/hexo-theme-sync/</loc>
+    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -167,12 +157,27 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
+    <loc>http://jxy.me/2015/02/26/endless-tech/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://jxy.me/2015/06/10/socket-exhausted-deadnode/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/06/27/some-gossip/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/02/23/foolbear-hexo-init/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/24/some-thoughts/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -192,22 +197,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/24/some-thoughts/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/about/index.html</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/404.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://jxy.me/tags/index.html</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/about/index.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
