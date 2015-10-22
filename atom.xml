@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2015-09-25T16:53:12.101Z</updated>
+  <updated>2015-10-22T14:45:00.685Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -13,6 +13,149 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[《Hadoop Application Architectures》]]></title>
+    <link href="http://jxy.me/2015/10/12/hadoop-application-architectures/"/>
+    <id>http://jxy.me/2015/10/12/hadoop-application-architectures/</id>
+    <published>2015-10-12T14:51:14.000Z</published>
+    <updated>2015-10-22T14:43:40.000Z</updated>
+    <content type="html"><![CDATA[<p>非常赞的一本书，链接：<a href="http://shop.oreilly.com/product/0636920033196.do" target="_blank" rel="external">OReilly Shop</a>，6月才出的。话说OReilly真是业界良心。<br>我订阅了<a href="http://www.hadoopweekly.com" target="_blank" rel="external">Hadoop Weekly</a>，某天它推荐了一篇cloudera blog，具体链接忘了，部分内容就是节选自本书，讲了实时处理的一些架构，当时就感觉很赞。于是找来原书看看，顿觉相见恨晚。<br>断断续续看了2个月，550多页啊，全英文。简单总结下。</p>
+<a id="more"></a>
+<p>书如其名，讲的是如何利用hadoop生态圈中的各个组件，构建自己的应用，或者叫data pipeline。只讲架构，而不会太深入细节。</p>
+<h1 id="先扯些别的">先扯些别的</h1>
+<p>我在<a href="/2015/03/24/some-thoughts/">以前的文章</a>中写到：大数据技术很多，但成熟的少，门槛很高，落地太难。<br>现在依然这样觉得。</p>
+<p>我认为hadoop圈已经发展的足够复杂了，各种开源项目可以覆盖到大部分需求。这么多apache顶级项目任君选择，还有各种孵化器项目。在hadoop-user的邮件列表中，还经常有人推销一些不太知名的第三方项目。<br>所谓的定制开发需求，很多是没有必要的，或者是从业务逻辑上可以绕过的，可以称作伪需求。说的不客气点就是自己YY出来的。有多少公司能达到阿里/腾讯那个数据量？会碰到他们的问题？不应该为一些很小的需求投入大量精力去改造。纯研究性质的另说。<br>hadoop现在真正欠缺的是<strong>易用性</strong>。技术已经很成熟，但对用户不友好。这里的用户不只是终端用户，也包括运维、开发。<br>很多项目为了追求技术的极致，为1%的性能提升而花费大量精力。一些出自学院派的项目尤其如此（想到scala，以用户大都是博士硕士为荣）。<br>其实如果能优化下用户体验，就推广上而言，远比1%的性能提升要好。<br>可能也是我最近做业务做多了。很多时候，技术都不是最重要的，够用就好。当然也不能太low。。。<br>Done is better than perfect嘛。<br>似乎我以前也<a href="/2015/06/27/some-gossip/">吐过这种槽</a>。。。<br>这算是学术界vs工业界？</p>
+<p>其实很多发行版都在做出努力优化用户体验，但是还不够。<br>如果我是一个新用户，面对这么多项目、这么复杂的系统，肯定无从下手。我只知道我要建一个数据仓库/我要分析日志/我要实时监控，有人跟我说hadoop能解决，但具体怎么做？</p>
+<p>咳，这本书就是告诉你怎么做的。扯了半天终于扯回正题了。。。</p>
+<h1 id="关于本书">关于本书</h1>
+<p>凭一本书当然不可能解决hadoop的易用性问题。<br>本书只是描述了各个组件的适用场景，结合一些实例，总结一些经验供读者参考。这些经验都是经过实践检验的，比较可靠，比自己慢慢摸索好多了。<br>对于我这样对hadoop比较了解，对其他项目也有一些了解，但缺少实践经验的人而言，本书非常适合，简直是雪中送炭。如果要我自己去构建一个系统，应该也能搞出来，但会比较痛苦，会踩很多坑，后续的维护性和扩展性也不好说。<br>但对新人而言，看这种书可能会比较累，一些设计上的抉择也不容易搞明白。建议先了解些基础知识。</p>
+<p>下面系统的总结下。<br>如果要构建一个基于hadoop的系统（无论离线还是实时），要从哪些角度去思考？或者说，要<strong>如何设计数据流</strong>？<br>一个前提：<strong>不存在one fits all的解决方案</strong>。</p>
+<h2 id="数据建模">数据建模</h2>
+<p>这是第一步，也是最重要的一步，但却很容易被忽视。我们以前直接纯文本，最多lzo压缩下，简单直接。<br>按本书的说法，这里有很多问题要考虑：</p>
+<ul>
+<li>数据格式。纯文本？二进制？是否有schema？</li>
+<li>文件格式。行式？列式？avro？parquet？sequence file？</li>
+<li>压缩。是否压缩？lzo/snappy？splittable？</li>
+<li>存储。数据存在哪里？hdfs/hbase/kafka？有些时候会存多份。如何分区？</li>
+<li>元数据管理。这是最抽象的。很多时候都意识不到元数据的存在。hive？hcatalog？</li>
+</ul>
+<p>数据格式，这是由各个应用决定的。<br>文件格式，我会尽量选择parquet。因为hadoop最大的应用场景是文本处理，或者类似OLAP，列式存储会有很大优势。以前还有种文件格式rcfile，现在好像很少用了。也要看具体的应用场景，如果是偏向于整行处理的，也可以选择avro。甚至可以基于sequence file设计自己的文件格式。总之还是看自己的应用模式。<br>压缩，尽量选择snappy。parquet+snappy是非常完美的。parquet/avro是一种类似于“容器”的格式，是splittable的，而不必关心容器内的数据是如何压缩的，于是snappy不能split的缺点也可以克服了。以前我们用的最多的是lzo，只是为了split。但每个lzo文件还要单独加index太蛋疼了。另外由于许可证问题，lzo的部署也比较麻烦，snappy就简单很多。如果要归档历史数据，也可以考虑gzip/bzip2。<br>存储的选择很简单，批处理就hdfs，实时就hbase/kafka。但直接用kafka存数据的比较少见，一般只是拿它过渡。<br>元数据管理没什么统一的方案，要看自己的应用。但有个偷懒的方式，尽量把数据全部导入hive，让hive去管理元数据。</p>
+<h2 id="数据导入">数据导入</h2>
+<p>这是数据开始“流动”的起点。如何将数据导入hadoop？</p>
+<ul>
+<li>数据类型？日志？数据库？纯二进制文件？</li>
+<li>数据处理模式？流式？批处理？随机读取？</li>
+<li>push or pull？</li>
+<li>传输过程中，是否需要一些处理/过滤？</li>
+<li>sink类型？是否要增量更新？append/overwrite？</li>
+</ul>
+<p>最简单的方式是直接以文件形式传到hdfs上，<code>hdfs fs -put</code>。这种方法虽然土，但有效，而且可以导入任意格式的数据。缺点是不太可靠。<br>如果是从rdbms导入，只能用sqoop了，没有太多选择。<br>其他情况下，一般flume都是最优选择。在hadoop圈的日志传输工具里，flume算是最成熟的了。而且flume提供interceptor机制，可以做一些简单的实时处理。但处理逻辑如果太复杂，会影响flume节点的吞吐率。<br>flume另一个问题是可能有数据重复。这是所有日志传输工具都会有的问题。flume的理念是“at least once”，优先保证数据不丢失，但故障时允许重复。<br>想要做到真正的“exactly once”是非常难的，而且势必会影响效率。<br>flume支持pull和push模式。但push模式需要改应用代码，直接在代码中像log4j一样调用，感觉不太好。。。常用的还是pull模式吧。flume实现了基于文件的pull模式，但只有当文件写完后才能pull，也就是说数据不是实时的，不支持类似tail的模式。</p>
+<p>如果目的地不是hdfs，而是hbase或是其他的系统，首先看下flume有没有提供对应的sink，没有的话就要自己写了。</p>
+<p>另外，kafka虽然不是用于数据导入的，但它像万金油一样，到处都可以用，能玩出很多花样。。。比如应用直接写数据到kafka，flume从kafka读取数据并归档到hdfs；或者flume直接写到kafka，让其他应用去消费。这样数据的可靠性可以交给底层的kafka保证。而且kafka中的数据可以有多个消费者，同一份数据可以用于多个地方。</p>
+<p>其实在现实中，很多公司会自己开发日志传输工具。<br>题外话，很多公司最常见的“定制开发”：日志传输和调度系统。这两个确实是和需求绑定比较紧的，不太容易通用。这种定制开发看着容易，随便写写就能cover 95%的需求，但剩下的5%才是真正的问题所在，决定了这个工具是“优秀”还是“能用”。</p>
+<h2 id="数据处理">数据处理</h2>
+<p>首先要明白自己的处理模式。<br>借用书中的一张图：<br><img src="/2015/10/12/hadoop-application-architectures/1.png" alt=""><br>如果简单点按响应时间分类，应该有3种：</p>
+<ul>
+<li>批处理/batch process，至少是分钟级别的。典型的比如MR、spark。特点是一次性处理大量数据，没有daemon。</li>
+<li>交互式查询/ad-hoc query。一般是秒级别，比如impala。特点是有daemon进程常驻内存。spark也能部分覆盖到这个场景。</li>
+<li>实时处理/流处理/stream process。处理模式跟前两者完全不同，基于每条日志去处理。比如storm。</li>
+</ul>
+<p>这是一种很模糊的分类，没有明确的界限，大概知道就可以。<br>ad-hoc query很多时候是由batch process优化得来的。如果能让MR有个线程池之类的东西，再加上一些优化，相信MR也可以作为ad-hoc query。<br>spark streaming虽然也号称是流处理，但真实的处理模型其实是micro batch。<br>所以不要纠结分类，知道每种工具的适用场景就可以了。</p>
+<p>上图中最左边的custom，意思是如果要更实时的处理，只能自己实现了。想到高频交易那帮人。。。<br>个人感觉，spark有一统天下的趋势，各种场合都可以用。</p>
+<h3 id="批处理">批处理</h3>
+<p>hadoop最主要的用处。<br>批处理和交互式查询除了响应时间，很多时候计算模式是类似的。放在一起说了。</p>
+<p>这里要区分计算引擎和工具：</p>
+<ul>
+<li>引擎：MR（经典/可靠/效率低）、spark（新贵/准备登基）、tez（已死/有事烧纸）、impala（没用过/不确定）。</li>
+<li>工具：hive、spark sql、pig、crunch、cascading。</li>
+</ul>
+<p>引擎和工具的区别，就是执行效率和开发效率的取舍。直接写MR可以控制大量细节，人为的做很多优化，但是要写大量代码，开发和维护的代价都很大；如果用hive，直接写sql就可以了，但hive sql编译出来的job往往不是最优的。spark/spark sql也是同理。</p>
+<p>重点说说MR和spark，至于其他的，其实不用关心。。。早晚会败在spark手下。。。<br>MR是非常经典的计算模型，最重要的设计是share nothing，所以可以简单的并行执行。在MR的过程中只有一次数据交换的机会，就是shuffle，所以多次迭代必须要多次MR。更为人诟病的是效率低，startup overhead非常大。<br>spark的初衷则是DAG处理，跟MR完全不同。spark感觉就是非常学院派的。。。spark在技术上的nb是毫无疑问的，发展非常快，但快也有很多问题，书中的原话是“Spark still has many rough edges”，以后应该会慢慢好转。</p>
+<p>hive是sql on MR的标准实现，很多项目都兼容hive的语法/元数据，hive也慢慢变成sql on hadoop的标准了。<br>spark sql也兼容hive。但鉴于他们放弃shark的“前科”，未来如何还要再观察。<br>另一个有趣的对比就是hive on spark和spark sql，二者功能上其实有些重叠的。但spark的东家databricks似乎对hive on spark非常不感冒，坐看他们撕逼了。。。</p>
+<p>对于impala，它是用C++写的，在hadoop圈中算是比较另类的存在。但对于交互式查询，好像只有impala比较成熟，其他一些类似的项目drill、stinger，基本都没人用的。所以在spark成熟前，在交互式领域，impala还是首选。</p>
+<h3 id="流处理">流处理</h3>
+<p>flume interceptor之类的暂不考虑，其实可选的工具就两种：storm和spark streaming。很久以前还有些其他的实时框架，S4什么的，但已经没人用了。</p>
+<p>流处理和批处理的区别是什么？其实处理上是没什么区别的。。。感觉是用吞吐量的下降换取实时性。另外由于每次只处理一条数据，一些上下文相关的处理会比较麻烦。</p>
+<p>我最早接触的实时框架就是storm，那时好像是0.7.x的版本。最让人惊艳是无状态的设计，nimbus可以随时重启，这是第一次见到。storm是最纯粹的record-based process，每次只处理一条。除了处理数据外，storm另一个重要作用是DRPC。ack机制也是storm的特色。<br>trident相当于扩展了storm，类似于hive与MR的关系，提供了更方便使用的接口，但似乎处理模型也有一些变化，变成了“伪batch”。<br>而spark streaming是“真batch”，它的实时只是降低了每次batch处理的数据量，同时提高处理频率。对实时性要求没那么高的情况下，性能会比storm好很多。不过，它真正的大杀器是批处理和流处理可以共用同样的代码。。。因为spark的RDD抽象层次很高，无论批处理还是流处理，都是对RDD的各种变换，只要改下作为输入源的RDD就可以。</p>
+<p>对于流处理，一个很重要的问题是可靠性保证，一共有3个级别：</p>
+<ul>
+<li>at most once。每条记录最多处理一次。简单的说，数据发出去就不管了，即使处理失败也不会重发。这是安全性最低的级别，可能会有数据丢失。</li>
+<li>at least once。每条记录至少处理一次。这也是大多数框架默认的级别。比如storm的ack机制，一条记录处理后必须ack一次，否则storm会认为处理失败，重发一次记录。但这样也可能造成重复处理。比如一条记录处理完毕，已经更改了外部的状态（比如mysql里的计数器+1），但ack()之前失败了，就会重复处理。</li>
+<li>exactly once。最严格的可靠性保证，每条记录只处理一次。使用上有很多限制，对输入源、输出目标、编码方式都有要求。而且对效率影响非常大。</li>
+</ul>
+<p>一般最常用的还是at least once。<br>稍微google了下exactly-once语义。要实现exactly-once，首先输入源必须是transactional的，大概的意思就是输入必须是严格有序的，可以根据id回放，并且回放的数据必须和以前的完全相同。无论storm还是spark streaming，目前只有kafka输入源能满足这个要求。其次，在写程序时，也必须一些额外的工作，处理一条记录后，不能直接修改状态（比如直接改数据库），而要把状态分成多个阶段，beforeCommit、commit等，实现相应的方法。这样把状态更新交给上层去处理（storm或spark），storm或spark会将状态变换暂时缓存到内存里，当前记录或batch处理完后，才会真正更新。如果失败，会回放数据并重新处理。这中间的机制很复杂。</p>
+<p>storm早期提供了一种transactional topology以支持exactly-once，大意就是每条记录必须完全处理完毕才能开始处理下一条，不用想就知道性能很差。<br>后来出现了trident、spark streaming等micro batch模型，对exactly-once友好了很多。换句话说，rollback的代价没有那么大了。<br>micro batch的另一个好处是写hbase性能会好很多，不用每条记录一次put。</p>
+<p>个人感觉，选择哪个工具还是要看自己的应用，一般情况下spark streaming是最优的。<br>如果有特殊需求，比如实时性要求较高、DRPC等，可以选择storm/trident。</p>
+<h3 id="处理模式">处理模式</h3>
+<p>只是总结下常见的数据处理模式，不限定于具体工具，不限定于具体应用，不区分批处理与实时。</p>
+<p>基础：filter、transform、aggregate<br>高级一点的：windowing analysis、graph processing<br>更高阶的：machine learing、visualization</p>
+<p>我暂时能想到的就是这些。<br>对于基础，用任何工具去做都很简单。但对于其他模式，是有所谓的最佳实践的。<br>比如图处理，可以用MR去算，像page rank那样多次迭代。但更好的办法是用专门的工具，比如spark GraphX。<br>比如machine learning，可以用mahout或spark MLlib。</p>
+<p>还是那句话，选哪种工具，看自己的应用场景。</p>
+<h3 id="Lambda_Architecture">Lambda Architecture</h3>
+<p>storm作者提出的一种架构：<a href="https://en.wikipedia.org/wiki/Lambda_architecture" target="_blank" rel="external">wiki</a>。</p>
+<p>大意就是说基于hadoop的系统都要是这样一种架构：有批处理和流处理两条线，数据是不可变的，同时进入批处理系统和流处理系统。批处理用于处理历史数据，流处理用于处理近期的数据。查询时会同时从两个系统中查询并合并结果。</p>
+<p>这种架构已经经过实践检验了，据说linkedin内部一直是这样一种架构（我觉得是因为他们有kafka）。其实很多系统也会不自觉的向这种结构发展。</p>
+<p>但这种架构争议也很多。最大的争议是处理逻辑变化时，要同时更改两个地方的代码。摘录一段：</p>
+<blockquote>
+<p>以类推方式，想想跨数据库ORM框架臭名昭著的困难，试图跨越这两个系统提供一个近似标准接口语言也会如此，试图在两个不同编程范式的顶部建立一个抽象层是非常难的。</p>
+</blockquote>
+<p>如果流处理足够强大，也许就不需要批处理部分了。但这种合并了批处理和流处理的方式还是值得参考的。</p>
+<p>其实，很多理论未必是真理，尤其是提出时间不长的。比如CAP就有很多争议。BASE更是牵强。</p>
+<h2 id="调度系统">调度系统</h2>
+<p>这是永远的痛啊。。。hadoop圈中一直没有一种好用的调度工具，勉强能用的是oozie和azkaban。<br>如果用crontab能满足的话，还不如用crontab简单直接。<br>所以很多公司都会开发自己的调度系统。</p>
+<p>oozie的配置太过复杂了，让人望而生畏，workflow的管理也很不方便，不直观。其他传参数、传第三方lib之类的，也很麻烦。<br>azkaban的优点是强大的web界面，很多配置可以在web上修改。问题在于修改workflow很麻烦，不能部分修改，因为它是以zip包形式管理的，只能整个替换。更麻烦的是要修改自己的代码才能被azkaban调度。</p>
+<p>如果一定要选的话，也只能是azkaban了。最近似乎2.7.x版本发布了，不知道会不会有些改进。</p>
+<p>另外我能吐槽下linkedin么，似乎开源项目的代码质量都不高啊。。。我看过WhiteElephant的代码，这哥们以前不是写java的吧？我也看了azkaban一点代码，也不咋样。不过这两个项目的前端倒是都不错。<br>想看高质量的代码，可以看hadoop，我看过一点yarn和hdfs的，受益匪浅。</p>
+<h2 id="总结">总结</h2>
+<p>只是个人感觉。</p>
+<ol>
+<li>大部分系统从这几个角度去设计：storage/ingestion/processing/analyzing/orchestration。</li>
+<li>能用hive的尽量用hive，甚至整个pipeline架在hive上也可以，有很多好处：hive原生支持parquet/avro；支持各种计算引擎；可以方便的对接各种BI工具和查询工具；支持hiveserver；后续的索引支持；对hive sql的扩展更方便，写UDF比写MR/spark简单的多；方便做各种优化等等。说实话，我也不愿意写一大堆代码做ETL和各种计算，sql要简单的多。如果以后spark sql成熟了，也可以考虑。</li>
+<li>不能用/不好用hive的地方，用spark。<strong>不要用MR。写scala，不要写java。</strong></li>
+<li>尽量用parquet+snappy。</li>
+<li>数据导入一般是flume+sqoop。</li>
+<li>需要可实时读写的持久化存储时，考虑hbase。否则一般是hdfs。</li>
+<li>实时处理优先考虑spark streaming，不能满足需求再考虑trident，最次storm。</li>
+<li>kafka就像润滑剂一样，设计系统碰到困难时，试着扔个kafka进去。</li>
+</ol>
+<p>牢记，<strong>抱着spark的大腿总是没错的</strong>。</p>
+<h2 id="实例">实例</h2>
+<p>书中给出了几个实例，具体的设计过程我就不列了。看看架构图吧。</p>
+<h3 id="点击流分析">点击流分析</h3>
+<p>特点是完全离线处理。注意数据处理过程中的sessionization.<br><img src="/2015/10/12/hadoop-application-architectures/2.png" alt=""></p>
+<p><img src="/2015/10/12/hadoop-application-architectures/3.png" alt=""></p>
+<h3 id="反作弊">反作弊</h3>
+<p>实时+离线，就是所谓的lamda architecture。<br><img src="/2015/10/12/hadoop-application-architectures/4.png" alt=""></p>
+<h3 id="数据仓库">数据仓库</h3>
+<p>跟传统的数据仓库概念差不多。只不过是基于hadoop的。<br>数据仓库的关键在于建模，很多时候要反范式。从架构图上看不出什么东西。<br><img src="/2015/10/12/hadoop-application-architectures/5.png" alt=""></p>
+<h1 id="事实标准">事实标准</h1>
+<p>跟技术无关的一些想法。<br>hadoop已经是大数据处理事实上的标准。谈到大数据，必言hadoop。hadoop应该称为data hub更合适，各种技术、框架依附于它而存在。<br>作为大数据处理技术，hadoop未必是最早的，未必是最NB的，却是最普及的。</p>
+<p>在我心目中，hadoop生态圈中各种项目的“江湖地位”：</p>
+<ol>
+<li>事实标准：hdfs、yarn、hive、zookeeper</li>
+<li>将成为事实标准：spark、kafka</li>
+<li>能独当一面：hbase、flume、storm</li>
+<li>能解决特定问题：pig、sqoop、oozie、azkaban、impala、mahout、hue</li>
+<li>快退休的：MR、tez</li>
+</ol>
+<p>详细的项目列表见<a href="https://hadoopecosystemtable.github.io" target="_blank" rel="external">这里</a>，虽然我觉得其中一些项目不属于hadoop生态圈。<br>纯粹凭感觉分类。对我来说，大部分项目属于第4类，只是能解决特定的问题。如果能做的更好，覆盖特定领域的大多数问题，就会进化到第3类，能独当一面。至于能否进化到第2类甚至第1类，不光看技术，也要看推广，甚至是运气。</p>
+<p>话说，前些年如火如荼的nosql运动好像沉寂很长时间了？我记得当时隔几天就有一个新项目冒出来，mongo/redis/riak/neo4j/cassandra/hypertable/couchbase，还有各种不知名的项目。<br>还是我太久没关注。。。<br>似乎只有mongo和redis活的还不错。</p>
+<h1 id="题外话">题外话</h1>
+<p>这篇文章写了近2周。近一万字，我特么都没想到写了这么多。。。<br>借着总结这本书的过程，沿着书中的脉络，也总结了自己的一些想法。夸张点说，我个人关于hadoop的所有理解，都总结在本文中了。<br>以后没事再来翻翻。</p>
+<p>我看技术类书籍的习惯，喜欢在书上写写画画，文中很多内容其实是当时的笔记。<br>如果不能直接在书上写，一定要开着xmind，一边看一边总结。<br>个人觉得这样是比较好的读书方法。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>非常赞的一本书，链接：<a href="http://shop.oreilly.com/product/0636920033196.do" target="_blank" rel="external">OReilly Shop</a>，6月才出的。话说OReilly真是业界良心。<br>我订阅了<a href="http://www.hadoopweekly.com" target="_blank" rel="external">Hadoop Weekly</a>，某天它推荐了一篇cloudera blog，具体链接忘了，部分内容就是节选自本书，讲了实时处理的一些架构，当时就感觉很赞。于是找来原书看看，顿觉相见恨晚。<br>断断续续看了2个月，550多页啊，全英文。简单总结下。</p>
+]]>
+    
+    </summary>
+    
+      <category term="hadoop" scheme="http://jxy.me/tags/hadoop/"/>
+    
+      <category term="读书" scheme="http://jxy.me/tags/%E8%AF%BB%E4%B9%A6/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[二手的前端开发]]></title>
@@ -1167,126 +1310,6 @@
       <category term="resourcemanager" scheme="http://jxy.me/tags/resourcemanager/"/>
     
       <category term="HA" scheme="http://jxy.me/tags/HA/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[YARN资源调度策略]]></title>
-    <link href="http://jxy.me/2015/04/30/yarn-resource-scheduler/"/>
-    <id>http://jxy.me/2015/04/30/yarn-resource-scheduler/</id>
-    <published>2015-04-30T08:34:04.000Z</published>
-    <updated>2015-09-03T15:42:14.000Z</updated>
-    <content type="html"><![CDATA[<p>公司活动写的一篇文章。这里也发下吧。<br>介绍下YARN中资源调度相关概念和算法。以hadoop 2.2.0为准。<br><a id="more"></a></p>
-<p>YARN虽然是从MapReduce发展而来，但其实更偏底层，它在硬件和计算框架之间提供了一个抽象层，用户可以方便的基于YARN编写自己的分布式计算框架，而不用关心硬件的细节。由此可以看出YARN的核心功能：资源抽象、资源管理（包括调度、使用、监控、隔离等等）。从某种程度上说YARN类似于IaaS。<br><img src="/2015/04/30/yarn-resource-scheduler/overview.png" alt=""></p>
-<p>YARN的基本概念不再赘述。一些缩写：RM = ResourceManager、NM = NodeManager、AM = ApplicationMaster。</p>
-<h1 id="什么是资源？">什么是资源？</h1>
-<p>对一个资源管理系统而言，首先要定义出资源的种类，然后将每种资源量化，才能管理。这就是资源抽象的过程。</p>
-<p>先抛开YARN不谈，在一个分布式、多用户的系统中，什么是资源？<br>我们通常所说的“资源”都是硬件资源，包括CPU使用/内存使用/磁盘用量/IO/网络流量等等。这是比较粗粒度的。也可以是抽象层次更高的TPS/请求数之类的。其实广义来看，时间、人力等“软件”也是资源，可惜一般很难量化。</p>
-<p>为什么要有“资源”这个概念？首先可以用来衡量系统的瓶颈，系统能否充分利用资源？什么时候应该扩容？在多用户的系统中，“资源”还额外承担着限制用户的功能。比如当总体资源紧张时，重要的用户可以优先获得资源，有更高的资源上限，普通的用户更难获得资源。</p>
-<p>YARN的资源抽象比较简单，只有两种资源：内存和CPU。而资源数量是管理员手动设置的，每个NM节点可以贡献一定数量的内存（MB）和CPU，由RM统一管理，不一定是真实的内存和CPU数。<br>其中内存资源是比较关键的，直接决定任务能否成功。如果某个任务需要的内存过多，可能无法执行，或者OOM。CPU资源的限制比较弱，只限定了一台NM上能并发执行多少任务。如果并发的过多，执行的可能比较慢。</p>
-<h1 id="基本概念">基本概念</h1>
-<h2 id="Container">Container</h2>
-<p>Container是RM分配资源的基本单位。每个Container包含特定数量的CPU资源和内存资源，用户的程序运行在Container中，有点类似虚拟机。RM负责接收用户的资源请求并分配Container，NM负责启动Container并监控资源使用。如果使用的资源（目前只有内存）超出Container的限制，相应进程会被NM杀掉。<br>可见Container这个概念不只用于资源分配，也用于资源隔离。理论上来说不同Container之间不能互相影响。可惜现阶段YARN的隔离做的还不太好。</p>
-<p>Container的另一个特性是客户端可以要求只在特定节点上分配，这样用户的程序可以只在特定的节点上执行。这跟计算本地性有关。后面会讲到。</p>
-<p>Container是有最大资源限制的。在我们的设置中，每个Container最多只能有8G内存，8个CPU。这是由RM端的参数yarn.scheduler.maximum-allocation-mb和yarn.scheduler.maximum-allocation-vcores决定的。</p>
-<h2 id="调度器与队列">调度器与队列</h2>
-<p>在YARN中，调度器是一个可插拔的组件，常见的有FIFO，CapacityScheduler，FairScheduler。可以通过配置文件选择不同的调度器。<br>在RM端，根据不同的调度器，所有的资源被分成一个或多个队列（queue），每个队列包含一定量的资源。用户的每个application，会被唯一的分配到一个队列中去执行。队列决定了用户能使用的资源上限。<br>所谓资源调度，就是决定将资源分配给哪个队列、哪个application的过程。</p>
-<p>可见调度器的两个主要功能：1.决定如何划分队列；2.决定如何分配资源。此外，还有些其他的特性：ACL、抢占、延迟调度等等。<br>后文会对这几种调度器分别介绍下。</p>
-<h2 id="事件驱动">事件驱动</h2>
-<p>YARN实现了一套基于状态机的事件驱动机制：很多对象内部有一个预先定义好的有限状态机，相应的事件会触发状态转换，状态转换的过程中触发预先定义的钩子，钩子执行的过程中又生成新的事件，继续状态转换。这种设计的好处是耦合小，但不太好理解。<br>几个角色：<br>Dispatcher —— 用于分发事件，一般是异步的。内部用一个BlockingQueue暂存所有事件。<br>Event —— 事件类型。<br>Handler —— 事件的消费者。每个消费者只handle特定的事件，所有Handler要在Dispatcher上注册。</p>
-<p>这个机制在YARN的各个模块中用的非常广泛，不只用于调度器。</p>
-<h2 id="pull-based">pull-based</h2>
-<p>通俗的说，AM通过心跳向RM申请资源，但当次心跳申请的资源不能马上拿到，而是要再经过若干次心跳才能拿到。这是一种pull-based模型。</p>
-<p>AM通过RPC协议ApplicationMasterProtocol与RM通信。这个协议在服务端的实现会调用YarnScheduler的allocate方法（所有调度器都必须实现YarnScheduler接口）。allocate方法有两个作用：1.申请、释放资源；2.表示AM是否存活。超过一段时间AM没有调用这个方法，RM会认为AM挂掉并尝试重新提交。</p>
-<p>allocate方法有3个参数：<applicationid, 想要申请的资源,="" 要释放的container="">。调度器会暂存这个application的资源请求，同时取出上次心跳后新分配给这个application的container，包装为一个Allocation对象返回。如果上次要求的资源也还没分配，那返回的Allocation对象就不包含任何资源。</applicationid,></p>
-<p>那真正分配container是什么时候？答案是NM的心跳时。当NM向RM发送心跳时，会触发一个NODE_UPDATE事件。schduler会handle这个事件尝试在这个node上分配container。里面有一系列判断，比如当前节点是否有足够资源、优先给哪个application分配资源。如果成功分配container，就加入一个List中，等待AM下次心跳来取。</p>
-<p>这点跟以前的JobTracker比较像，也是TaskTracker各自去拉取任务。</p>
-<h1 id="常见调度器">常见调度器</h1>
-<p>前文说过，调度器的两个主要作用：1.决定如何划分队列；2.决定如何分配资源，这里又分两种情况：为队列分配资源和为单个application分配资源。从这两方面看下常见的调度器，重点分析下FairScheduler。</p>
-<h2 id="FIFO">FIFO</h2>
-<p>最简单、也是默认的调度器。只有一个队列，所有用户共享。<br>资源分配的过程也非常简单，先到先得，所以很容易出现一个用户占满集群所有资源的情况。<br>可以设置ACL，但不能设置各个用户的优先级。</p>
-<p>优点是简单好理解，缺点是无法控制每个用户的资源使用。<br>一般不能用于生产环境中。</p>
-<h2 id="CapacityScheduler">CapacityScheduler</h2>
-<p>在FIFO的基础上，增加多用户支持，最大化集群吞吐量和利用率。它基于一个很朴素的思想：每个用户都可以使用特定量的资源，但集群空闲时，也可以使用整个集群的资源。也就是说，单用户的情况下，和FIFO差不多。<br>这种设计是为了提高整个集群的利用率，避免集群有资源但不能提交任务的情况。</p>
-<p>特点：</p>
-<ul>
-<li>划分队列使用xml文件配置，每个队列可以使用特定百分比的资源</li>
-<li>队列可以是树状结构，子队列资源之和不能超过父队列。所有叶子节点的资源之和必须是100%，只有叶子节点能提交任务</li>
-<li>可以为每个队列设置ACL，哪些用户可以提交任务，哪些用户有admin权限。ACL可以继承</li>
-<li>队列资源可以动态变化。最多可以占用100%的资源。管理员也可以手动设置上限。</li>
-<li>配置可以动态加载，但只能添加队列，不能删除</li>
-<li>可以限制整个集群或每个队列的并发任务数量</li>
-<li>可以限定AM使用的资源比例，避免所有资源用来执行AM而只能无限期等待的情况</li>
-</ul>
-<p>当选择队列分配资源时，CapacityScheduler会优先选择资源用量在规定量以下的。<br>当选择一个队列中的application分配资源时，CapacityScheduler默认使用FIFO的规则，也可以设定每个app最多占用队列资源的百分比。</p>
-<p>关于CapacityScheduler一个比较重要问题就是百分比是如何计算的。默认的算法是DefaultResourceCalculator类的ratio方法，只考虑了内存。也就是说CapacityScheduler调度时是只考虑内存的。管理员也可以手动设置选择其他算法。</p>
-<p>优点：灵活、集群的利用率高<br>缺点：也是灵活。某个用户的程序最多可以占用100%的资源，如果他一直不释放，其他用户只能等待，因为CapacityScheduler不支持抢占式调度，必须等上一个任务主动释放资源。</p>
-<h2 id="FairScheduler">FairScheduler</h2>
-<p>我们一直在用的调度器。设计思路和CapacityScheduler不同，优先保证“公平”，每个用户只有特定数量的资源可以用，不可能超出这个限制，即使集群整体很空闲。</p>
-<p>特点：</p>
-<ul>
-<li>使用xml文件配置，每个队列可以使用特定数量的内存和CPU</li>
-<li>队列是树状结构。只有叶子节点能提交任务</li>
-<li>可以为每个队列设置ACL</li>
-<li>可以设置每个队列的权重</li>
-<li>配置可以动态加载</li>
-<li>可以限制集群、队列、用户的并发任务数量</li>
-<li>支持抢占式调度</li>
-</ul>
-<p>优点：稳定、管理方便、运维成本低<br>缺点：相对CapacityScheduler，牺牲了灵活性。经常出现某个队列资源用满，但集群整体还有空闲的情况。整体的资源利用率不高。</p>
-<p>下面重点看下资源分配的算法。</p>
-<h3 id="Max-min_fairness算法">Max-min fairness算法</h3>
-<p>FairScheduler主要关注“公平”，那么在一个共享的集群中，怎样分配资源才算公平？<br>常用的是max-min fairness算法：<a href="http://en.wikipedia.org/wiki/Max-min_fairness" target="_blank" rel="external">wiki</a>。这种策略会最大化系统中一个用户收到的最小分配。如果每一个用户都有足够地请求，会给予每个用户一份均等的资源。尽量不让任何用户被“饿死”。</p>
-<p>一个例子：资源总量是10，有3个用户A/B/C，需要的资源分别是5/4/3，应该怎样分配资源？<br>第一轮：10个资源分成3份，每个用户得到3.33<br>第二轮：3.33超出了用户C的需求，超出了0.33，将这多余的0.33平均分给A和B，每个用户得0.16<br>所以最后的分配结果是A=3.49，B=3.49，C=3</p>
-<p>上面的例子没有考虑权重，如果3个用户的权重分别是0.5/1/0.8，又应该如何分配资源？<br>第一轮：将权重标准化，3个用户的权重比是5:10:8。将所有资源分成5+10+8=23份，按比例分配给各个用户。A得到<code>10*5/23=2.17</code>，B得到<code>10*10/23=4.35</code>，C得到<code>10*8/23=3.48</code>。<br>第二轮：B和C的资源超出需求了，B超过0.25，C超过0.48。将多出资源分配给A。<br>最后的分配结果是A=2.9，B=4，C=3<br>由于进位的问题会有些误差。</p>
-<p>更多用户的情况下同理。</p>
-<h3 id="DRF">DRF</h3>
-<p>Max-min fairness解决了单一资源下，多用户的公平分配。这个算法以前主要用来分配网络流量。但在现代的资源管理系统中，往往不只有一种资源。比如YARN，包含CPU和内存两种资源。多种资源的情况下，如何公平分配？Berkeley的大牛们提出了<a href="http://static.usenix.org/event/nsdi11/tech/full_papers/Ghodsi.pdf" target="_blank" rel="external">DRF算法</a>。</p>
-<p>DRF的很多细节不提了。核心概念在于让所有application的“主要资源占比”尽量均等。比如集群总共X内存，Y CPU。app1和app2是CPU密集型的，app1每次请求3个CPU，app2每次请求4个CPU；app3和app4是内存密集型的，app3每次请求10G内存，app4每次请求20G内存。设分给app1、app2、app3、app4的请求数分别是a、b、c、d。DRF算法就是希望找到一组abcd，使得3a/X=4b/X=10c/Y=20d/Y。<br>如何判断CPU/内存密集型？如果任务需要的CPU资源/集群总的CPU资源 &gt; 需要的内存资源/集群总的内存资源，就是CPU密集型，反之是内存密集型。<br>实际应用中一般没有最优解，而是一个不断动态调整的过程。和max-min fairness一样，也要经过多轮分配，才能达到一个公平的状态。</p>
-<p>如果考虑权重的话，算法会更复杂一点。另外在单一资源的情况下，DRF会退化为max-min fairness。</p>
-<h3 id="资源分配过程">资源分配过程</h3>
-<p>了解了一些基本的算法，接下来看看FairScheduler的资源分配过程。<br>前文说过NM的心跳会触发一个NODE_UPDATE事件，scheduler同时也是这个事件的handler，会尝试在对应的节点上分配container。<br>在FairScheduler中，所有的queue、application都继承了Scheduable，构成一个树状结构。资源分配的过程就是从这颗树的根节点开始查找，直到找到一个合适的Scheduable对象的过程。<br><img src="/2015/04/30/yarn-resource-scheduler/tree.png" alt=""></p>
-<p>以上图为例，共有3种对象：ParentQueue（root是一个特殊的ParentQueue）、LeafQueue、Application，只有LeafQueue才能提交app。<br>每个Queue可以定义自己的SchedulingPolicy，这个policy主要用于Scheduable对象的排序。目前共有3种SchedulingPolicy的实现：FifoPolicy、FairSharePolicy、DominantResourceFairnessPolicy，FIFO只能用于LeafQueue，其他两种Policy可以用于任意Queue。默认是FairSharePolicy。</p>
-<p>分配Container是一次深度优先搜索：从root节点开始，首先检查当前节点资源是否用满，是则直接返回（这里会同时考虑CPU和内存）。如果当前节点是ParentQueue，就将所有子节点排序（SchedulingPolicy决定了这里的顺序），依次尝试在每个子节点上分配container；如果当前节点是LeafQueue，就将下面的app排序（也是SchedulingPolicy决定，但加入了一些app特有的判断条件），依次尝试为每个app分配资源；如果当前节点是app，会比较当前app的资源需求与节点的剩余资源，如果能满足，才真正分配container。至此整个资源分配过程才完成。如果找不到合适的app，最后会返回null。</p>
-<p>从上面的过程可以看出，每次NM心跳时，都会触发一次资源分配，而且只能分配一个container。所以NM的心跳频率会影响到整个集群的吞吐量。另外可以配置参数yarn.scheduler.fair.assignmultiple让一次心跳分配多个container，默认是false。</p>
-<p>下面看下默认的FairSharePolicy是如何排序的。这个policy只考虑内存资源，但跟max-min failness不太一样。max-min fairness关注整体资源的公平分配，而FairSharePolicy目的在于公平分配“被调度的机会”，所以最终的资源分配可能不是算法上的最优解。但目的是一样的，都是让所有app有机会运行，不会被饿死。</p>
-<p>每个Schedulable对象都有minShare、maxShare、fairShare 3个属性，其中minShare、maxShare用于排序，fairShare用于抢占式调度，后文会讲到。此外还有权重属性（weight），也会用于排序。对于queue而言，minShare、maxShare就是fair-scheduler.xml里配置的minResource和maxResource，weight也是直接配置的。对于application而言minResource直接返回0，maxResource直接返回Integer.MAX_VALUE，weight如果没有配置yarn.scheduler.fair.sizebasedweight=true就直接返回1.0，意味着所有app的权重是相同的。</p>
-<p>FairSharePolicy在比较两个Schedulable对象时，先看是否有已分配资源小于minShare的，如果是说明当前Scheduable处于饥饿状态，应该被优先满足。如果两个Schedulable都处于饥饿状态，就看谁占minShare的比例更小（谁更饿）。如果没有饥饿状态的，就比较两个Schedulable已用资源与权重的比例，这个比例越大，说明占用了越多的资源，为了公平，应该给另一个Schedulable分配资源。</p>
-<p>DominantResourceFairnessPolicy是YARN中DRF算法的实现，会考虑内存和CPU两种资源，排序逻辑会更复杂些，这里略过。</p>
-<h3 id="任务分配过程">任务分配过程</h3>
-<p>任务分配过程决定一个app被分到哪个队列。相对于资源分配过程，这个过程简单的多。因为app在提交的时候一般会指定队列名。</p>
-<p>第一步：检查提交的app是否指定了队列名。如果没有指定，检查是否存在和用户同名的队列。如果还不存在，就提交到default队列。default队列可以在配置文件中指定，也可以在调度器初始化时默认创建。<br>第二步：检查ACL，当前用户是否有向指定队列提交任务的权限。<br>第三步：如果通过ACL检查，发出一个APP_ACCEPTED事件。app加入LeafQueue的children，开始等待资源分配。</p>
-<p>FairScheduler的一个特点是客户端可以动态创建队列，即指定一个不存在的队列。但生产环境中这一般是不允许的。</p>
-<h3 id="抢占式调度">抢占式调度</h3>
-<p>FairScheduler特有的功能。当某个队列资源不足时，调度器会杀死其他队列的container以释放资源，分给这个队列。这个特性默认是关闭的。<br>关键点有两个：1.启动抢占式调度的条件？2.选择哪些container去杀掉？</p>
-<p>前文说过每个Schedulable对象都有minShare、fairShare属性。这两个属性是抢占式调度的阈值。当一个Schedulable使用的资源小于fairShare*0.5、或者小于minShare，并且持续超过一定时间（这两种情况的超时时间不同，可以设置），就会开始抢占式调度。</p>
-<p>Schedulabe的fairShare是会不断变化的（minShare一般不会变化）。如果队列的minResource、maxResource、权重等属性变化，fairShare都要重新计算。application开始或结束，也都要重新计算fairShare。FairScheduler中有一个线程UpdateThread，默认每0.5秒调用一次update方法，就会重新计算fairShare。<br>计算fairShare的过程就是将“上层”Schedulable的fairShare，“公平”的分配给下层的Schedulable。计算过程从root queue开始。root queue的fairShare就是整个集群的可用资源。怎样才算公平？要综合考虑各个Schedulable的权重、minShare、maxShare，算法也是由SchedulingPolicy决定的。默认是FairSharePolicy。这个计算逻辑跟max-min fairness类似。</p>
-<p>当FairScheduler决定开始抢占时，首先会计算要抢得的资源量。对于使用资源量小于minShare的，要恢复到minShare；对于使用量小于fairShare*0.5的，需要恢复到fairShare。将所有要恢复的资源量相加，得出要抢的的资源总量。然后遍历所有LeafQueue，找到所有资源用量大于fairShare的app，将他们在运行的container加入一个List，按优先级升序排列。然后遍历，优先杀死优先级低的container。当释放足够的资源后，抢占停止。</p>
-<p>如何确定container的优先级？这是由AM在申请资源的时候决定的。用一个整数表示，数字越大优先级越低。以MapReduce为例，AM Container是0，Reduce Container是10，Map Contaienr是20。意味着一个map任务更容易被杀死。</p>
-<p>抢占式调度可以一定程度上保证公平，但不可控因素比较多。如果用户的长时间任务因此失败，是不可接受的。所以生产环境一般关闭这个特性。</p>
-<h3 id="计算本地性">计算本地性</h3>
-<p>从MapReduce时代开始，“移动计算比移动数据更经济”的概念就深入人心。在YARN中，当然也继承了这一传统。这一特性主要是用来配合HDFS的，因为HDFS的多副本，任务应该尽量在选择block所在的机器上执行，可以减少网络传输的消耗。如果开启了Short-Circuit Read特性，还可以直接读本地文件，提高效率。</p>
-<p>本地性有3个级别：NODE_LOCAL、RACK_LOCAL、OFF_SWITCH，分别代表同节点、同机架、跨机架。计算效率会依次递减。</p>
-<p>根据前文所述，Container在申请时可以指定节点，但这不是强制的。只有NM心跳的时候才会分配资源，所以container无法一般确定自己在那个节点上执行，基本是随机的。scheduler能做的只是尽量满足NODE_LOCAL，尽量避免OFF_SWITCH。计算本地性更多的要AM端配合，当AM拿到资源后，优先分配给NODE_LOCAL的任务。</p>
-<p>但FairScheduler中，允许一个app错过若干次调度机会，以便能分到一个NODE_LOCAL的节点。由yarn.scheduler.fair.locality.threshold.node控制。这个参数是一个百分比，表示相对整个集群的节点数目而言，一个app可以错过多少次机会。<br>比如yarn.scheduler.fair.locality.threshold.node为0.2，集群节点数为10。那么FairScheduler分配这个资源时，发现当前发来心跳的NM不能满足这个app的NODE_LOCAL要求，就会跳过，继续寻找下一个APP。相当于这个app错过一次调度机会，最多可以错过2次。<br>对RACK_LOCAL而言，有一个参数yarn.scheduler.fair.locality.threshold.rack，作用差不多。</p>
-<h1 id="发展趋势">发展趋势</h1>
-<p>YARN的发展一直比较快，调度/资源相关的一些值得关注的改进：</p>
-<p>Label based scheduling<br><a href="https://issues.apache.org/jira/browse/YARN-796" target="_blank" rel="external">https://issues.apache.org/jira/browse/YARN-796</a><br><a href="https://issues.apache.org/jira/browse/YARN-3214" target="_blank" rel="external">https://issues.apache.org/jira/browse/YARN-3214</a><br>可以给不同的节点加上标签，比如某些节点CPU频率比较高、某些节点内存比较大，RM在调度的时候，可以更有针对性。甚至可以分成多个小集群供不同用户使用。</p>
-<p>管理更多资源<br>磁盘：<a href="https://issues.apache.org/jira/browse/YARN-2139" target="_blank" rel="external">https://issues.apache.org/jira/browse/YARN-2139</a><br>网络：<a href="https://issues.apache.org/jira/browse/YARN-2140" target="_blank" rel="external">https://issues.apache.org/jira/browse/YARN-2140</a></p>
-<p>Dynamic resource configuration<br><a href="https://issues.apache.org/jira/browse/YARN-291" target="_blank" rel="external">https://issues.apache.org/jira/browse/YARN-291</a><br>动态加载资源配置。包括自动探测实际的机器配置，而不是管理员手动设置。</p>
-<p>app级别的权重设置<br><a href="https://issues.apache.org/jira/browse/YARN-1963" target="_blank" rel="external">https://issues.apache.org/jira/browse/YARN-1963</a></p>
-<p>使用Docker做资源隔离<br><a href="https://issues.apache.org/jira/browse/YARN-1964" target="_blank" rel="external">https://issues.apache.org/jira/browse/YARN-1964</a></p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>公司活动写的一篇文章。这里也发下吧。<br>介绍下YARN中资源调度相关概念和算法。以hadoop 2.2.0为准。<br>]]>
-    
-    </summary>
-    
-      <category term="yarn" scheme="http://jxy.me/tags/yarn/"/>
-    
-      <category term="resourcemanager" scheme="http://jxy.me/tags/resourcemanager/"/>
-    
-      <category term="scheduler" scheme="http://jxy.me/tags/scheduler/"/>
     
   </entry>
   
