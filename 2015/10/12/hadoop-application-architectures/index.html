@@ -204,7 +204,7 @@
 <p>个人感觉，选择哪个工具还是要看自己的应用，一般情况下spark streaming是最优的。<br>如果有特殊需求，比如实时性要求较高、DRPC等，可以选择storm/trident。</p>
 <h3 id="处理模式">处理模式</h3>
 <p>只是总结下常见的数据处理模式，不限定于具体工具，不限定于具体应用，不区分批处理与实时。</p>
-<p>基础：filter、transform、aggregate<br>高级一点的：windowing analysis、graph processing<br>更高阶的：machine learing、visualization</p>
+<p>基础：filter、transform、aggregate<br>高级一点的：windowing analysis、graph processing<br>更高阶的：machine learning、visualization</p>
 <p>我暂时能想到的就是这些。<br>对于基础，用任何工具去做都很简单。但对于其他模式，是有所谓的最佳实践的。<br>比如图处理，可以用MR去算，像page rank那样多次迭代。但更好的办法是用专门的工具，比如spark GraphX。<br>比如machine learning，可以用mahout或spark MLlib。</p>
 <p>还是那句话，选哪种工具，看自己的应用场景。</p>
 <h3 id="Lambda_Architecture">Lambda Architecture</h3>
@@ -284,6 +284,8 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
+                <a href="/2015/10/30/methodology/">方法论？</a>
+              
             </div>
 
             <div class="post-nav-next post-nav-item">
@@ -349,7 +351,7 @@
       <p class="site-description motion-element">思绪偶尔在这里停留</p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">39</span>
+          <span class="site-state-item-count">40</span>
           <span class="site-state-item-name">日志</span>
         </div>
         <div class="site-state-item site-state-tags">
