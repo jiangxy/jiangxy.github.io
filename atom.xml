@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2015-11-04T02:08:57.114Z</updated>
+  <updated>2015-12-06T09:02:05.292Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -13,6 +13,105 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[南游记]]></title>
+    <link href="http://jxy.me/2015/11/29/south-trip/"/>
+    <id>http://jxy.me/2015/11/29/south-trip/</id>
+    <published>2015-11-29T01:09:25.000Z</published>
+    <updated>2015-12-06T08:52:40.000Z</updated>
+    <content type="html"><![CDATA[<p>其实是跑到深圳参加了<a href="http://wot.51cto.com/2015bigdata/schedule.html" target="_blank" rel="external">某个会议</a>，简单总结下。</p>
+<a id="more"></a>
+<p>看到这个会议名字的时候，我是有点虚的。又是“大数据”，又是“互联网+”，噱头十足。一般这种会议水分也很充足。。。这种会议吧，未必真的能学到什么东西，关键在于聊天吹水换名片兼挖人。。。还未进会场就收到了一堆招聘广告。<br>每个演讲开始前，讲师都会宣传自己的公司、推销自己的书、公众号，演讲结束前还要帮公司挖人。。。<br>这个真的是技术会议嘛？</p>
+<p>不过干货虽然少，还是能捞出一些。</p>
+<h1 id="流水帐">流水帐</h1>
+<h2 id="28日上午">28日上午</h2>
+<p>很水。<br>各路CTO/CEO/VP上台演讲，本来就不能抱什么期望。不能指望听到什么技术。<br>倒是360的一个人讲的数据变现比较有意思。数据到底能不能赚钱？似乎只有广告一条路可以走。他说现在很多所谓的大数据应用其实都不是真正的大数据。bigdata已经变成了一个营销词汇。从技术上来说，<strong>只要能采样处理的都不是bigdata</strong>，只有那些必须全量处理，而数据量又大到传统手段不能处理的，才是bigdata。<br>另一个很重要的问题就是隐私，说是达摩克利斯之剑也不为过。我很久以前跟一个朋友聊天，说我是做统计的，你在app内的各种行为都能被记录到，他就非常反感。。。虽然他完全不懂技术，也不知道这些数据是用来干什么的。<br>就像倒卖个人信息的快递员，人家也算是数据从业人员了。。。</p>
+<p>不过他们都真的很能讲，发明各种各样的概念。<br>“全方位的、360度的大数据”，这是什么鬼？？</p>
+<p>最大的收获是一个数据驱动决策的段子：“领导看了报表，哈哈一笑，听取大多数人的意见，然后按自己的想法拍板”。。。</p>
+<h2 id="28日下午">28日下午</h2>
+<p>O2O电商架构专场。</p>
+<ul>
+<li>美团：《O2O领域的基础信息建设》。建设商家中心的一些经验。美团的商家信息都是商家上报或自主采集的，如何对这些信息进行清洗、合并、扩展。可惜没太听懂，业务还是挺复杂的。</li>
+<li>菜鸟：《物流领域大数据应用-路由分单（青鸾智简）系统》。感觉就是根据地址信息自动配送路径。典型的分类算法。</li>
+<li>唯品会：《实时数据在移动电商中的应用与实践》。完全是非技术的好嘛。</li>
+<li>魅族：《魅族电商平台架构的变迁》。电商架构，简单明了。当然不能跟淘宝之类的比，但对我这样没什么经验的人，这种简单的反而更易理解。</li>
+<li>京东：《京东搜索和618实战》。我对搜索了解不多，只知道基本的原理。架构图很复杂，但感觉讲的不太细啊。主要是hadoop离线建索引+MQ的实时索引。同行的搜索部门的同事倒觉得收获很多。</li>
+</ul>
+<h2 id="29日上午">29日上午</h2>
+<p>移动大数据专场。</p>
+<ul>
+<li>汽车之家：《如何构建高效的数据采集系统》。大概就是一个日志收集系统吧，包括如何埋点，如何设计日志，前后端规范。还是讲了一些实践经验的，但技术细节较少。</li>
+<li>吆喝：《AB测试高效实现全数据驱动产品优化》。讲了半天都是AB测试的好处，google/facebook通过AB测试提升了多少营收，提升了多少转化率。好处我当然知道啊，我想知道的是细节，如何构建这样一个支持AB测试的系统，怎样的分流规则，有哪些要注意的地方，踩过哪些坑。估计这哥们只是个数据分析师吧。</li>
+<li>友盟：《移动大数据平台架构与实践》。友盟还是比较有发言权的。分享了data pipeline设计以及一些数据处理的经验。架构是简单的lamda architecture，但实时处理和批处理却分为了两个kafka。另外提到的一句话很有道理：“移动互联网红利已经结束，现在要比拼精细化运营”（大意）。</li>
+<li>乐逗：《大数据处理及建模技术—基于R语言实现》。应该叫R语言简明教程。我完全不懂R，所以没怎么听。感觉R和matlab有点像。另外数据可视化让人印象深刻。</li>
+<li>手淘：《亿级UV手淘背后的移动大数据采集体系》。难得的干货，认真的从头听到尾。因为我以前也是给移动应用做统计，所以了解很多痛点。和汽车之家的分享有些重合，但更全面，更深入。</li>
+</ul>
+<p>似乎现在移动端的统计都必须是专业的SDK了，我们以前那种手动打日志的方式太low了。<br>但想做一个好的SDK真的很不容易。做的不好轻则统计不准/扩展困难，重则影响app本身的功能。</p>
+<p>重点说说手淘的分享。几个有意思的：<br>1.链路追踪：类似GA中的页面流，基本方法还是加参数。<br>2.客户端聚合：为了减少日志量，会在客户端做简单聚合再上传。<br>3.日志分级：业务日志的优先级明显大于性能日志，系统压力大时会优先丢弃性能日志。我以前见过开发乱打日志，打印一种类似于ping的日志，数据量急剧增大。。。数据重要性：跟钱相关的 &gt; 用户活跃相关 &gt; 运营相关。<br>4.客户端清洗：一些简单的日志清洗工作会在客户端做，不需关联处理的日志都可以这样，似乎配置是实时从服务端取的。<br>5.上传策略：定时上传/wifi上传/启动上传/crash上传。<br>6.采样上传：似乎是压力大时会采样部分用户的数据上传，同一个用户的数据也只会采样部分。<br>7.SDK自身监控。SDK自身也会打印日志用于监控。<br>8.数据运维。运维是大公司与小公司最大的区别。手淘的运维平台可以做到埋点、校验、监控、调试等等。但不知道技术细节。<br>9.双11灾备。业务分优先级，压力大时优先保证P0业务；系统降级，自动重设超时时间。</p>
+<p>其实还是有很多疑问的。比如手淘是如何跨native和H5统计的。</p>
+<p>汽车之家的分享中提到日志扩展性的问题，我也说说我们以前的做法。<br>早期的日志都是开发定的，非常随意，虽然都是json，但没有统一的schema。日志格式一旦变化就很痛苦。<br>后来受twitter<a href="https://engineering.twitter.com/research/publication/the-unified-logging-infrastructure-for-data-analytics-at-twitter" target="_blank" rel="external">某篇论文</a>的启发，定义了统一的日志格式，固定的N个字段+一个可扩展的json。<br>但很多时候日志格式设计都只考虑了可读性，也许可以设计的更加紧凑，那性能也会更好。</p>
+<h2 id="29日下午">29日下午</h2>
+<p>数据安全专场。</p>
+<ul>
+<li>京东：《大数据下的电商风控体系》。算是干货。部分原因是我一直不太了解风控，所以有很多启发。画像还是挺有意思的，包括IP画像/设备画像/人机画像等等。其实风控最核心的是规则引擎吧，而且这个根据业务的不同差异很大，也不能直接复制。</li>
+</ul>
+<p>然后我们就悄悄的跑路了。。。</p>
+<h1 id="大数据万能论">大数据万能论</h1>
+<p>2天听下来，最大的感受是，很多人觉得大数据是万能的？<br>张口闭口大数据。自从用了大数据，腰不酸腿不痛，成本下降了，库存不积压，决策不拍脑袋，利润一口气翻五倍不费劲，一切都无比美好？这种论调尤其在第一天的CTO/CEO之流的演讲中出现非常多。</p>
+<p>也许每个人看待所谓的大数据都不同吧。在我看来的bigdata是一堆技术的集合，以hadoop为代表。技术又不能帮你创造价值，关键还是看你怎么用。什么机器学习、数据挖掘，不都是在大数据之前就有的东西么？如果你对数据只是简单的count(1)，数据量再大又能如何？<br><strong>数据-&gt;信息-&gt;价值</strong>，这个转换不是那么容易的。而且其中的经验未必是可复制的。对技术而言，不会因为公司的不同而不同。你的hadoop集群和我的hadoop集群不会差太多。但你能从数据中获取价值，我按同样的方法去做，就未必可行。往小了说这和人员素质、经验有关，往大了说这和公司的业务、文化有关。<br>一个很危险的倾向就是为了用而用。明明excel就能搞定的偏要用hive；明明抽样统计下就可以偏偏要跑全量数据。感觉就和SOA一样，很多人根本不知道自己想要什么，只是机械的模仿别人，或者是为了符合“业界标准”。</p>
+<p>但对传统行业而言，也许这个概念真的是颠覆性的。就像若干年前的信息化改造一样。<br>所以CTO/CEO们抓住这个机会，各种忽悠。但也就忽悠下外行罢了。</p>
+<h1 id="所谓架构">所谓架构</h1>
+<p>既然是技术分享，当然有不少的架构图。但其实吧，大数据相关的技术无非就那些，hadoop/spark/kafka之流，每个人根据自己需求的不同组合起来，需要定制开发的很少，所以技术架构都是大同小异。何况还有lamda architecture这种公认（算是吧）的成功范例。一些感受：</p>
+<ul>
+<li>kafka已是标配。</li>
+<li>实时处理的还是storm多，可能出的早吧。JStorm也开源了，要焕发第二春？</li>
+<li>Elasticsearch异军突起啊。以前没怎么关注过。</li>
+</ul>
+<p>真正复杂的反而是各种业务架构。<br>这个我很难评判，因为我没有相关经验，总不能乱讲。我只知道看着很头痛。。。人家设计成这么复杂，总不会是为了好看吧。<br>只有在特定的场景下，才能评判一个架构的好坏。</p>
+<p>我现在越来越觉得，所谓的“技术栈”深度是有限的，但在有限的技术上总能折腾出无限复杂的业务。。。</p>
+<h1 id="如何听技术分享">如何听技术分享</h1>
+<p>只是个人的一些习惯。<br>整个会议40多场演讲，怎么选择听哪些？听的时候有哪些重点？</p>
+<ul>
+<li>看背景。看人的背景，看公司的背景。来自大公司的干货机率总是大些。CXO的演讲一般没什么营养。尽量去听一线开发人员的演讲。但如果有个人光环，比如Doug Cutting之类，那是必须听了，哪怕讲的不是技术相关也得去凑凑热闹。没错我就是这么庸俗。。。</li>
+<li>看题目。太宽泛的题目水的概率比较大。如果能关注某部分技术细节，我会更感兴趣。</li>
+<li>个人兴趣。有些题目我完全没有背景知识，去听也没有意义。像什么R语言之类的。。。但移动统计相关还有些经验，所以能有很多收获。当然也和公司的需求有关。</li>
+<li>关注实践。我最关心的是他们踩过哪些坑，是如何解决的。什么背景啊、意义啊、需求啊，讲得再多也没用。</li>
+<li>别被架构图吓住。很多图看着很复杂，但只是你不了解相关业务才觉得复杂的，不要被他们的业务逻辑绕进去。单独看某一部分就会简单很多。典型的就是美团的那个分享。</li>
+<li>如何提问？演讲后总会有提问环节，但提问前先理清自己的思路好嘛。问题都说不明白，让人怎么回答。而且不要问得太宽泛，不要问和演讲无关的。某些人问“XX老师您觉得电商的未来如何？”。这种问题有何意义啊。</li>
+</ul>
+<h1 id="如何做技术分享">如何做技术分享</h1>
+<p>只是一些我觉得应该注意的细节。</p>
+<ul>
+<li>画得不好的架构图不如不画。太简单没意义，太复杂听众也不懂。有人总喜欢用复杂的架构图标榜自己如何NB，我觉得很没必要。能讲清楚事情就可以了。</li>
+<li>别念ppt。不只是技术分享，所有的presentation都是。好的ppt应该没多少文字的。</li>
+<li>别罗列代码。在ppt里嵌代码要谨慎啊。这种过于细节的东西，很难保证所有人都理解。反而让人觉得讲师功力不够。就像看书一样，大篇的代码很容易让读者疲劳。</li>
+<li>不要怕短。有些人喜欢讲各种废话拖时间。。。10分钟能讲清楚的事情偏要讲半小时。</li>
+<li>不用刻意幽默。讲问题就好了。台上自己笑台下鸦雀无声，真的有点尴尬。。。</li>
+<li>数据说话。你说你的系统多么NB，那拿出数据来，支持了多大的业务量，跟已有的系统比较如何。</li>
+<li>不会的就老老实实承认。有些细节如果含糊带过，事后被人提问答不上来，就悲剧了。。。</li>
+</ul>
+<h1 id="其他">其他</h1>
+<ul>
+<li>深圳真温暖，回到杭州冻成狗。</li>
+<li>为啥前台妹子都是一口京腔。</li>
+<li>原来hu建人都用“fu联网”啊。</li>
+</ul>
+<p>总的来说，参加这种活动还是有点意思的，抱着观光旅游的心态就好。<br>回去继续干活去了。。。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>其实是跑到深圳参加了<a href="http://wot.51cto.com/2015bigdata/schedule.html" target="_blank" rel="external">某个会议</a>，简单总结下。</p>
+]]>
+    
+    </summary>
+    
+      <category term="杂谈" scheme="http://jxy.me/tags/%E6%9D%82%E8%B0%88/"/>
+    
+      <category term="hadoop" scheme="http://jxy.me/tags/hadoop/"/>
+    
+      <category term="bigdata" scheme="http://jxy.me/tags/bigdata/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[方法论？]]></title>
@@ -1260,49 +1359,6 @@
     </summary>
     
       <category term="hadoop" scheme="http://jxy.me/tags/hadoop/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[网络异常导致RM failover失败]]></title>
-    <link href="http://jxy.me/2015/05/04/network-error-fails-RM-HA/"/>
-    <id>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</id>
-    <published>2015-05-04T08:44:23.000Z</published>
-    <updated>2015-09-03T15:42:14.000Z</updated>
-    <content type="html"><![CDATA[<p>测试RM HA时发现一个JIRA：<a href="https://issues.apache.org/jira/browse/YARN-2578" target="_blank" rel="external">YARN-2578</a>。</p>
-<a id="more"></a>
-<p>以前我测试过重启RM所在机器/直接<code>kill -9</code>杀掉RM进程，都是可以正常failover的。</p>
-<p>在google的过程中发现这个jira，如果网络失败会导致RM failover失败。</p>
-<p>在虚拟机上重现这个bug：</p>
-<p>部署了一个3节点的集群（ubuntu 10.04，JDK7u75）<br>hadoop1：ZK、JN、StandbyNN、DN、NM<br>hadoop2：ZK、JN、ActiveNN、ActiveRM、DN、NM<br>hadoop3：ZK、JN、StandbyRM、DN、NM</p>
-<p>然后在hadoop2上执行<code>sudo ifconfig eth0 down</code>。<br>模拟网络挂掉的情况，相当于hadoop2跟其他节点网络都隔离开了。</p>
-<p>hadoop2上的RM日志：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">24</span>:<span class="number">24</span>,<span class="number">726</span> INFO org.apache.zookeeper.ClientCnxn: Client session timed out, have <span class="operator">not</span> heard <span class="built_in">from</span> server <span class="operator">in</span> <span class="number">26668</span>ms <span class="keyword">for</span> sessionid <span class="number">0x14d1d76951c0001</span>, closing <span class="built_in">socket</span> connection <span class="operator">and</span> attempting reconnect</div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">24</span>:<span class="number">24</span>,<span class="number">830</span> INFO org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore: Exception <span class="keyword">while</span> executing <span class="operator">a</span> ZK operation.</div><div class="line">org.apache.zookeeper.KeeperException$ConnectionLossException: KeeperErrorCode = ConnectionLoss</div><div class="line">	<span class="keyword">at</span> org.apache.zookeeper.KeeperException.<span class="built_in">create</span>(KeeperException.java:<span class="number">99</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.zookeeper.ZooKeeper.multiInternal(ZooKeeper.java:<span class="number">935</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.zookeeper.ZooKeeper.multi(ZooKeeper.java:<span class="number">915</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore$<span class="number">4.</span>run(ZKRMStateStore.java:<span class="number">888</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore$<span class="number">4.</span>run(ZKRMStateStore.java:<span class="number">885</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore$ZKAction.runWithCheck(ZKRMStateStore.java:<span class="number">1004</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore$ZKAction.runWithRetries(ZKRMStateStore.java:<span class="number">1023</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore.doMultiWithRetries(ZKRMStateStore.java:<span class="number">885</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore.access$<span class="number">500</span>(ZKRMStateStore.java:<span class="number">82</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore$VerifyActiveStatusThread.run(ZKRMStateStore.java:<span class="number">976</span>)</div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">24</span>:<span class="number">24</span>,<span class="number">831</span> INFO org.apache.hadoop.yarn.server.resourcemanager.recovery.ZKRMStateStore: Retrying operation <span class="command"><span class="keyword">on</span> <span class="title">ZK</span>. <span class="title">Retry</span> <span class="title">no</span>. <span class="title">1</span></span></div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">24</span>:<span class="number">25</span>,<span class="number">080</span> INFO org.apache.zookeeper.ClientCnxn: Opening <span class="built_in">socket</span> connection <span class="built_in">to</span> server hadoop3/<span class="number">192.168</span><span class="number">.177</span><span class="number">.140</span>:<span class="number">2181.</span> Will <span class="operator">not</span> attempt <span class="built_in">to</span> authenticate <span class="keyword">using</span> SASL (unknown error)</div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">24</span>:<span class="number">25</span>,<span class="number">080</span> ERROR org.apache.zookeeper.ClientCnxnSocketNIO: Unable <span class="built_in">to</span> <span class="built_in">open</span> <span class="built_in">socket</span> <span class="built_in">to</span> hadoop3/<span class="number">192.168</span><span class="number">.177</span><span class="number">.140</span>:<span class="number">2181</span></div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">24</span>:<span class="number">25</span>,<span class="number">081</span> WARN org.apache.zookeeper.ClientCnxn: Session <span class="number">0x14d1d76951c0000</span> <span class="keyword">for</span> server <span class="constant">null</span>, unexpected error, closing <span class="built_in">socket</span> connection <span class="operator">and</span> attempting reconnect</div><div class="line">java.net.SocketException: 网络不可达</div><div class="line">	<span class="keyword">at</span> sun.nio.ch.Net.connect0(Native Method)</div><div class="line">	<span class="keyword">at</span> sun.nio.ch.Net.connect(Net.java:<span class="number">465</span>)</div><div class="line">	<span class="keyword">at</span> sun.nio.ch.Net.connect(Net.java:<span class="number">457</span>)</div><div class="line">	<span class="keyword">at</span> sun.nio.ch.SocketChannelImpl.connect(SocketChannelImpl.java:<span class="number">670</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.zookeeper.ClientCnxnSocketNIO.registerAndConnect(ClientCnxnSocketNIO.java:<span class="number">277</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.zookeeper.ClientCnxnSocketNIO.connect(ClientCnxnSocketNIO.java:<span class="number">287</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.zookeeper.ClientCnxn$SendThread.startConnect(ClientCnxn.java:<span class="number">967</span>)</div><div class="line">	<span class="keyword">at</span> org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:<span class="number">1003</span>)</div></pre></td></tr></table></figure>
-
-<p>可以看到是zk客户端出错，不断尝试连接。</p>
-<p>这时，NN的failover正常。hadoop3虽然变成ActiveRM了，但没有NM到hadoop3上注册，跟jira中描述的症状一样。<br>为何NN failover正常呢？因为NN HA和RM HA的机制不同。DN会同时向ANN和SNN发送心跳。而NM只会向ActiveRM发送心跳。见<a href="/2015/05/02/hadoop-resourcemanager-recovery/">另一篇文章</a>。</p>
-<p>问题的根源在于NM发送心跳时没有超时机制，卡在了心跳那一步。</p>
-<p>过了大概15分钟，NM终于超时，重新向hadoop3注册。日志：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div></pre></td><td class="code"><pre><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">39</span>:<span class="number">48</span>,<span class="number">161</span> INFO org.apache.hadoop.io.retry.RetryInvocationHandler: Exception <span class="keyword">while</span> invoking nodeHeartbeat <span class="keyword">of</span> <span class="type">class</span> ResourceTrackerPBClientImpl <span class="keyword">over</span> rm1. Trying <span class="keyword">to</span> fail <span class="keyword">over</span> immediately.</div><div class="line">java.io.IOException: Failed <span class="function_start"><span class="keyword">on</span></span> <span class="keyword">local</span> exception: java.io.IOException: 没有到主机的路由; Host Details : <span class="keyword">local</span> host <span class="keyword">is</span>: <span class="string">"hadoop1/192.168.177.139"</span>; destination host <span class="keyword">is</span>: <span class="string">"hadoop2"</span>:<span class="number">8031</span>;</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.net.NetUtils.wrapException(NetUtils.java:<span class="number">764</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.ipc.Client.call(Client.java:<span class="number">1415</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.ipc.Client.call(Client.java:<span class="number">1364</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.ipc.ProtobufRpcEngine$Invoker.invoke(ProtobufRpcEngine.java:<span class="number">206</span>)</div><div class="line">        <span class="keyword">at</span> com.sun.proxy.$Proxy27.nodeHeartbeat(Unknown Source)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.yarn.server.api.impl.pb.client.ResourceTrackerPBClientImpl.nodeHeartbeat(ResourceTrackerPBClientImpl.java:<span class="number">80</span>)</div><div class="line">        <span class="keyword">at</span> sun.reflect.GeneratedMethodAccessor2.invoke(Unknown Source)</div><div class="line">        <span class="keyword">at</span> sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:<span class="number">43</span>)</div><div class="line">        <span class="keyword">at</span> java.lang.reflect.Method.invoke(Method.java:<span class="number">606</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.io.retry.RetryInvocationHandler.invokeMethod(RetryInvocationHandler.java:<span class="number">187</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.io.retry.RetryInvocationHandler.invoke(RetryInvocationHandler.java:<span class="number">102</span>)</div><div class="line">        <span class="keyword">at</span> com.sun.proxy.$Proxy28.nodeHeartbeat(Unknown Source)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.yarn.server.nodemanager.NodeStatusUpdaterImpl$<span class="number">1.</span><span class="command">run</span>(NodeStatusUpdaterImpl.java:<span class="number">512</span>)</div><div class="line">        <span class="keyword">at</span> java.lang.Thread.<span class="command">run</span>(Thread.java:<span class="number">745</span>)</div><div class="line">Caused <span class="keyword">by</span>: java.io.IOException: 没有到主机的路由</div><div class="line">        <span class="keyword">at</span> sun.nio.ch.FileDispatcherImpl.read0(Native Method)</div><div class="line">        <span class="keyword">at</span> sun.nio.ch.SocketDispatcher.<span class="command">read</span>(SocketDispatcher.java:<span class="number">39</span>)</div><div class="line">        <span class="keyword">at</span> sun.nio.ch.IOUtil.readIntoNativeBuffer(IOUtil.java:<span class="number">223</span>)</div><div class="line">        <span class="keyword">at</span> sun.nio.ch.IOUtil.<span class="command">read</span>(IOUtil.java:<span class="number">197</span>)</div><div class="line">        <span class="keyword">at</span> sun.nio.ch.SocketChannelImpl.<span class="command">read</span>(SocketChannelImpl.java:<span class="number">379</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.net.SocketInputStream$Reader.performIO(SocketInputStream.java:<span class="number">57</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.net.SocketIOWithTimeout.doIO(SocketIOWithTimeout.java:<span class="number">142</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.net.SocketInputStream.<span class="command">read</span>(SocketInputStream.java:<span class="number">161</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.net.SocketInputStream.<span class="command">read</span>(SocketInputStream.java:<span class="number">131</span>)</div><div class="line">        <span class="keyword">at</span> java.io.FilterInputStream.<span class="command">read</span>(FilterInputStream.java:<span class="number">133</span>)</div><div class="line">        <span class="keyword">at</span> java.io.FilterInputStream.<span class="command">read</span>(FilterInputStream.java:<span class="number">133</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.ipc.Client$Connection$PingInputStream.<span class="command">read</span>(Client.java:<span class="number">512</span>)</div><div class="line">        <span class="keyword">at</span> java.io.BufferedInputStream.fill(BufferedInputStream.java:<span class="number">235</span>)</div><div class="line">        <span class="keyword">at</span> java.io.BufferedInputStream.<span class="command">read</span>(BufferedInputStream.java:<span class="number">254</span>)</div><div class="line">        <span class="keyword">at</span> java.io.DataInputStream.readInt(DataInputStream.java:<span class="number">387</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.ipc.Client$Connection.receiveRpcResponse(Client.java:<span class="number">1055</span>)</div><div class="line">        <span class="keyword">at</span> org.apache.hadoop.ipc.Client$Connection.<span class="command">run</span>(Client.java:<span class="number">950</span>)</div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">39</span>:<span class="number">48</span>,<span class="number">203</span> INFO org.apache.hadoop.yarn.client.ConfiguredRMFailoverProxyProvider: Failing <span class="keyword">over</span> <span class="keyword">to</span> rm2</div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">39</span>:<span class="number">48</span>,<span class="number">211</span> WARN org.apache.hadoop.yarn.server.nodemanager.NodeStatusUpdaterImpl: Node <span class="keyword">is</span> <span class="keyword">out of</span> sync <span class="keyword">with</span> ResourceManager, hence resyncing.</div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">39</span>:<span class="number">48</span>,<span class="number">211</span> WARN org.apache.hadoop.yarn.server.nodemanager.NodeStatusUpdaterImpl: Message <span class="keyword">from</span> ResourceManager: Node <span class="keyword">not</span> found resyncing hadoop1:<span class="number">60618</span></div><div class="line"><span class="number">2015</span>-<span class="number">05</span>-<span class="number">04</span> <span class="number">14</span>:<span class="number">39</span>:<span class="number">48</span>,<span class="number">214</span> INFO org.apache.hadoop.yarn.server.nodemanager.NodeManager: Notifying ContainerManager <span class="keyword">to</span> block new container-requests</div></pre></td></tr></table></figure>
-
-<p>在这15分钟内，可以提交任务到RM，但任务是无法执行的。</p>
-<p>为何是15分钟？因为所有的RPC请求都有一个最基础的超时机制，见org.apache.hadoop.ipc.Client类。由两个参数控制：<br>ipc.client.connect.timeout，默认20秒<br>ipc.client.connect.max.retries.on.timeouts，默认重试45次<br>所以超时时间是(45-1)*20=880秒，约15分钟。</p>
-<p>jira上的patch也非常简单，换一个有超时参数的getProxy方法即可。</p>
-<p>hadoop的RPC机制还有点复杂的。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>测试RM HA时发现一个JIRA：<a href="https://issues.apache.org/jira/browse/YARN-2578" target="_blank" rel="external">YARN-2578</a>。</p>
-]]>
-    
-    </summary>
-    
-      <category term="hadoop" scheme="http://jxy.me/tags/hadoop/"/>
-    
-      <category term="resourcemanager" scheme="http://jxy.me/tags/resourcemanager/"/>
-    
-      <category term="nodemanager" scheme="http://jxy.me/tags/nodemanager/"/>
-    
-      <category term="HA" scheme="http://jxy.me/tags/HA/"/>
     
   </entry>
   
