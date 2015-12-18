@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2015-12-17T14:44:37.814Z</updated>
+  <updated>2015-12-18T10:15:46.429Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://jxy.me/2015/12/17/maven-tips/"/>
     <id>http://jxy.me/2015/12/17/maven-tips/</id>
     <published>2015-12-17T10:21:51.000Z</published>
-    <updated>2015-12-17T14:42:11.000Z</updated>
+    <updated>2015-12-18T10:14:39.000Z</updated>
     <content type="html"><![CDATA[<p>好久没有写豆知识系列了。<br>记录下使用中的一些问题。</p>
 <a id="more"></a>
 <h1 id="eclipse中maven项目的bug">eclipse中maven项目的bug</h1>
@@ -28,7 +28,7 @@
 <p>不确定这是bug，也许有配置可以改，但我没找到。</p>
 <h1 id="skipTests与maven-test-skip">skipTests与maven.test.skip</h1>
 <p>首先要知道<a href="https://maven.apache.org/guides/introduction/introduction-to-the-lifecycle.html" target="_blank" rel="external">maven生命周期</a>。<br>skipTests只是maven-surefire-plugin插件的一个参数，这个插件是maven自带的，默认绑定到test阶段。设置这个参数后，test阶段不会执行测试。<br>而maven.test.skip会影响更多插件，包括maven-resources-plugin（testResource阶段），maven-compiler-plugin（testCompile阶段），maven-surefire-plugin（test阶段）。换言之，和测试有关的所有阶段都会起作用。</p>
-<p>所以maven.test.skip是更彻底的跳过测试的方法。<br>直观的感受，就是如果src/main/test下的代码编译有问题，加上maven.test.skip就能防止整个项目构建失败。而只用skipTests则会在testCompile阶段失败。<br>但maven.test.skip也可能造成一些奇怪的问题，见<a href="http://stackoverflow.com/questions/24727536/maven-skip-tests" target="_blank" rel="external">这里</a>。</p>
+<p>所以maven.test.skip是更彻底的跳过测试的方法。<br>直观的感受，就是如果src/test/java下的代码编译有问题，加上maven.test.skip就能防止整个项目构建失败。而只用skipTests则会在testCompile阶段失败。<br>但maven.test.skip也可能造成一些奇怪的问题，见<a href="http://stackoverflow.com/questions/24727536/maven-skip-tests" target="_blank" rel="external">这里</a>。</p>
 <h1 id="report插件">report插件</h1>
 <p>maven本质上来说就是个插件的集合。<br>而插件分为两种，build插件和report插件。build插件会在default生命周期生效，配置在POM中的<code>&lt;build/&gt;</code>元素里；report插件会在site生命周期生效，配置在POM中的<code>&lt;reporting/&gt;</code>元素里。<br>根据配置的插件不同，<code>mvn site</code>命令会在target目录下生成不同的html报告，帮你了解项目的一些概况。<br>虽然大多数项目用不到，但挺好玩的。所以研究了下。</p>
 <p>常见的report插件（有一些插件既是build插件也是report插件）：</p>
