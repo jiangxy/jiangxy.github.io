@@ -128,6 +128,92 @@
           
           
             
+              <a class="post-title-link" href="/2015/04/07/hbase-switch-problem/">
+                交换机引起的hbase事故
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            发表于 2015-04-07
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/04/07/hbase-switch-problem/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/04/07/hbase-switch-problem/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          
+            <p>最近我们的hbase集群(0.98)突然出现写入很慢的情况。折腾了好几天。</p>
+
+            <div class="post-more-link text-center">
+              <a class="btn" href="/2015/04/07/hbase-switch-problem/#more">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/运维/">
+                #运维
+              </a>
+            
+              <a href="/tags/hbase/">
+                #hbase
+              </a>
+            
+          </div>
+        
+
+        
+
+        
+        
+          <div class="post-eof"></div>
+        
+      </div>
+    
+  </div>
+
+
+  
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/04/06/java-tips/">
                 java豆知识
               </a>
@@ -920,105 +1006,6 @@
 
         
         
-          <div class="post-eof"></div>
-        
-      </div>
-    
-  </div>
-
-
-  
-    
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/03/08/pages-dns/">
-                为github pages绑定域名
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          
-            发表于 2015-03-08
-          
-        </span>
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/03/08/pages-dns/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/08/pages-dns/"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </div>
-
-    
-      <div class="post-body">
-
-        
-        
-
-        
-          
-            <p>之前为了给blog绑定域名，折腾了很长时间，记录下。</p>
-<p>其实<a href="https://help.github.com/articles/about-custom-domains-for-github-pages-sites/" target="_blank" rel="external">github pages的帮助</a>已经说得很清楚了，有两种方式：</p>
-<ol>
-<li>A记录指向github pages的IP，这个IP可能会变；</li>
-<li>CNAME记录指向xxx.github.io；</li>
-</ol>
-<p>在自己的repo里再加一个CNAME文件即可。注意不要和域名的CNAME记录混淆。</p>
-<p>最初我用自己的域名<code>foolbear.me</code>的A记录设置，确实能成功，但要fan| qiang。。。</p>
-<p>我以为是github的IP被qiang了，于是换成CNAME方式。<br>按github的文档，CNAME方式有个问题，只能绑定二级域名，就是只能绑定<code>blog.foolbear.me</code>，而不能直接绑定<code>foolbear.me</code>。我用godaddy和linode的nameserver都测试过，确实无法直接在裸域名上新建CNAME记录。</p>
-<p>但<a href="https://www.dnspod.cn/" target="_blank" rel="external">DNSPod</a>可以。于是把域名的nameserver改成dnspod，直接新建一个<code>@</code>的CNAME记录指向jiangxy.github.io。<br>绑定确实成功了，但还是要fan| qiang。。。我这才意识到自己的域名被qiang了。。。</p>
-<p>只有http的访问被重置，而且是关键字屏蔽。比如<code>http://www.apple.com/foolbear.me</code>都会直接返回<code>链接被重置</code>，接下来几分钟之内都无法访问apple.com。。。</p>
-<p>我也很无奈。。。我没干啥啊。。。</p>
-<p>好在dns还是正常的，除了http外其他访问方式还正常。</p>
-<p>只能重新申请域名并绑定，终于成功了。</p>
-<p>这次申请了im的域名。原来的me域名只能绑定到linode上了。</p>
-
-          
-        
-      </div>
-    
-
-    
-      <div class="post-footer">
-        
-          <div class="post-tags">
-            
-              <a href="/tags/github-pages/">
-                #github pages
-              </a>
-            
-              <a href="/tags/dns/">
-                #dns
-              </a>
-            
-              <a href="/tags/域名/">
-                #域名
-              </a>
-            
-          </div>
-        
-
-        
-
-        
-        
       </div>
     
   </div>
@@ -1057,7 +1044,7 @@
       <p class="site-description motion-element">思绪偶尔在这里停留</p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">43</span>
+          <span class="site-state-item-count">44</span>
           <span class="site-state-item-name">日志</span>
         </div>
         <div class="site-state-item site-state-tags">
