@@ -577,7 +577,8 @@ td {
 .icon-archives,
 .icon-tags,
 .icon-about,
-.icon-feed {
+.icon-feed,
+.icon-books {
   font-size: 20px;
 }
 .icon-external-link {
@@ -630,6 +631,9 @@ td {
 }
 .icon-truck:before {
   content: "\e60d";
+}
+.icon-books:before {
+  content: "\e606";
 }
 .post pre,
 .post .highlight {
@@ -1030,7 +1034,7 @@ pre .javascript .function {
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: #03375e;
+  background: #362fb1;
 }
 .sidebar-nav {
   margin: 0;

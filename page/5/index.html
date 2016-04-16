@@ -27,7 +27,7 @@
 
 
 
-    <link rel="alternate" href="/atom.xml" title="foolbear's Pensieve" type="application/atom+xml" />
+    <link rel="alternate" href="/atom.xml" title="foolbear的冥想盆" type="application/atom+xml" />
 
 
 
@@ -46,7 +46,7 @@
   </script>
 
 
-  <title> foolbear's Pensieve </title>
+  <title> foolbear的冥想盆 </title>
 </head>
 
 <body>
@@ -62,7 +62,7 @@
         <span class="logo">
           <i class="icon-logo"></i>
         </span>
-        <span class="site-title">foolbear's Pensieve</span>
+        <span class="site-title">foolbear的冥想盆</span>
     </a>
 </h1>
 
@@ -94,6 +94,14 @@
       </li>
     
       
+      <li class="menu-item menu-item-books">
+        <a href="/2016/04/16/gitbook/">
+          <i class="menu-item-icon icon-books"></i> <br />
+          书目
+        </a>
+      </li>
+    
+      
       <li class="menu-item menu-item-about">
         <a href="/about">
           <i class="menu-item-icon icon-about"></i> <br />
@@ -116,6 +124,97 @@
 
           <div id="posts" class="posts-expand">
             
+  
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              <a class="post-title-link" href="/2015/03/10/hadoop-lzo-and-snappy/">
+                hadoop中的lzo和snappy
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            发表于 2015-03-10
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/03/10/hadoop-lzo-and-snappy/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/10/hadoop-lzo-and-snappy/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          
+            <p>澄清一些相关概念。</p>
+<p>Lempel-Ziv是一种编码方式（类比霍夫曼编码），特点是字典小速度快：<a href="http://zh.wikipedia.org/wiki/LZW" target="_blank" rel="external">http://zh.wikipedia.org/wiki/LZW</a><br>在这个理论的基础上实现了很多压缩算法，包括lzo/lzf/lz4/lzw/snappy等等。snappy特殊，不是lz前缀。<br><a href="http://en.wikibooks.org/wiki/Data_Compression/Dictionary_compression" target="_blank" rel="external">http://en.wikibooks.org/wiki/Data_Compression/Dictionary_compression</a></p>
+<p>这里只考虑lzo和snappy，这两个用的比较广泛。<br>它们的共同特点是压缩比小、压缩/解压快（更注重解压速度）、不耗CPU、会占用一些内存。snappy相对更快。<br>
+            <div class="post-more-link text-center">
+              <a class="btn" href="/2015/03/10/hadoop-lzo-and-snappy/#more">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/hadoop/">
+                #hadoop
+              </a>
+            
+              <a href="/tags/lzo/">
+                #lzo
+              </a>
+            
+              <a href="/tags/snappy/">
+                #snappy
+              </a>
+            
+          </div>
+        
+
+        
+
+        
+        
+          <div class="post-eof"></div>
+        
+      </div>
+    
+  </div>
+
+
   
     
 
@@ -508,11 +607,11 @@
       <p class="site-description motion-element">思绪偶尔在这里停留</p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-count">45</span>
           <span class="site-state-item-name">日志</span>
         </div>
         <div class="site-state-item site-state-tags">
-            <span class="site-state-item-count">34</span>
+            <span class="site-state-item-count">35</span>
             <span class="site-state-item-name">标签</span>
         </div>
         <div class="site-state-item site-state-pages">
