@@ -136,6 +136,94 @@
           
           
             
+              <a class="post-title-link" href="/2015/03/21/hexo-theme-sync/">
+                同步hexo主题
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            发表于 2015-03-21
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/03/21/hexo-theme-sync/#comments" >
+              <span class="post-comments-count ds-thread-count" data-thread-key="2015/03/21/hexo-theme-sync/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          
+            <p>我<a href="/2015/03/07/hexo-and-git/">上一篇文章</a>中使用git在不同机器间同步。<br>主题作者一直在增加新功能，我偶尔会修改下主题的样式，如何应用到我自己的站点里？<br>其实就是git的submodule的用法。</p>
+<p>以下操作在公司的pc上</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor"># 首先clone我自己的repo</span></div><div class="line">git clone ssh:<span class="comment">//foolbear@foolbear.me:8086/home/foolbear/git-repo/hexo-theme-next.git</span></div><div class="line"><span class="preprocessor"># 添加一个github的remote</span></div><div class="line">git remote add github git@github.com:iissnan/hexo-theme-next.git</div><div class="line"><span class="preprocessor"># 将作者的一些更新合并到我自己的分支</span></div><div class="line">git pull github master</div><div class="line">git checkout foolbear</div><div class="line">git merge master</div><div class="line"><span class="preprocessor"># 肯定会有些冲突，解决冲突后commit</span></div><div class="line">git commit -m <span class="string">"xxx"</span></div><div class="line"><span class="preprocessor"># 修改后的foolbear分支push到我自己的repo</span></div><div class="line">git push origin foolbear</div></pre></td></tr></table></figure>
+
+<p>以下操作在我自己笔记本上</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">cd</span> themes/<span class="keyword">next</span></div><div class="line">git pull</div><div class="line">git checkout foolbear</div></pre></td></tr></table></figure>
+
+<p>概念上是很简单的，只是记录下。</p>
+
+          
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/hexo/">
+                #hexo
+              </a>
+            
+              <a href="/tags/git/">
+                #git
+              </a>
+            
+          </div>
+        
+
+        
+
+        
+        
+          <div class="post-eof"></div>
+        
+      </div>
+    
+  </div>
+
+
+  
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/03/14/just-for-fun/">
                 《Just for fun —— Linus Torvalds自传》
               </a>
@@ -695,11 +783,11 @@
       <p class="site-description motion-element">思绪偶尔在这里停留</p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">46</span>
+          <span class="site-state-item-count">47</span>
           <span class="site-state-item-name">日志</span>
         </div>
         <div class="site-state-item site-state-tags">
-            <span class="site-state-item-count">36</span>
+            <span class="site-state-item-count">37</span>
             <span class="site-state-item-name">标签</span>
         </div>
         <div class="site-state-item site-state-pages">
