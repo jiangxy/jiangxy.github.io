@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://jxy.me/2016/10/02/docker-for-mac/</loc>
+    <lastmod>2016-10-05T04:10:29.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2016/09/06/zhen-second-hand-qianduan/</loc>
     <lastmod>2016-09-15T16:44:48.000Z</lastmod>
   </url>
@@ -67,7 +72,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
+    <loc>http://jxy.me/2015/06/10/linux-tips/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -82,12 +87,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/07/06/hbase-tips/</loc>
+    <loc>http://jxy.me/2015/04/07/hbase-switch-problem/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/07/hbase-switch-problem/</loc>
+    <loc>http://jxy.me/2015/07/06/hbase-tips/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -102,32 +107,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/21/hexo-theme-sync/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/07/19/interview-summary/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/16/kerberos-tips/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/05/19/linode-qianged/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/02/23/foolbear-hexo-init/</loc>
+    <loc>http://jxy.me/2015/03/21/hexo-theme-sync/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -137,12 +122,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/10/linux-tips/</loc>
+    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/23/beyond-8-hours/</loc>
+    <loc>http://jxy.me/2015/04/16/kerberos-tips/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -152,12 +137,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/01/ha-and-zookeeper/</loc>
+    <loc>http://jxy.me/2015/02/23/foolbear-hexo-init/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/01/multiple-namenode/</loc>
+    <loc>http://jxy.me/2015/05/19/linode-qianged/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -167,32 +157,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/05/04/hadoop-2-5-2-min-conf/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/01/nodemanager-suicide/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/07/06/scheduler-diff-2-5-2/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/27/some-gossip/</loc>
+    <loc>http://jxy.me/2015/03/23/beyond-8-hours/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -202,32 +167,47 @@
   </url>
   
   <url>
+    <loc>http://jxy.me/2015/06/01/multiple-namenode/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/05/04/hadoop-2-5-2-min-conf/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/01/nodemanager-suicide/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/07/06/scheduler-diff-2-5-2/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2015/06/10/socket-exhausted-deadnode/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/24/some-thoughts/</loc>
+    <loc>http://jxy.me/2015/06/27/some-gossip/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/09/hadoop-ha-active-nn/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/16/standby-namenode-slow-web/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/01/checkpoint-error/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/05/15/yarn-container-executor/</loc>
+    <loc>http://jxy.me/2015/04/01/ha-and-zookeeper/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -237,7 +217,27 @@
   </url>
   
   <url>
+    <loc>http://jxy.me/2015/04/16/standby-namenode-slow-web/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/24/some-thoughts/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/05/15/yarn-container-executor/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2015/04/30/yarn-resource-scheduler/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/06/01/checkpoint-error/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -247,12 +247,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/tags/index.html</loc>
+    <loc>http://jxy.me/404.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/404.html</loc>
+    <loc>http://jxy.me/2015/04/09/hadoop-ha-active-nn/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/tags/index.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
