@@ -82,7 +82,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/10/hadoop-lzo-and-snappy/</loc>
+    <loc>http://jxy.me/2015/05/02/hadoop-resourcemanager-recovery/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -102,12 +102,17 @@
   </url>
   
   <url>
+    <loc>http://jxy.me/2015/03/07/hexo-and-git/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2015/06/09/hdfs-data-visibility/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/07/hexo-and-git/</loc>
+    <loc>http://jxy.me/2015/02/26/endless-tech/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -122,11 +127,6 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/16/kerberos-tips/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
@@ -137,12 +137,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/02/26/endless-tech/</loc>
+    <loc>http://jxy.me/2015/06/10/linux-tips/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/10/linux-tips/</loc>
+    <loc>http://jxy.me/2015/05/19/linode-qianged/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -157,17 +157,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/08/05/goodbye-netease/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/06/02/funny-federation/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/tags/index.html</loc>
+    <loc>http://jxy.me/2015/08/05/goodbye-netease/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/404.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -177,17 +177,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/05/04/hadoop-2-5-2-min-conf/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/01/nodemanager-suicide/</loc>
+    <loc>http://jxy.me/2015/06/27/hadoop-and-windows/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -207,7 +197,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/24/some-thoughts/</loc>
+    <loc>http://jxy.me/2015/04/01/nodemanager-suicide/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/05/04/hadoop-2-5-2-min-conf/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -217,17 +217,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/01/ha-and-zookeeper/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/27/hadoop-and-windows/</loc>
+    <loc>http://jxy.me/2015/03/24/some-thoughts/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://jxy.me/2015/04/16/standby-namenode-slow-web/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/01/ha-and-zookeeper/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -252,17 +252,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/404.html</loc>
+    <loc>http://jxy.me/tags/index.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/05/02/hadoop-resourcemanager-recovery/</loc>
+    <loc>http://jxy.me/2015/03/10/hadoop-lzo-and-snappy/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/05/19/linode-qianged/</loc>
+    <loc>http://jxy.me/2015/04/16/kerberos-tips/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
