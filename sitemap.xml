@@ -2,6 +2,16 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://jxy.me/2016/10/24/1024-festival/</loc>
+    <lastmod>2016-11-06T09:03:39.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/06/java-tips/</loc>
+    <lastmod>2016-11-06T08:03:51.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2016/10/02/docker-for-mac/</loc>
     <lastmod>2016-10-05T05:09:31.000Z</lastmod>
   </url>
@@ -72,12 +82,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/10/linux-tips/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/05/02/hadoop-resourcemanager-recovery/</loc>
+    <loc>http://jxy.me/2015/03/10/hadoop-lzo-and-snappy/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -107,22 +112,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/07/19/interview-summary/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/03/21/hexo-theme-sync/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/06/java-tips/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
+    <loc>http://jxy.me/2015/07/19/interview-summary/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -132,27 +127,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/02/26/endless-tech/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/02/23/foolbear-hexo-init/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/05/19/linode-qianged/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/02/funny-federation/</loc>
+    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -162,7 +137,37 @@
   </url>
   
   <url>
+    <loc>http://jxy.me/2015/02/26/endless-tech/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/06/10/linux-tips/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/02/23/foolbear-hexo-init/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2015/08/05/goodbye-netease/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/06/02/funny-federation/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/tags/index.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -177,7 +182,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</loc>
+    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -187,7 +192,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
+    <loc>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -198,6 +203,11 @@
   
   <url>
     <loc>http://jxy.me/2015/06/10/socket-exhausted-deadnode/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/24/some-thoughts/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -222,17 +232,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/24/some-thoughts/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/05/15/yarn-container-executor/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/30/yarn-resource-scheduler/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -242,12 +242,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/10/hadoop-lzo-and-snappy/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/404.html</loc>
+    <loc>http://jxy.me/2015/04/30/yarn-resource-scheduler/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -257,7 +252,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/tags/index.html</loc>
+    <loc>http://jxy.me/404.html</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/05/02/hadoop-resourcemanager-recovery/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/05/19/linode-qianged/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
