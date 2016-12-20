@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2016-11-09T05:11:49.689Z</updated>
+  <updated>2016-12-20T11:24:59.742Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -13,6 +13,83 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[不务正业again]]></title>
+    <link href="http://jxy.me/2016/12/07/wx-applet/"/>
+    <id>http://jxy.me/2016/12/07/wx-applet/</id>
+    <published>2016-12-07T10:06:50.000Z</published>
+    <updated>2016-12-20T11:21:25.000Z</updated>
+    <content type="html"><![CDATA[<p>又一次不务正业，研究了下微信小程序。</p>
+<p>其实微信小程序已经火了好久了。几个月之前内测的时候，很多人就迫不及待去研究，各种破解资料、教程满天飞。公司内部也专门组织人去学习了下。<br>可惜当时我事情比较多，只是打了个酱油，等公测开始才真正去研究了下。<a href="https://github.com/jiangxy/wxapplet-canvas-demo" target="_blank" rel="external">写了个简单的小游戏</a>，算是对小程序有了个大概的了解。话说最好的学习方式果然还是实践。古人云：“纸上得来终觉浅，须知此事要躬行”。</p>
+<p><strong>本文不是一个教程</strong>，只是总结下学习过程中的感想。</p>
+<a id="more"></a>
+<h1 id="初印象">初印象</h1>
+<p>其实最早的传闻，是微信要做一个叫“服务号”的东西，老大说要我们关注下，但完全没有头绪，网上也没有啥靠谱的资料。</p>
+<p>题外话，我一直觉得微信的生态好复杂，订阅号/服务号/企业号傻傻分不清楚，公众平台/开放平台到底是啥关系，工作中碰到各种openId/unionId、各种授权的问题也总是会晕。而且这个生态特别封闭，自成体系，微信会管的很多，比如外链的限制、对外部接口的限制等等。这倒是和appstore有点像。<br>在这种封闭的生态中做开发，其实挺难受的。。。但生态封闭、开发难受，用户体验就能得到保证。参考ios vs android。而且，能做出这样一个生态真是挺NB的，不得不服。</p>
+<p>另外，总有人纠结HTML5 vs H5，我觉得这种纠结很无聊啊。写作<code>HTML5</code>就比<code>H5</code>高大上了？有人看到H5就一定要去纠正一下：“你这样是不对的，应该是<code>HTML5</code>，H5是中国人自己发明的叫法”，以此彰显自己的专业。知乎上这种风气尤甚。你咋不说茴字有四种写法呢╮(╯_╰)╭？嘛，你们开心就好，我反正是个二手前端，图省事一般都叫做H5。</p>
+<p>小程序的<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/structure.html?t=20161122" target="_blank" rel="external">结构</a>还是比较简单的，无非是<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxml/?t=20161122" target="_blank" rel="external">WXML</a>和<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxss.html?t=20161122" target="_blank" rel="external">WXSS</a>解决视图层的问题，JS解决逻辑层的问题。WXML和WXSS可以认为是HTML和CSS的方言，只是有些特殊的限制，其实经过编译之后还是HTML和CSS。这套逻辑和各种概念早就被各种JS的MVVM框架玩烂了，实在没啥新鲜的。<br>WXML除了常规的数据绑定/模版/引用等概念，值得注意的是<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxml/event.html?t=20161122" target="_blank" rel="external">事件绑定</a>，和普通的HTML不同，不过用起来挺顺手的。<br>WXSS和CSS没啥区别，写起来还是一样的痛苦。。。我本来还期望着微信能有什么方法解决布局的问题，释放二手前端生产力。。。为啥前端一直没有一种可视化的布局工具嘞？像若干年的VB6一样，拖拖拽拽就能搭出一个页面。mac上有个软件<a href="http://www.maczapp.com/sparkle-pro-visual-web-design" target="_blank" rel="external">Sparkle</a>实现了类似的想法，可是不太好用。</p>
+<p>因为我之前有研究过一点React，于是学习小程序的过程中总是会不自觉的和React对比。小程序也确实和React有点像。比如<code>setData</code>明显就是抄的<code>setState</code>，还有组件化/生命周期等概念。但用户无法自定义组件是一大问题，而且只有页面级别的组件，也许这是微信为了降低开发复杂度而做的妥协吧。<br>应该说，页面是唯一的“容器组件”，所有的状态都在页面组件中。另外<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/app-service/page.html?t=20161122" target="_blank" rel="external">页面路由</a>的管理也真是很迷。。。经常有些诡异的状况出现。</p>
+<p>在视图层，微信提供了一些可用的<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/component/?t=20161122" target="_blank" rel="external">基础组件</a>，这些应该被称为“UI组件”（感觉是脱胎于<a href="https://mp.weixin.qq.com/wiki/2/ae9782fb42e47ad79eb7b361c2149d16.html" target="_blank" rel="external">WeUI</a>），最大意义在于提供统一的视觉风格，跟React的组件不是一个概念。还不是很完善，尤其是对比Ant Design之类的。不知道什么时候会有小程序的第三方UI KIT。</p>
+<p>小程序在WXML中绑定数据的逻辑又和angular有点像。不过我挺喜欢<a href="http://mustache.github.io/" target="_blank" rel="external">Mustache</a>的语法的，有点像jsx表达式，但区别也很多。<br>WXML中的模版概念，感觉也是从angular中搞过来的。</p>
+<p>总的来说，小程序开发框架（传说这个框架名字叫MINA？）就是个大杂烩，吸收了各种JS框架的理念，同时加入一些自己<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/api/?t=20161122" target="_blank" rel="external">特有的API</a>（我要吐槽微信的canvas API真是超难用，跟标准的canvas完全不一样，让我找到了小学用logo语言画图的感觉。。。）。<br>如果你之前使用过一些MVVM框架，那小程序完全没啥学习成本，直接就能上手。<br>就算之前没有接触过，相对于让人望而生畏的厚厚一本《Angular JS实战》/《深入React技术栈》，小程序对新手无疑也要友好很多。</p>
+<h1 id="一些思考">一些思考</h1>
+<p>由于工作原因，我接触过一些<a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html" target="_blank" rel="external">JS-SDK</a>。在我看来，使用了JS-SDK的H5页面已经可以很接近原生app的体验了，可以调用各种原生app的能力，除了慢点。参考微信自带的理财通。</p>
+<p>那问题来了，微信小程序就是加强版的JS-SDK么？小程序和普通的H5区别在哪里？为啥微信要再造个轮子？</p>
+<p>我的感觉：<br><strong>1.运行时&amp;效率的不同</strong><br>这是最重要的区别。之前有消息说小程序使用了ReactNative。我以为是编译成native代码执行，但目测不是啊。摘自微信官方文档：</p>
+<blockquote>微信小程序运行在三端：iOS、Android 和 用于调试的开发者工具<br><br>在 iOS 上，小程序的 javascript 代码是运行在 JavaScriptCore 中<br>在 Android 上，小程序的 javascript 代码是通过 X5 内核来解析<br>在 开发工具上， 小程序的 javascript 代码是运行在 nwjs（chrome内核） 中</blockquote>
+
+<p>看来小程序的代码还是要有一个JS运行时环境去支持的。但微信应该有做过一些优化，坊间传言视图层（WXML中的块级元素）的渲染都是native的。否则打开微信小程序=扫码打开一个网页，那也太low了吧。。。至于是否有其他优化策略，还不得而知。<br>而普通的H5么，因为是用浏览器打开，效率明显会低一些。iOS上微信会调用系统自带的浏览器内核，Android上会使用内嵌的QQ浏览器X5内核（所以一直被吐槽是手机上的IE6）。</p>
+<p><strong>2.简化&amp;规范开发流程，约定大于配置</strong><br>相比开发一个H5页面，开发一个小程序的难度是很低的。摘自微信官方文档：</p>
+<blockquote>小程序开发框架的目标是通过尽可能简单、高效的方式让开发者可以在微信中开发具有原生 APP 体验的服务。</blockquote>
+
+<p>如果想用H5+JS-SDK实现类似于原生APP的体验，无疑是超级麻烦的，光是各种设备的适配就能搞个半死。。。而且使用标准的HTML时，要去关注很多跟业务逻辑无关的东西，比如各种<code>&lt;meta&gt;</code>标签、<code>&lt;script&gt;</code>的顺序、CSS属性的各种特定前缀之类的。<br>而小程序将这些复杂的事情都交给框架去做，同时对工程结构做了很多约定，简化了开发流程。从某种意义上说，JS-SDK只是个“工具”，而小程序才是真正的“框架”，就是jquery和react的区别。<br>这也是所谓的DRY原则。</p>
+<p><strong>3.重新整合微信特有的API</strong><br>小程序提供了各种微信特有的API，比如登录/微信支付/照片/设备信息等等。我对比了下JS-SDK提供的API，发现二者是互相交叉的，小程序去掉了JS-SDK中很多用不到的API，而且小程序的API也好用很多。或者说，原来的JS-SDK的API设计的太烂了。。。用过的没有不吐槽的。</p>
+<p>不过小程序应该也从JS-SDK借鉴了很多经验。</p>
+<p><strong>4.增加对生态的控制力</strong><br>微信的生态一直是封闭的。而H5很难控制，你不知道一个页面是做什么用的，打开之后会发生什么，请求哪些服务端，也很难封杀。同样的页面内容，完全可以换个马甲就出来了。。。从战略上来说，对整个生态是不利的。<br>而小程序请求哪些域名、能做什么事、呈现什么内容，可以说完全在微信的控制之下。尤其是上架还要经过审核，想改就改，想封杀就封杀。越来越像老大哥了啊。。。对于所有的权利集团而言，当然是权利越集中对自己越有利啊。</p>
+<p><strong>5.渠道的问题</strong><br>微信小程序的入口现在还不清楚。有说是二级菜单的，有说是像公众号一样的，甚至有说可以直接放在系统桌面的（估计只有android能做到这种吧，桌面widget）。不过不管怎样，相比只能在朋友圈里以url形式传播的H5页面，小程序的渠道肯定更丰富吧，离用户更近，也就更容易获得流量。</p>
+<p>说到底，大家为什么这么看好小程序，还不是因为微信巨大的流量，9亿的注册用户，5亿的月活，还自带社交渠道的推广属性，怎么想都是很诱人。关键就看腾讯爸爸怎么分配入口和流量了。。。如果能拿到更核心的社交关系数据，想象空间更是无限大，不过这个腾讯肯定是不会给的，毕竟隐私策略也是个大问题。</p>
+<p>个人感觉，小程序的关键在于“小”。小就意味着简单：开发简单，不需要投入太多；使用简单，用户进入后很快找到需要的功能，不会有太多的干扰因素；功能上也应该简单，即开即用，用完就走，不需要有什么顾虑。很多公司开发小程序，就是把自己已有的APP原样照搬过去，俺对此持保留意见。。。<br>感觉上，用户在打开一个小程序之前，就应该知道要干什么，知道要打开哪个程序。程序被打开后，让用户做完想做的事就可以了，而不要提供各种乱七八糟的额外功能。小程序应该专注于特定的本职功能。<br>所以我觉得一些工具类/游戏类的小程序会比较契合主题，一些“大而全”的小程序反而是理念有问题。可以参考下小程序的<a href="https://mp.weixin.qq.com/debug/wxadoc/design/index.html?t=20161109" target="_blank" rel="external">设计指南</a>。</p>
+<p>还有啊，为啥大家默认小程序就是H5页面？各种视觉、交互都是按照网页的风格去设计，很多原来的在线H5设计工具，改一改就号称是小程序在线设计了。。。如果打开小程序就等于是打开了一个浏览器，那还有啥意思。<br>我理想中的小程序，应该是体验和native app一样的，用户打开app时，不应该明显的感觉到从app进入到了一个网页。用户都不傻的，“画风突变”还是能分别出来的。<br>我在使用一些APP时，碰到这种画风突变的情况，也会很蛋疼。。。不管你背后的技术是native还是H5还是hybird，至少体验要一致吧。</p>
+<p>小程序一出来，很多人就叫嚣着“H5要取代app”，“H5开发需求要爆发”，“微信将统一所有APP”，“ios/android开发要失业”。。。嗯，开心就好。。。<br>这让我想到Facebook Messenger刚推出<a href="https://developers.facebook.com/docs/messenger-platform/product-overview" target="_blank" rel="external">Bot平台</a>时，大家也是各种激动，号称以后各种APP都将消亡，很多用户需求都将在Bot上满足，人工智能将迎来春天。甚至Bot上将形成自己的appstore。<br>乐观是好的，但忽悠人就不对了。客观的说，冲击肯定是有的，但说取代APP还为时过早。微信对APP的冲击从公众号时代就开始了。现在我们试水一个新业务，很多都是先做一个公众号而不是APP。至于小程序会带来哪些改变，谁知道呢，上帝的归上帝，凯撒的归凯撒吧。对个人而言，多关注些业界，多了解些技术总是不会错的，但也没必要过度反应。</p>
+<p>之前不是也有好多人担心微信能不能过appstore审核。如果微信小程序真的能发展到威胁appstore的程序，苹果也不会坐视不理吧。之前为啥ios封杀flash，安全/性能只是一方面，更大的原因是flash“不受控”，adobe完全可以在flash上发展出自己的生态，flash生态中的应用/用户/数据，都完全不受控制。</p>
+<p>不管怎样，拭目以待吧。</p>
+<h1 id="Hybird">Hybird</h1>
+<p>我对APP开发的经验是0，仅有的一点点经验来自React Native。但平常跟各个APP的同学打交道还是比较多的，也知道一些概念。对Hybird这个概念一直比较模糊，正好顺道google下。</p>
+<p>Hybird也就是所谓的混合开发，一个APP中，部分使用native实现，部分使用H5实现。一般而言展示性强的页面偏向于H5，功能性强的页面偏向于native。但也没有定式。好处嘛就是降低开发成本，但出现问题调试也比较麻烦。<br>我以前一直以为所谓的Hybird APP就是一个浏览器。。。所有的页面都是H5的，app本身只负责提供一些底层的接口。看了<a href="http://www.infoq.com/cn/articles/hybrid-app-development-combat" target="_blank" rel="external">这篇文章</a>才知道，Hybird也分很多种，H5甚至可以只负责局部的渲染。</p>
+<p>感觉上，React Native应该不算Hybird吧，毕竟它是编译成原生代码。有点像编译型语言和解释型语言的区别。</p>
+<p>H5和native通信的组件被称为JsBridge，但似乎没有一个标准的规范？各家APP都有自己的实现，个人没事也可以写一个玩，基本就是在原生的WebView上各种hack，拦截H5页面请求的一些特殊的url（比如<code>weidian://methodName?k1=v1&amp;k2=v2</code>）再做出相应的处理。微信的JS-SDK调用native API也是同样的道理。<br>通过JS调用java方法，想想还是挺带感的。。。</p>
+<p>话说，我最早记住的Hybird开发工具是<a href="https://www.xamarin.com/" target="_blank" rel="external">Xamarin</a>，忘了是从哪里看到的了。我一看这名字，“厦门人”，哎呦有个性啊。。。</p>
+<h1 id="参考资料">参考资料</h1>
+<p>小程序现在不需要去看第三方的破解资料了，直接看<a href="https://mp.weixin.qq.com/debug/wxadoc/introduction/index.html?t=20161122" target="_blank" rel="external">官方文档</a>就好。</p>
+<p>腾讯云的小程序解决方案，能解决很多问题，session/websocket/https证书/域名之类的，但要有内测资格才能使用，而且收费：<br><a href="https://www.qcloud.com/solution/la.html" target="_blank" rel="external">https://www.qcloud.com/solution/la.html</a><br><a href="https://github.com/tencentyun/weapp-solution" target="_blank" rel="external">https://github.com/tencentyun/weapp-solution</a></p>
+<p>两个用于小程序界面设计的在线工具：<br><a href="http://www.coolsite360.com/wxapp/" target="_blank" rel="external">http://www.coolsite360.com/wxapp/</a><br><a href="http://jisuapp.cn/" target="_blank" rel="external">http://jisuapp.cn/</a></p>
+<p>一个小程序论坛，有很多开源代码：<br><a href="https://weappdev.com/" target="_blank" rel="external">https://weappdev.com/</a></p>
+<p>对小程序比较透彻的分析：<br><a href="https://github.com/phodal/weapp-quick" target="_blank" rel="external">https://github.com/phodal/weapp-quick</a></p>
+<p>一个比较好的小程序教程：<br><a href="https://segmentfault.com/a/1190000007033827" target="_blank" rel="external">https://segmentfault.com/a/1190000007033827</a></p>
+<p>两个纯用canvas做的小游戏，当作canvas入门挺好的：<br><a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript</a><br><a href="http://www.w3schools.com/graphics/game_intro.asp" target="_blank" rel="external">http://www.w3schools.com/graphics/game_intro.asp</a></p>
+<p>CSS布局教程，对我这样CSS苦手的人是一大福音：<br><a href="http://zh.learnlayout.com/toc.html" target="_blank" rel="external">http://zh.learnlayout.com/toc.html</a></p>
+<h1 id="碎碎念">碎碎念</h1>
+<ol>
+<li>JS真是无所不在，不光能写移动端的，还能写桌面端的。。。微信官方的开发工具其实就是个react应用，见<a href="https://www.phodal.com/blog/weapp-demo-process-webkit-app/" target="_blank" rel="external">这篇文章</a>的分析。这种技术被称为<a href="http://nwjs.io/" target="_blank" rel="external">node-webkit</a>，感觉就是桌面版的Hybird啊，有空研究下。</li>
+<li>canvas是个好东西。理论上在canvas中可以做任意事情，发挥自己的想象力。Flipboard甚至搞出个<a href="https://github.com/Flipboard/react-canvas" target="_blank" rel="external">react-canvas</a>，所有UI都在canvas上绘制，真是有毅力。据说是为了避免DOM的性能问题？有空研究下。</li>
+<li>强烈要求微信改进开发者工具，至少要可以自定义背景色和字体，白背景看得眼睛好痛。而且字体也太小了，也不支持html/css的格式化。</li>
+<li>最近手贱<code>rm -rf /</code>了一下。。。这种事我一直是当作段子来看的啊，没想到居然会发生在我身上。看来不能高估自己的san值。</li>
+<li>无论什么语言、框架、工具，甚至无论什么事情，生活中/工作上，<strong>想象力</strong>都是最重要的，它决定了一个人的上限。做出有想象力的作品是很难的，只会循规蹈矩很难有出路。为啥会有这个感慨呢，因为组里有个树莓派，在想能拿来干点啥。。。google的过程中惊叹于各种神奇的作品。有时候脑洞大点真不是坏事。</li>
+<li>最近稍微看了些<a href="https://zh.wikipedia.org/wiki/%E5%B0%BD%E7%AE%A1%E5%8E%BB%E5%81%9A" target="_blank" rel="external">GTD</a>相关的东西，在想要不要搞下“规范的”时间管理。这种方法论呢，<a href="http://www.mifengtd.cn/articles/do-you-need-a-complete-gtd.html" target="_blank" rel="external">没有定式</a>，不要沦为单纯的使用工具，适合自己的才是最好的。</li>
+</ol>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>又一次不务正业，研究了下微信小程序。</p>
+<p>其实微信小程序已经火了好久了。几个月之前内测的时候，很多人就迫不及待去研究，各种破解资料、教程满天飞。公司内部也专门组织人去学习了下。<br>可惜当时我事情比较多，只是打了个酱油，等公测开始才真正去研究了下。<a href="https://github.com/jiangxy/wxapplet-canvas-demo" target="_blank" rel="external">写了个简单的小游戏</a>，算是对小程序有了个大概的了解。话说最好的学习方式果然还是实践。古人云：“纸上得来终觉浅，须知此事要躬行”。</p>
+<p><strong>本文不是一个教程</strong>，只是总结下学习过程中的感想。</p>
+]]>
+    
+    </summary>
+    
+      <category term="小程序" scheme="http://jxy.me/tags/%E5%B0%8F%E7%A8%8B%E5%BA%8F/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[壹〇二四]]></title>
@@ -1658,89 +1735,6 @@
     </summary>
     
       <category term="杂谈" scheme="http://jxy.me/tags/%E6%9D%82%E8%B0%88/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[hadoop与windows]]></title>
-    <link href="http://jxy.me/2015/06/27/hadoop-and-windows/"/>
-    <id>http://jxy.me/2015/06/27/hadoop-and-windows/</id>
-    <published>2015-06-27T05:40:21.000Z</published>
-    <updated>2015-09-03T15:42:14.000Z</updated>
-    <content type="html"><![CDATA[<p>以前写的一篇文章。<br>折腾了下windows下的编译、部署、使用。纯粹为了好玩，肯定不能用于生产环境。</p>
-<a id="more"></a>
-<h1 id="在windows中编译hadoop">在windows中编译hadoop</h1>
-<p>以2.5.2的代码为基准。系统为32位WinXP SP3（虚拟机）。</p>
-<h2 id="前置要求">前置要求</h2>
-<p>看BUILDING.txt：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">Building <span class="function_start"><span class="keyword">on</span></span> Windows</div><div class="line"></div><div class="line"><span class="comment">----------------------------------------------------------------------------------</span></div><div class="line">Requirements:</div><div class="line"></div><div class="line">* Windows System</div><div class="line">* JDK <span class="number">1.6</span>+</div><div class="line">* Maven <span class="number">3.0</span> <span class="keyword">or</span> later</div><div class="line">* Findbugs <span class="number">1.3</span><span class="number">.9</span> (<span class="keyword">if</span> <span class="property">running</span> findbugs)</div><div class="line">* ProtocolBuffer <span class="number">2.5</span><span class="number">.0</span></div><div class="line">* Windows SDK <span class="keyword">or</span> Visual Studio <span class="number">2010</span> Professional</div><div class="line">* Unix command-line tools <span class="keyword">from</span> GnuWin32 <span class="keyword">or</span> Cygwin: sh, mkdir, rm, cp, tar, gzip</div><div class="line">* zlib headers (<span class="keyword">if</span> building native code bindings <span class="keyword">for</span> zlib)</div><div class="line">* Internet connection <span class="keyword">for</span> <span class="keyword">first</span> build (<span class="keyword">to</span> fetch all Maven <span class="keyword">and</span> Hadoop dependencies)</div></pre></td></tr></table></figure>
-
-<p>大多数都好说，有几个要求比较麻烦：</p>
-<h3 id="ProtocolBuffer">ProtocolBuffer</h3>
-<p>protocbuffer项目迁到github了，目前好像最新是3.0版。<br>以前的版本还可以在google code上下载。直接下载编译好的：<a href="https://protobuf.googlecode.com/files/protoc-2.5.0-win32.zip" target="_blank" rel="external">https://protobuf.googlecode.com/files/protoc-2.5.0-win32.zip</a><br>解压后将protoc.exe加入PATH。我是直接扔到c:\windows里了，省事。</p>
-<h3 id="Windows_SDK">Windows SDK</h3>
-<p>可以去<a href="http://www.microsoft.com/en-us/download/details.aspx?id=8279" target="_blank" rel="external">http://www.microsoft.com/en-us/download/details.aspx?id=8279</a>下载。<br>但这里给出的是在线安装，非常非常慢。还是下载完整的程序自己安装吧。<br>完整的iso在这里下载：<a href="http://www.microsoft.com/en-us/download/details.aspx?id=8442" target="_blank" rel="external">http://www.microsoft.com/en-us/download/details.aspx?id=8442</a>。<br>注意根据需要选择32位或64位版本。<br>安装也是一路next。</p>
-<h3 id="Unix_command-line_tools">Unix command-line tools</h3>
-<p>很多文章推荐cygwin。但是cygwin太重量级了。<br>我推荐直接安装git bash，它自带一个MinGW32，包含常用的linux命令。<br>去<a href="http://git-scm.com/download/win" target="_blank" rel="external">http://git-scm.com/download/win</a>这里下载并安装。注意安装中有一步询问是否将相关命令加入PATH，选择加入。</p>
-<p>其他依赖就很简单了。记得把相关命令都加入PATH。在cmd里输入mvn/protoc/ls等命令验证下。</p>
-<h2 id="修改代码">修改代码</h2>
-<p>原来的代码直接编译有些问题。<br>主要参考<a href="http://www.cnblogs.com/smartbooks/p/3694760.html" target="_blank" rel="external">这篇文章</a>。</p>
-<p>原作者说要改3个地方：</p>
-<ol>
-<li>hadoop-common-project\hadoop-auth\pom.xml增加一个依赖org.mortbay.jetty:jetty-util。在2.2.0确实有这个问题。但2.5.2已经修复了。</li>
-<li>修改hadoop-common-project\hadoop-common\src\main\native\native.sln。将{4C0C12D2-3CB0-47F8-BCD0-55BD5732DFA7}.Debug|Win32.XXX = Release|x64修改为{4C0C12D2-3CB0-47F8-BCD0-55BD5732DFA7}.Debug|Win32.XXX = Release|Win32。总共要修改4行。</li>
-<li>修改hadoop-common-project\hadoop-common\src\main\native\native.vcxproj，将所有Release|x64替换为Release|Win32。</li>
-</ol>
-<p>我估计如果是在64位系统中编译，2、3两步是不用改的。</p>
-<p>（我想在Win7 64位下测试下的，但Windows SDK死活安装不上，看日志里有报错vcredist_x64.exe installation failed with return code 5100，google的话能找到这个链接：<a href="http://support.microsoft.com/kb/2717426/de" target="_blank" rel="external">http://support.microsoft.com/kb/2717426/de</a>。但按这个链接卸载了vcredist也不行。折腾了半天。为这个重装系统也不值得。）</p>
-<h2 id="编译">编译</h2>
-<p>进入Windows SDK 7.1 Command Prompt，开始编译：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="preprocessor"># maven下载非常慢。设置代理也很麻烦。</span></div><div class="line"><span class="preprocessor"># 我以前在服务器（linux）上编译过2.5.2的hadoop。把~/.m2下所有文件拷到虚拟机里，替换原来的maven repo。</span></div><div class="line"><span class="keyword">set</span> ZLIB_HOME=E:\zlib128-dll\include</div><div class="line"><span class="preprocessor"># 注意大小写，必须是Platform</span></div><div class="line"><span class="keyword">set</span> Platform=Win32</div><div class="line"><span class="preprocessor"># 从本地下载tomcat。否则从外网下载非常慢。</span></div><div class="line">mvn package -Pdist,native-win -DskipTests -Dtar -Dtomcat.version=<span class="number">6.0</span><span class="number">.36</span> -Dtomcat.download.url=file:<span class="comment">//e:/apache-tomcat-6.0.36.tar.gz</span></div></pre></td></tr></table></figure>
-
-<p>编译成功后在hadoop-dist生成tar包。和linux一样。</p>
-<h2 id="一些注意事项">一些注意事项</h2>
-<p>JDK的路径不要包含空格<br>hadoop的代码所在路径尽量简短。比如e:\h252<br>执行命令时总是出现一个warn：unable to load native lib。但编译时其实编译了native库的，开debug日志似乎是说hadoop.dll有问题，暂时不明白是怎么回事。<br>虽然我是32位winxp下编译的，但拿到64位win7中也能用，因为我只是当做客户端来用，访问hdfs，提交job之类的。如果在windows中部署集群估计就不能通用了。<br>其他一些事项见BUILDING.txt</p>
-<h1 id="windows客户端使用">windows客户端使用</h1>
-<p>这个客户端可以在windows下读写2.5.2、2.2.0的hdfs。可以向2.5.2的yarn提交任务，不能向2.2.0的yarn提交任务，见<a href="https://issues.apache.org/jira/browse/MAPREDUCE-4052" target="_blank" rel="external">MAPREDUCE-4052</a>。（有人给出过解决方法，但只是临时方案，比较麻烦）<br>在32位WinXP SP3和64位Win7中测试通过。</p>
-<h2 id="设置JAVA_HOME">设置JAVA_HOME</h2>
-<p>为避免一些不必要的问题，JAVA_HOME的路径不要有空格。<br>下载jce的jar替换JAVA_HOME/jre/lib/security中的同名文件。如果是OpenJDK不用替换。<br>修改HADOOP_HOME/etc/hadoop/hadoop-env.cmd：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">set JAVA_HOME=D:<span class="command">\test</span><span class="command">\jdk</span>1.6.0_30</div></pre></td></tr></table></figure>
-
-<h2 id="kerberos认证">kerberos认证</h2>
-<p>首先安装kerberos的win客户端：<a href="http://web.mit.edu/kerberos/dist/kfw/3.2/kfw-3.2.2/kfw-3-2-2.exe" target="_blank" rel="external">http://web.mit.edu/kerberos/dist/kfw/3.2/kfw-3.2.2/kfw-3-2-2.exe</a>。现在有4.x版本的了，但我还是觉得这个3.2的用着方便。<br>设置c:\windows\krb5.ini的过程不多说了。</p>
-<p>认证首先要有keytab文件。<br>win版的kerberos似乎有些问题，必须手动设置一下票据缓存的位置，否则hadoop认证时会失败。而且在win7下和winxp下输出也不同。</p>
-<p>Win7下的输出：<br><img src="/2015/06/27/hadoop-and-windows/1.png" alt=""></p>
-<p>WinXP下的输出：<br><img src="/2015/06/27/hadoop-and-windows/2.png" alt=""></p>
-<p>KRB5CCNAME环境变量可以设置为任意文件名，有权限就行。<br>无论如何，如果kinit命令没有出错，就可以认为kerberos认证成功了。</p>
-<h2 id="访问hdfs和yarn">访问hdfs和yarn</h2>
-<p>大多数命令都跟linux下是一样的。<br>执行ls命令验证下：<br><img src="/2015/06/27/hadoop-and-windows/3.png" alt=""></p>
-<p>提交一个wordcount任务：<br><img src="/2015/06/27/hadoop-and-windows/4.png" alt=""></p>
-<h2 id="一些注意事项-1">一些注意事项</h2>
-<p>win客户端不能-text lzo文件，似乎没有windows可用的lzo库。google的话能找到一个链接：<a href="http://gnuwin32.sourceforge.net/packages/lzo.htm" target="_blank" rel="external">http://gnuwin32.sourceforge.net/packages/lzo.htm</a>，可以在win下安装，但试过不好使。<br>Unable to load native-hadoop这个warn，没找到办法消除。我已经编译了hadoop.dll，但还是有warn。可以set HADOOP_ROOT_LOGGER=DEBUG,console开下debug日志，看下具体的错误。暂时没法解决。<br>注意core-site.xml中的hadoop.tmp.dir设置，默认是/tmp/hadoop-${user.name}，会在硬盘上自动建个文件夹。</p>
-<h1 id="在eclipse中读写HDFS">在eclipse中读写HDFS</h1>
-<p>其实跟windows没啥关系。只是我一般用win下的eclipse，写到这正好想起来，顺便记下。仅供调试使用。<br>其实也可以用于Linux下，一样的道理。</p>
-<p>关键问题就是如何获得必要的Configuration对象。正常情况下把core-site.xml和hdfs-site.xml放到classpath里，再conf.addResource(“hdfs-site.xml”)就可以了（core-site.xml会自动加载）。<br>但其实不是所有属性都是必要的。测试时完全可以在代码里手动设置，不用配置文件。<br>代码：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span>(String[] args) throws IOException {</div><div class="line">    <span class="comment">// kerberos的配置文件的位置，windows下叫krb5.ini，linux下叫krb5.conf</span></div><div class="line">    System.setProperty(<span class="string">"java.security.krb5.conf"</span>, <span class="string">"e:/Documents/TEMP/krb5.ini"</span>);</div><div class="line">    <span class="comment">// 在windows下会需要一个winutil.exe的文件，要放在hadoop.home.dir/bin目录下，否则会报个异常，但不影响程序运行</span></div><div class="line">    System.setProperty(<span class="string">"hadoop.home.dir"</span>, <span class="string">"D:\\Hadoop_src\\hadoop-2.2.0"</span>);</div><div class="line">    <span class="comment">// 默认的构造函数会在classpath中查找core-site.xml并加载</span></div><div class="line">    Configuration conf = <span class="keyword">new</span> Configuration();</div><div class="line"> </div><div class="line">    <span class="comment">// 第一种方法，直接加载配置文件。需要core-site.xml和hdfs-site.xml都在classpath中</span></div><div class="line">    <span class="comment">// conf.addResource("hdfs-site.xml");</span></div><div class="line"> </div><div class="line">    <span class="comment">// 第二种方法，自己手动set需要的属性，不需要任何xml配置文件</span></div><div class="line">    <span class="comment">// 这里又分两种情况，如果没开启HA或者知道哪台机器是ActiveNN，可以直接写死地址</span></div><div class="line">    <span class="comment">// 否则要加上HA相关配置</span></div><div class="line"> </div><div class="line">    <span class="comment">// non-HA case</span></div><div class="line">    <span class="comment">// conf.setBoolean("hadoop.security.authorization", true);</span></div><div class="line">    <span class="comment">// conf.set("hadoop.security.authentication", "kerberos");      </span></div><div class="line">    <span class="comment">// conf.set("fs.defaultFS", "hdfs://inspur129.photo.163.org:8020");</span></div><div class="line">    <span class="comment">// conf.set("dfs.namenode.kerberos.principal","hdfs/inspur129.photo.163.org@HADOOP.HZ.NETEASE.COM");</span></div><div class="line"> </div><div class="line">    <span class="comment">// HA case</span></div><div class="line">    <span class="comment">// 这里以测试集群为例，参考自己的hdfs-site.xml</span></div><div class="line">    conf.setBoolean(<span class="string">"hadoop.security.authorization"</span>, <span class="keyword">true</span>);</div><div class="line">    conf.<span class="keyword">set</span>(<span class="string">"hadoop.security.authentication"</span>, <span class="string">"kerberos"</span>);        </div><div class="line">    conf.<span class="keyword">set</span>(<span class="string">"fs.defaultFS"</span>, <span class="string">"hdfs://hp1"</span>);</div><div class="line">    conf.<span class="keyword">set</span>(<span class="string">"dfs.nameservices"</span>, <span class="string">"hp1"</span>);</div><div class="line">    conf.<span class="keyword">set</span>(<span class="string">"dfs.ha.namenodes.hp1"</span>, <span class="string">"nn1,nn2"</span>);</div><div class="line">    conf.<span class="keyword">set</span>(<span class="string">"dfs.namenode.rpc-address.hp1.nn1"</span>,<span class="string">"inspur120.photo.163.org:8020"</span>);</div><div class="line">    conf.<span class="keyword">set</span>(<span class="string">"dfs.namenode.rpc-address.hp1.nn2"</span>,<span class="string">"inspur129.photo.163.org:8020"</span>);</div><div class="line">    conf.<span class="keyword">set</span>(<span class="string">"dfs.client.failover.proxy.provider.hp1"</span>,<span class="string">"org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"</span>);</div><div class="line">    conf.<span class="keyword">set</span>(<span class="string">"dfs.namenode.kerberos.principal"</span>,<span class="string">"hdfs/_HOST@HADOOP.HZ.NETEASE.COM"</span>);</div><div class="line"> </div><div class="line">    <span class="comment">// 至此已经获得了正确配置的Configuration对象，可以访问NN了</span></div><div class="line"> </div><div class="line">    <span class="comment">// 用keytab认证</span></div><div class="line">    UserGroupInformation.setConfiguration(conf);</div><div class="line">    UserGroupInformation.loginUserFromKeytab(<span class="string">"spark@HADOOP.HZ.NETEASE.COM"</span>,</div><div class="line">            <span class="string">"E:\\Documents\\TEMP\\spark.keytab"</span>);</div><div class="line"> </div><div class="line">    <span class="comment">// 获得FileSystem对象后，就可以读写hdfs了，客户端API隐藏了很多细节</span></div><div class="line">    FileSystem fs = FileSystem.<span class="keyword">get</span>(conf);</div><div class="line">    InputStream <span class="keyword">in</span> = fs.open(<span class="keyword">new</span> Path(<span class="string">"/tmp/hadoop-env.sh"</span>));</div><div class="line">    IOUtils.copyBytes(<span class="keyword">in</span>, System.<span class="keyword">out</span>, conf, <span class="keyword">false</span>);</div><div class="line">    fs.close();</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>推荐还是尽量使用HA的配置吧。</p>
-<p>加上maven依赖即可运行：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.apache.hadoop<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>hadoop-client<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">version</span>&gt;</span>2.2.0<span class="tag">&lt;/<span class="title">version</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
-
-<p>这种方法只能用于测试，把配置在程序中写死是很low的。<br>其实除了第一步设置winutil.exe的位置，其他代码在linux下是通用的。</p>
-<p>题外话：<br>上述配置中的hp1/nn1/nn2等名称完全是客户端的，其实可以是任意字符串，只要能对应上就行，比如：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">conf</span>.<span class="keyword">set</span>(<span class="string">"fs.defaultFS"</span>, <span class="string">"hdfs://xyxyxy"</span>);</div><div class="line"><span class="keyword">conf</span>.<span class="keyword">set</span>(<span class="string">"dfs.nameservices"</span>, <span class="string">"xyxyxy"</span>);</div><div class="line"><span class="keyword">conf</span>.<span class="keyword">set</span>(<span class="string">"dfs.ha.namenodes.xyxyxy"</span>, <span class="string">"jiang,xi"</span>);</div><div class="line"><span class="keyword">conf</span>.<span class="keyword">set</span>(<span class="string">"dfs.namenode.rpc-address.xyxyxy.jiang"</span>,<span class="string">"inspur120.photo.163.org:8020"</span>);</div><div class="line"><span class="keyword">conf</span>.<span class="keyword">set</span>(<span class="string">"dfs.namenode.rpc-address.xyxyxy.xi"</span>,<span class="string">"inspur129.photo.163.org:8020"</span>);</div><div class="line"><span class="keyword">conf</span>.<span class="keyword">set</span>(<span class="string">"dfs.client.failover.proxy.provider.xyxyxy"</span>,<span class="string">"org.apache.hadoop.hdfs.server.namenode.ha.ConfiguredFailoverProxyProvider"</span>);</div></pre></td></tr></table></figure>
-
-<p>改成这样的配置也可以正常运行。因为hp1之类的名称只是逻辑上的概念，不会真的存在一个叫hp1的机器，客户端API会自动根据配置替换成实际的地址。<br>不过一般用户不用关心这个，直接抄我们配置好的hdfs-site.xml里的就好。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>以前写的一篇文章。<br>折腾了下windows下的编译、部署、使用。纯粹为了好玩，肯定不能用于生产环境。</p>
-]]>
-    
-    </summary>
-    
-      <category term="hadoop" scheme="http://jxy.me/tags/hadoop/"/>
-    
-      <category term="windows" scheme="http://jxy.me/tags/windows/"/>
     
   </entry>
   
