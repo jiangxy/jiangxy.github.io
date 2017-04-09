@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://jxy.me/2017/04/02/lazy-busy-lazy/</loc>
+    <lastmod>2017-04-09T16:04:28.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2017/01/15/2017-and-redux/</loc>
     <lastmod>2017-01-30T13:15:04.000Z</lastmod>
   </url>
@@ -97,17 +102,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/07/hbase-switch-problem/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/07/06/hbase-tips/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/03/07/hexo-and-git/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -122,17 +117,17 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/23/beyond-8-hours/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/03/21/hexo-theme-sync/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
+    <loc>http://jxy.me/2015/03/07/hexo-and-git/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/23/beyond-8-hours/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -147,7 +142,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/05/19/linode-qianged/</loc>
+    <loc>http://jxy.me/2015/06/02/funny-federation/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/16/kerberos-tips/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -157,12 +157,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/02/funny-federation/</loc>
+    <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
+    <loc>http://jxy.me/2015/05/19/linode-qianged/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -172,37 +172,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/tags/index.html</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/01/multiple-namenode/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/01/ha-and-zookeeper/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/07/06/scheduler-diff-2-5-2/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/01/nodemanager-suicide/</loc>
+    <loc>http://jxy.me/2015/06/01/checkpoint-error/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -212,7 +182,42 @@
   </url>
   
   <url>
+    <loc>http://jxy.me/2015/06/01/multiple-namenode/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/01/ha-and-zookeeper/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/01/nodemanager-suicide/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/07/06/scheduler-diff-2-5-2/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2015/06/10/socket-exhausted-deadnode/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/06/27/hadoop-and-windows/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -227,17 +232,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/27/hadoop-and-windows/</loc>
+    <loc>http://jxy.me/tags/index.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
     <loc>http://jxy.me/2015/04/16/standby-namenode-slow-web/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/01/checkpoint-error/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -262,17 +262,22 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/404.html</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
     <loc>http://jxy.me/2015/04/01/hadoop-tips/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/16/kerberos-tips/</loc>
+    <loc>http://jxy.me/2015/04/07/hbase-switch-problem/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/404.html</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   

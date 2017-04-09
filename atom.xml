@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2017-01-30T13:16:14.933Z</updated>
+  <updated>2017-04-09T16:05:14.003Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -13,6 +13,70 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[拖更已是常态]]></title>
+    <link href="http://jxy.me/2017/04/02/lazy-busy-lazy/"/>
+    <id>http://jxy.me/2017/04/02/lazy-busy-lazy/</id>
+    <published>2017-04-02T14:54:51.000Z</published>
+    <updated>2017-04-09T16:04:28.000Z</updated>
+    <content type="html"><![CDATA[<p>年终总结时，我曾痛下决心，每月至少写一篇，结果。。。</p>
+<a id="more"></a>
+<p>当然可以找很多理由，比如工作啊，比如生活啊，但说到底其实就是拖延症发作。<br>其实啊，人活在世，槽点总是会不断积累的，只不过放着放着就忘了。</p>
+<p>不过最近确实也没研究啥新玩意，还是在做着各种各样的“日常”，毕竟是打杂工程师嘛。倒是我的<a href="https://github.com/jiangxy/react-antd-admin" target="_blank" rel="external">react后台</a>写的很欢快，发了几个版本，渐渐有点样子了，收到star还是挺开心的，也收到了一些正面的反馈。已经在前端的大坑里越陷越深了。。。<br>对于非技术方面的思考倒是很多，而且这比研究技术难得多。<br>我tm是不是中年危机了啊。。。</p>
+<p>不管怎样，偶尔停下脚步，收拾下心情，挺好的。我还保留着独立思考的能力，略感欣慰。<br>虽然我不能保证我的思考都是正确的，博君一笑罢了。</p>
+<h1 id="关于title">关于title</h1>
+<p>所谓title，或者说level/头衔/级别，就是“高级/资深/总监”之类的“名号”，国外可能是“junior/senior/director/principal”之类的。这玩意大家都挺在意的，但也是很容易有槽点的一个东西。</p>
+<p>起因是我最近看了下脉脉，被一众高title闪瞎了眼。。。让我有一种跻身上流社会的错觉。。。这个经理那个总监，这个CXO那个创始人的。。。倒是前老大就简简单单写着“XX司技术”，让我觉得很亲切。</p>
+<p>这让我想起某次面试，候选人的简历显示他曾是某个公司的VP。看到简历我就吓尿了，这种级别的轮得到我来面试么？结果聊下了发现，水份有点大。。。说技术吧，他已经脱离一线开发很久了，很多东西只知道个概念，甚至概念也说不清；说管理吧，其实他前公司的规模很小，而且互联网公司很少会找一个纯粹的“管理者”，大多是所谓的“技术管理者（Tech Leader）”。虽然我看在党国的份上想拉他一把，但他二面还是挂掉了。。。</p>
+<p>所以说，title这种东西，有时候很容易有水份，只能起一个参考作用，或者说，只有统计学意义。同一家公司高level的人一般整体上能力优于低level的，但具体到某些个体上就未必了。<br>不同公司间的级别也很难对比，google/FB的senior到国内可能就是总监了；甚至同一个公司的不同部门间级别也不能对比，做业务的部门往往更容易拿到结果，做基础技术的部门就可能比较悲催，比如dba/运维。。。具体到个人就更不能一概而论，跟个人际遇有很大关系，比如加入的早晚。。。升级也是个有点玄学的事情。</p>
+<p>同理，想靠title服众也是很难的，还是要看实力。</p>
+<p>但有一点毫无疑问，title/level是越高越好的，不管是出于什么目的，为了虚荣心也好，为了待遇也罢，人们总是会故意/非故意的美化自己，于是有了各种各样“注水”行为。。。简历可以美化，项目经历可以夸大，技术栈略懂皮毛就可以到处吹逼，甚至某<a href="http://github.com" target="_blank" rel="external">大型同性交友网站</a>的经历都可以造假。。。前段时间v2ex不是就爆出了某人号称参与了各种大型开源项目，看profile各种NB，实际上所有PR都只是改了改文档/注释之类的。。。<br>不管实际情况如何，先要装出NB的样子指点江山，谈及其他人必然是一副“都不如我”的语气，言语中还要透露出“当年我可是参加了XXX大会”/“当年我可是和XXX谈笑风生”，技术细节要保持神秘，各种架构/各种名词要信手拈来，反正只要忽悠过面试官就算成功了。</p>
+<p>我不能认同这种注水行为，但我非常理解。因为<strong>这个社会早已经不是埋头做事的年代了，自我包装/自我营销是非常重要的</strong>，甚至你说是“忽悠”也可以，没有人可以置身事外，虽然这有点悲哀。当大家都在造假、都在注水的时候，如果你不参与进来，就会被你的圈子、被业界、甚至被社会抛下，这就是所谓的劣币驱逐良币吧。反正靠忽悠、靠嘴就能获得财富、获得名望，还有谁愿意安下心来研究技术啊。就好比，工作三十年都不如买套房挣钱快，还有谁愿意工作啊，都炒房去算了。<br>靠技术获得成功反而是最难的。人脉广/会表现/会做ppt才是硬道理。。。我不否认这些“soft tech”的重要性，但是不是有点本末倒置了。也许从单个事例来看这不是什么大问题，最多是用人不察罢了；但整体上看，这会潜移默化的影响所有人的价值观，就不知是福是祸了。</p>
+<p>曾经在cc98（浙大的内网论坛）上有一个帖子，题目大概是这样的：《如果你不了解XX和XX，就只能一辈子是个工程师》。浓浓的朋友圈画风有木有。。。某老年dota男主播2009（有段时间我还经常打dota的）也曾在节目中感慨过：自己的父亲不会营销自己，所以只能做个工程师，没什么成就（大意）。我想说“工程师”跟你们什么仇什么怨。。。<br>但不得不承认，目前这个社会的主流价值观就是这样的（以后会不会变化我不知道）。想取得世俗所定义的“成功”（当上CEO赢取白富美走上人生巅峰之类的），就不得不跟随这种价值观。可能我有点悲观，但我觉得现实一定比我写的还要残酷。。。这很像经济学中所说的泡沫和通货膨胀（专有名词：通P膨胀），在膨胀的过程中，上层会不断掠夺底层，马太效应愈加明显。反正别像某打工皇帝一样把泡泡吹爆了就好。。。</p>
+<h1 id="关于“贴标签”">关于“贴标签”</h1>
+<p>由title衍生而来的一些想法。<br>“贴标签”/“扣帽子”，说的都是一个事，这个很难用语言去定义。如果不了解什么是“贴标签”，去知乎看看各种涉及到女权的话题，如何稍有不慎就会被喷成“直男癌”，然后就明白了。。。<br>title就是一种简单粗暴的标签，可以快速的让你“了解”一个人，虽然这种“了解”非常不靠谱。</p>
+<p>标签是一种非常好用的东西，可以快速的了解其他人。人们往往会根据某个标签的“共性”去推断一个人的方方面面。比如对于“程序员”，大家往往会觉得“逻辑性强/情商低/挣的多/死的早”。。。虽然这些特征也只有统计学意义，具体到某个个体上未必是这样，但一般也不会偏差太多。标签还可以快速的让他人了解自己，通过给自己贴标签的方式，让对方根据这些标签去推断。想想相亲时都是如何做自我介绍的。。。虽然这不是什么好办法，而且对方的理解可能有偏差，但确实是最省力、最快速的方式。<br>可以说，贴标签就是人的本能，每个人都在忙着给别人贴标签，也在给自己贴标签。</p>
+<p>但标签也可能是个很危险的东西，因为有一些人总是不负责任的评判他人，滥用标签。可能是无心的，只是为了求个存在感，或者是为了显摆，也许“评判他人”这种行为有一种高高在上指点江山的快感吧；但也有可能是恶意的，比如上面说的“直男癌”，只是用来攻击意见不同的人的工具。这就有点批斗的感觉了。我最近碰到的一个事例就是“这人技术不行”，言下之意“他不如我”。额，只是业务领域不同而已，这个评价未免有点过了。还好我双方都了解一些，如果不认识另一个人，很可能就会听信这个评价形成偏见了。。。</p>
+<p>我更推崇所谓的“no judge”，不要随意的评判一个人，不管什么身份地位，这是对人基本的尊重吧。一旦对某个人下了“判决”，那固有的印象就很难改变了。no judge ≠ 不能评价别人，而是说评价时要更谨慎，基于客观事实而不是主观臆测，同时对自己做出的评价要负责。<br>为啥网络喷子可以肆无忌惮的给其他人扣帽子，就是因为他们不用为说过的话负责。。。<br>这个话题如果继续讨论下去，都可以上升到人性的高度了，那就不是我能想明白的了。</p>
+<p>我也要时刻注意自己的言行，谨记。</p>
+<h1 id="关于业务">关于业务</h1>
+<p>业务代码写的多了，心中总是难免忐忑。</p>
+<p>在网易，我可以4年只干一件事，或者说至少是认准一个方向，把hadoop研究明白就可以了。不管是做BI、做数据、做运维、做开发，都是围绕着hadoop。<br>但是离开之后，细细数来，直接参与的已经做过4、5个业务，算上间接参与的就更多了，“打杂工程师”可不是随便说说的。不同业务方向间基本没什么关联。关键是没有“做起来”的，这就有点焦虑了。。。总是热火朝天干一段时间，但没什么起色，然后慢慢冷寂。。。当然有些业务是不能急于求成的，是需要“熬”的，慢慢去培养和运营。但是如果经过三五年才失败，才被判死刑，那中间这段时间岂不是荒废了，怎么跟参与项目的人交代？失败不可怕，关键失败后总要留下点什么。是技术？经验？资历？我也不知道。。。<br>就像我之前说的，“苦劳”这种东西是不存在的，how cruel this world。</p>
+<p>从公司的角度来说，在没有明确业务模式的情况下，确实是要不断的快速尝试，fail-fast。因为一旦停下来必定就会挂掉，动一动还有可能找到方向。个人如何在这种不断变化的尝试中成长，才是我们需要思考的。</p>
+<p>有这种焦虑的人应该还挺多的。但就像我<a href="/2016/10/24/1024-festival/">之前</a>说的，业务和技术从来不是对立的。这就是个围城，单纯做业务的觉得自己一直在拧螺丝，技术没什么成长，担忧未来；单纯做技术的又觉得自己技能过于单一，缺少业务场景，很难做出成绩拿到结果。这两种状态我或多或少都经历过。最好的结果是二者能互相促进，业务的发展能推动技术，技术的发展又能给业务更多想象空间。但如何达成这种正向的循环，因人而异，只能自己去不断摸索。<br>从个人成长角度来说，技术为本，兼顾某些业务领域，同时也要能快速理解其他领域的业务模式，再懂点管理，是最好的状态了吧。当然这只是我一家之言，未必是对的。</p>
+<p>随着云计算的发展，现在越来越多的东西变成了基础设施（Infrastructure）：db、mq、hadoop、redis，作为一种服务提供给外部用户，降低了开发成本，也让分工更加明确了。分工的好处就是可以提升生产效率，用户完全不用了解细节；但也容易把人变成螺丝钉，缺少一种全局的视野，毕竟懒惰是人类天性（这我深有体会）。。。</p>
+<p>话说回来，一块业务的成功与否，往往也是需要天时地利人和的，如何找到靠谱的业务方向也是个技术活，真正NB的人往往是“创造”需求而不是“发现”需求。而我们一般只能在“人和”上下功夫，或者说，“执行力”。这样就算失败，至少可以说是“非战之罪”。就像打台球一样，就算球就在洞口，就算我能计算好所有球碰撞后的行进路线，但是tmd打出去的白球总是歪啊，计算的再好又有毛线用。。。</p>
+<h1 id="成长没有捷径">成长没有捷径</h1>
+<p>看到一些文章，感触颇深，特意摘录下。</p>
+<p><a href="http://www.infoq.com/cn/news/2016/12/architect-CTO-growth-not-easy" target="_blank" rel="external">http://www.infoq.com/cn/news/2016/12/architect-CTO-growth-not-easy</a></p>
+<blockquote class="blockquote-center">成长是漫长的，充满了点滴细节，没有一蹴而就，但是智慧和经验却可以复用<br><br>独立思考，推动变化及拿到结果的能力和愿望会变的更为重要<br></blockquote>
+
+<p><a href="http://www.infoq.com/cn/articles/road-of-the-development-of-technical-people" target="_blank" rel="external">http://www.infoq.com/cn/articles/road-of-the-development-of-technical-people</a></p>
+<blockquote class="blockquote-center">在你事业的上升期，你需要更多的软技能<br><br>你还要明白在职场里的几个冷酷的事实：你要开始要关心并处理复杂的人事<br>code is cheap，talk is the matter<br></blockquote>
+
+<h1 id="杂谈">杂谈</h1>
+<p>一些零散的想法。</p>
+<ol>
+<li>认识自己才是最困难的事。what you are you do not see, what you see is your shadow.</li>
+<li>我这人应该算是比较谨慎保守的，做事之前会想的很多，考虑的很全面再动手。缺点是有些时候想的太多了，有些踌躇不前。我也见过很多人干劲十足，说是横冲直撞也不为过。孰优孰劣？没有定论。还是一个“度”的把握。</li>
+<li>在网易时某前辈说过一句至理名言：“能重启解决的问题都不是问题”。虽是戏谑之语，我却想借用一下：能加班解决的问题都不是问题，能用技术解决的问题也都不是问题。那啥是问题？找不到方向才是问题。</li>
+<li>如何说服他人一起做某件事？说白了很简单，上策就是让双方有共同的利益，下策就是大棒+胡萝卜。。。做事的态度（自主推动 vs 公事公办）对结果影响很大。</li>
+<li>忽悠其他人之前往往要先忽悠自己。。。</li>
+<li>发现前端项目在github上更容易获得star，毕竟做的是看得见的事。但就目前而言，后端的天花板更高。</li>
+<li>慎用fixme。。。有多少次fixme变成了遗留问题，这就是技术债务啊。</li>
+</ol>
+<p>扯了这么多，也只是我自己随便发发牢骚而已。很多事情只能是如鱼饮水，冷暖自知。我说出来其他人也未必能感同身受。不过至少我吐槽之后感觉轻松多了。。。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>年终总结时，我曾痛下决心，每月至少写一篇，结果。。。</p>
+]]>
+    
+    </summary>
+    
+      <category term="杂谈" scheme="http://jxy.me/tags/%E6%9D%82%E8%B0%88/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[时间倏忽而逝]]></title>
@@ -1865,65 +1929,6 @@
       <category term="hbase" scheme="http://jxy.me/tags/hbase/"/>
     
       <category term="豆知识" scheme="http://jxy.me/tags/%E8%B1%86%E7%9F%A5%E8%AF%86/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[2.5.2中queueMaxAppsDefault的一个bug]]></title>
-    <link href="http://jxy.me/2015/07/06/scheduler-diff-2-5-2/"/>
-    <id>http://jxy.me/2015/07/06/scheduler-diff-2-5-2/</id>
-    <published>2015-07-06T02:51:09.000Z</published>
-    <updated>2015-09-03T15:42:14.000Z</updated>
-    <content type="html"><![CDATA[<p>升级hadoop 2.5.2过程中碰到的一个问题。<br>很难说是个bug，更像是功能上的一些变化，社区也没有相关jira。<br>看看代码研究下。<br>调度器的基本概念见<a href="/2015/04/30/yarn-resource-scheduler/">我以前的文章</a>。</p>
-<a id="more"></a>
-<h1 id="症状">症状</h1>
-<p>在我们的fair-scheduler.xml中一直有这样一个属性：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">queueMaxAppsDefault</span>&gt;</span>2<span class="tag">&lt;/<span class="title">queueMaxAppsDefault</span>&gt;</span></div></pre></td></tr></table></figure>
-
-<p>本意是将默认值设小一点，防止一些意外情况。在2.2.0中时，一直正常使用。<br>但升级到2.5.2后，发现这个设置变成了全局的，变成了整个集群只能并发执行2个任务。<br>删掉这个属性后就正常了。</p>
-<p>我们的队列配置类似这样：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">allocations</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">queue</span> <span class="attribute">name</span>=<span class="value">"a"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">minResources</span>&gt;</span>10240 mb, 10 vcores<span class="tag">&lt;/<span class="title">minResources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">maxResources</span>&gt;</span>409600 mb, 200 vcores<span class="tag">&lt;/<span class="title">maxResources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">maxRunningApps</span>&gt;</span>20<span class="tag">&lt;/<span class="title">maxRunningApps</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">weight</span>&gt;</span>1.0<span class="tag">&lt;/<span class="title">weight</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">schedulingPolicy</span>&gt;</span>fair<span class="tag">&lt;/<span class="title">schedulingPolicy</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">aclSubmitApps</span>&gt;</span>a<span class="tag">&lt;/<span class="title">aclSubmitApps</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">aclAdministerApps</span>&gt;</span>hadoop,yarn,a<span class="tag">&lt;/<span class="title">aclAdministerApps</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="title">queue</span>&gt;</span></div><div class="line">  <span class="tag">&lt;<span class="title">queue</span> <span class="attribute">name</span>=<span class="value">"b"</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">minResources</span>&gt;</span>10240 mb, 10 vcores<span class="tag">&lt;/<span class="title">minResources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">maxResources</span>&gt;</span>409600 mb, 200 vcores<span class="tag">&lt;/<span class="title">maxResources</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">maxRunningApps</span>&gt;</span>20<span class="tag">&lt;/<span class="title">maxRunningApps</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">weight</span>&gt;</span>1.5<span class="tag">&lt;/<span class="title">weight</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">schedulingPolicy</span>&gt;</span>fair<span class="tag">&lt;/<span class="title">schedulingPolicy</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">aclSubmitApps</span>&gt;</span>b<span class="tag">&lt;/<span class="title">aclSubmitApps</span>&gt;</span></div><div class="line">    <span class="tag">&lt;<span class="title">aclAdministerApps</span>&gt;</span>b,hadoop,yarn<span class="tag">&lt;/<span class="title">aclAdministerApps</span>&gt;</span></div><div class="line">  <span class="tag">&lt;/<span class="title">queue</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">allocations</span>&gt;</span></div></pre></td></tr></table></figure>
-
-<p>队列结构只有2层。一个root队列，其他都是LeafQueue。并且为每个LeafQueue单独配置了maxRunningApps属性。</p>
-<h1 id="2-2-0的代码">2.2.0的代码</h1>
-<p>2.2.0中，队列相关配置由QueueManager类管理。包括加载fair-scheduler.xml、更新配置等等。</p>
-<p>FairScheduler中有一个线程UpdateThread，默认每0.5秒调用一次update方法：</p>
-<figure class="highlight java"><figcaption><span>FairScheduler.java</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">   <span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">update</span>() {</div><div class="line">       <span class="comment">// 检查是否要重新加载fair-scheduler.xml</span></div><div class="line">	queueMgr.reloadAllocsIfNecessary(); <span class="comment">// Relaod alloc file</span></div><div class="line">	<span class="comment">// 关键的一个方法，计算每个队列是否超出了资源限制、app数量限制</span></div><div class="line">	<span class="comment">// 如果已经超出限制，所有的app的runnable属性会被设为false，不会再分配container</span></div><div class="line">	updateRunnability(); <span class="comment">// Set job runnability based on user/queue limits</span></div><div class="line"></div><div class="line">	<span class="comment">// 接下来的是抢占式调度的一些逻辑，不是本文重点</span></div><div class="line">	updatePreemptionVariables(); <span class="comment">// Determine if any queues merit preemption</span></div><div class="line">	FSQueue rootQueue = queueMgr.getRootQueue();</div><div class="line"></div><div class="line">	<span class="comment">// Recursively update demands for all queues</span></div><div class="line">	rootQueue.updateDemand();</div><div class="line"></div><div class="line">	rootQueue.setFairShare(clusterCapacity);</div><div class="line">	<span class="comment">// Recursively compute fair shares for all queues</span></div><div class="line">	<span class="comment">// and update metrics</span></div><div class="line">	rootQueue.recomputeShares();</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>继续看updateRunnability方法：</p>
-<figure class="highlight java"><figcaption><span>FairScheduler.java</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div></pre></td><td class="code"><pre><div class="line">   <span class="keyword">private</span> <span class="keyword">void</span> <span class="title">updateRunnability</span>() {</div><div class="line">	List&lt;AppSchedulable&gt; apps = <span class="keyword">new</span> ArrayList&lt;AppSchedulable&gt;();</div><div class="line"></div><div class="line">	<span class="comment">// Start by marking everything as not runnable</span></div><div class="line">	<span class="comment">// 注意这里，这里只处理了所有leafQueue，对于parentQueue，没有考虑maxApp限制</span></div><div class="line">	<span class="keyword">for</span> (FSLeafQueue leafQueue : queueMgr.getLeafQueues()) {</div><div class="line">		<span class="keyword">for</span> (AppSchedulable a : leafQueue.getAppSchedulables()) {</div><div class="line">			a.setRunnable(<span class="keyword">false</span>);</div><div class="line">			apps.add(a);</div><div class="line">		}</div><div class="line">	}</div><div class="line">	<span class="comment">// Create a list of sorted jobs in order of start time and priority</span></div><div class="line">	Collections.sort(apps, <span class="keyword">new</span> FifoAppComparator());</div><div class="line">	<span class="comment">// Mark jobs as runnable in order of start time and priority, until</span></div><div class="line">	<span class="comment">// user or queue limits have been reached.</span></div><div class="line">	Map&lt;String, Integer&gt; userApps = <span class="keyword">new</span> HashMap&lt;String, Integer&gt;();</div><div class="line">	Map&lt;String, Integer&gt; queueApps = <span class="keyword">new</span> HashMap&lt;String, Integer&gt;();</div><div class="line"></div><div class="line">	<span class="keyword">for</span> (AppSchedulable app : apps) {</div><div class="line">		String user = app.getApp().getUser();</div><div class="line">		String queue = app.getApp().getQueueName();</div><div class="line">		<span class="keyword">int</span> userCount = userApps.containsKey(user) ? userApps.get(user) : <span class="number">0</span>;</div><div class="line">		<span class="keyword">int</span> queueCount = queueApps.containsKey(queue) ? queueApps</div><div class="line">				.get(queue) : <span class="number">0</span>;</div><div class="line">		<span class="comment">// 这里获得的queueMaxApps就是我们在xml文件里为每个队列配置的maxRunningApps属性</span></div><div class="line">		<span class="comment">// 如果某个队列没有配置，就返回queueMaxAppsDefault</span></div><div class="line">		<span class="keyword">if</span> (userCount &lt; queueMgr.getUserMaxApps(user)</div><div class="line">				&& queueCount &lt; queueMgr.getQueueMaxApps(queue)) {</div><div class="line">			userApps.put(user, userCount + <span class="number">1</span>);</div><div class="line">			queueApps.put(queue, queueCount + <span class="number">1</span>);</div><div class="line">			app.setRunnable(<span class="keyword">true</span>);</div><div class="line">		}</div><div class="line">	}</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>只有当NM发来心跳时才能分配container，分配过程是一次DFS。<br>当一个leafQueue下所有app的runnable都是false时，不会分配任何container。<br>具体代码不列了。见FairScheduler.nodeUpdate和FSParentQueue.assignContainer。</p>
-<p>可见，对于root队列，FairScheduler没有检查任何限制条件。</p>
-<h1 id="2-5-2的代码">2.5.2的代码</h1>
-<p>2.5.2的FairScheduler代码变化非常大。我目前看到的几个：</p>
-<ol>
-<li>处理fair-scheduler.xml的逻辑从QueueMananger类剥离，独立作为一个service：AllocationFileLoaderService。</li>
-<li>FairScheduler handle的事件增加了很多APP_ATTEMPT相关的，见handle方法。相应的app提交过程也变化了。</li>
-<li>maxApp相关限制的判断独立为一个类：MaxRunningAppsEnforcer。</li>
-</ol>
-<p>还有很多变化是为了配合RM HA的。</p>
-<p>提交app后会触发addApplicationAttempt方法（相关的事件链不列了。这个方法也是2.5.2新增的）</p>
-<figure class="highlight java"><figcaption><span>FairScheduler.java</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">protected</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">addApplicationAttempt</span>(</div><div class="line">      ApplicationAttemptId applicationAttemptId,</div><div class="line">      <span class="keyword">boolean</span> transferStateFromPreviousAttempt,</div><div class="line">      <span class="keyword">boolean</span> shouldNotifyAttemptAdded) {</div><div class="line">    <span class="comment">// 省略</span></div><div class="line">    <span class="comment">// 关键在这里，提交app时会判断这个app是否runnable</span></div><div class="line">    <span class="comment">// runnable=false的app会一直保持在ACCEPTED状态，不会分配任何container（包括AM Container）</span></div><div class="line">    <span class="keyword">boolean</span> runnable = maxRunningEnforcer.canAppBeRunnable(queue, user);</div><div class="line">    <span class="comment">// 将app加到队列中，会更改app的状态</span></div><div class="line">    queue.addApp(attempt, runnable);</div><div class="line">    <span class="comment">// 下面是一些统计信息</span></div><div class="line">    <span class="keyword">if</span> (runnable) {</div><div class="line">      maxRunningEnforcer.trackRunnableApp(attempt);</div><div class="line">    } <span class="keyword">else</span> {</div><div class="line">      maxRunningEnforcer.trackNonRunnableApp(attempt);</div><div class="line">    }</div><div class="line">    <span class="comment">// 省略</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>继续看canAppBeRunnable方法：</p>
-<figure class="highlight java"><figcaption><span>MaxRunningAppsEnforcer.java</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">canAppBeRunnable</span>(FSQueue queue, String user) {</div><div class="line">  AllocationConfiguration allocConf = scheduler.getAllocationConfiguration();</div><div class="line">  <span class="comment">// 获得当前用户RUNNING的app数量</span></div><div class="line">  Integer userNumRunnable = usersNumRunnableApps.get(user);</div><div class="line">  <span class="keyword">if</span> (userNumRunnable == <span class="keyword">null</span>) {</div><div class="line">    userNumRunnable = <span class="number">0</span>;</div><div class="line">  }</div><div class="line">  <span class="keyword">if</span> (userNumRunnable &gt;= allocConf.getUserMaxApps(user)) {</div><div class="line">    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">  }</div><div class="line">  <span class="comment">// Check queue and all parent queues</span></div><div class="line">  <span class="comment">// 关键在这里，会一直回溯到root队列，判断appMax</span></div><div class="line">  <span class="comment">// 而我们对root队列没有单独配置maxRunningApps属性，就会返回queueMaxAppsDefault</span></div><div class="line">  <span class="keyword">while</span> (queue != <span class="keyword">null</span>) {</div><div class="line">    <span class="keyword">int</span> queueMaxApps = allocConf.getQueueMaxApps(queue.getName());</div><div class="line">    <span class="keyword">if</span> (queue.getNumRunnableApps() &gt;= queueMaxApps) {</div><div class="line">      <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">    }</div><div class="line">    queue = queue.getParent();</div><div class="line">  }</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>可见在2.5.2中，maxApp的限制对所有队列都生效，不区分ParentQueue和LeafQueue。<br>所以造成了整个集群只能运行2个任务的情况。</p>
-<h1 id="总结">总结</h1>
-<p>很难说那种方式更好。<br>2.5.2里的FairScheduler，有点像CapacityScheduler了，父队列会限制子队列。<br>而2.2.0里的FairScheduler，父队列和子队列基本没关系（除了ACL）。<br>之前测试的时候，没有测过并发执行多个任务，直到线上升级才发现这个问题，也是考虑不周。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>升级hadoop 2.5.2过程中碰到的一个问题。<br>很难说是个bug，更像是功能上的一些变化，社区也没有相关jira。<br>看看代码研究下。<br>调度器的基本概念见<a href="/2015/04/30/yarn-resource-scheduler/">我以前的文章</a>。</p>
-]]>
-    
-    </summary>
-    
-      <category term="hadoop" scheme="http://jxy.me/tags/hadoop/"/>
-    
-      <category term="fair scheduler" scheme="http://jxy.me/tags/fair-scheduler/"/>
-    
-      <category term="resourcemanager" scheme="http://jxy.me/tags/resourcemanager/"/>
     
   </entry>
   
