@@ -128,7 +128,7 @@
             <span class="post-comments-count">
             &nbsp; | &nbsp;
             <a href="/2015/04/06/java-tips/#comments" >
-              <span class="post-comments-count ds-thread-count" data-thread-key="2015/04/06/java-tips/"></span>
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/04/06/java-tips/"></span>
             </a>
           </span>
           
@@ -203,6 +203,22 @@
 <li>如果某个类是编译时需要的并且编译成功：<br>1.1 运行时不存在，一般会抛NoClassDefFoundError + 类名，第一次调用时会有个<code>Caused by ClassNotFoundException</code><br>1.2 运行时存在但类初始化出错，第一次使用该类时出现ExceptionInInitializerError，以后再使用时就会抛NoClassDefFoundError: Could not initialize class + 类名</li>
 <li>如果某个类是通过反射加载的（换句话说，不需要编译时存在），比如<code>Class.forName</code>：<br>2.1 运行时不存在，直接抛ClassNotFoundException（这些反射的方法会跳过内存中查找的步骤，直接从classpath中查找）<br>2.2 运行时存在但类初始化出错，跟1.2是一样的情况</li>
 </ol>
+<h1 id="Java_Cookies">Java Cookies</h1>
+<p>一些有用的小技巧</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">// java.nio.file.Paths</span></div><div class="line">Path path = Paths.get(<span class="string">"c:\\data\\myfile.txt"</span>);</div><div class="line">Path.normalize()  <span class="comment">// 将路径标准化，去除./..等</span></div><div class="line"></div><div class="line"><span class="comment">// java.nio.file.Files</span></div><div class="line"><span class="comment">// guava中也有一个Files工具类</span></div><div class="line">Files.createDirectory()</div><div class="line">Files.copy()/move()/delete()</div><div class="line"></div><div class="line"><span class="comment">// java.nio.channels.Channels</span></div><div class="line"><span class="comment">// 很有意思的工具类，用于channel和stream直接的转换</span></div></pre></td></tr></table></figure>
+
+<p>除了guava外，netty可以提供了很多有意思的工具类：<br><a href="http://netty.io/wiki/using-as-a-generic-library.html" target="_blank" rel="external">http://netty.io/wiki/using-as-a-generic-library.html</a><br>其中的Listenable Future、对象池感觉比较有用</p>
+<h1 id="接口的默认实现">接口的默认实现</h1>
+<p>Java中的interface中只能定义方法签名，不能定义方法体，但Java8中这个限制被打破了，接口中可以带默认实现，称作default方法：<br><a href="https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html" target="_blank" rel="external">https://docs.oracle.com/javase/tutorial/java/IandI/defaultmethods.html</a></p>
+<p>一个例子就是JDK自带的<code>java.util.Iterator</code></p>
+<h1 id="Apache_vs_Tomcat">Apache vs Tomcat</h1>
+<p>他们的区别是啥？经常有同学问到这个问题。。。网上也有很多解答，但都比较笼统。<br>“既然php可以通过mod_php在Apache中使用，为啥没有一个mod_java？”<br>“既然tomcat已经能处理http请求了，为何前端还要一个Apache/Nginx？”</p>
+<p>回答这些问题需要先去考下古。<br>Apache（httpd）出现的比较早，第一个版本是1995年的，是专门处理http请求的服务端软件。概括的说，对http请求主要有3种处理方式：1. 如果是静态文件直接返回；2. 结合CGI动态生成内容；3. 转发请求给其他host。<br>所谓的<a href="https://zh.wikipedia.org/wiki/%E9%80%9A%E7%94%A8%E7%BD%91%E5%85%B3%E6%8E%A5%E5%8F%A3" target="_blank" rel="external">CGI</a>，是一种很古老的技术，让各种语言都能处理http请求。简单的说，每次Apache接收到一个请求，就会<code>fork-and-join</code>产生一个新的进程，这个进程的标准输入/标准输出就对应于socket的输入/输出，还有其他一些环境变量也对应于各种参数，比如IP/UA之类。绝大多数语言都可以实现CGI，毕竟处理标准输入输出/环境变量是所有语言的标配。<br>php的<code>mod_php</code>就是这个原理。<br>这就是所谓的多进程模型，但多进程时毫无疑问吞吐量会有问题。于是有了所谓的<a href="https://zh.wikipedia.org/wiki/FastCGI" target="_blank" rel="external">FastCGI</a>，大概原理就是一个进程池，不用为每个请求都新建一个进程了。后续还有所谓的<a href="https://zh.wikipedia.org/wiki/%E7%AE%80%E5%8D%95%E9%80%9A%E7%94%A8%E7%BD%91%E5%85%B3%E6%8E%A5%E5%8F%A3" target="_blank" rel="external">SCGI</a>和<a href="https://zh.wikipedia.org/wiki/Web%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%BD%91%E5%85%B3%E6%8E%A5%E5%8F%A3" target="_blank" rel="external">WSGI</a>等衍生。</p>
+<p>既然如此，为什么不直接用java+CGI去处理http请求呢？还真有这么做的：<br><a href="https://opensource.apple.com/source/FastCGI/FastCGI-4/fcgi/doc/fcgi-java.htm" target="_blank" rel="external">https://opensource.apple.com/source/FastCGI/FastCGI-4/fcgi/doc/fcgi-java.htm</a><br>注意下这篇文章是1996年的，而且还是苹果的，真是少见。。。96年的时候，JDK还只是1.0版本，Servlet规范还没出现（Servlet 1.0规范是97年6月提出的），如果想用java处理http，确实也只能用CGI。估计当时的java对服务端也没什么想法吧，感觉像玩具一样的语言，在前端做各种applet。。。直到JDK1.2，Sun才提出了J2EE，也就是现在的JavaEE，开始发力服务端。</p>
+<p>那么，为啥没发展出所谓的<code>mod_java</code>呢？看上面文章中的代码就知道，用CGI去处理http非常“不OO”，这跟java的理念是完全相悖的。而且这是一种比较“底层”的API，使用不方便，维护、扩展都有很多问题，很多特性（比如session处理）都需要另外去补充。而且java是基于多线程模型去处理请求的，跟Apache的多进程模型也不同。当然也不能忽略Sun的推动与宣传。</p>
+<p>不管怎样，java+CGI没有成为主流，servlet成了java世界的标准，应该说这是历史的选择？从设计上来讲Servlet可以支持各种类型的请求，但实际中绝大多数实现都是用于处理http请求。Tomcat就是所谓的Servlet容器，符合servlet规范的java工程，直接部署到tomcat中即可运行。</p>
+<p>那么，为啥不能用tomcat直接处理所有请求？为啥要加一层Apache/Nginx？从理论上来说，是可以用tomcat处理所有请求的，但还要考虑到效率的问题。虽然Apache“结合CGI动态生成内容”这个功能被废掉了，但“处理静态文件”和“转发请求”这两个功能还在啊，可以用来减轻tomcat的负载，还能实现负载均衡等功能。<br>单纯说处理静态请求的话，各种Servlet容器还是不如Apache/Nginx，毕竟不是专门干这个的。虽然也能用<code>DefaultServlet</code>处理静态文件，但多了一层Servlet的处理逻辑，性能上总会有些损耗。</p>
+<p>一篇比较好的介绍Servlet的文章：<br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-servlet/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/java/j-lo-servlet/</a></p>
 
         
       </div>
@@ -251,10 +267,9 @@
   
     <div class="comments" id="comments">
       
-        <div class="ds-thread" data-thread-key="2015/04/06/java-tips/"
-             data-title="java豆知识" data-url="http://jxy.me/2015/04/06/java-tips/">
+        <div id="disqus_thread">
+          <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
         </div>
-
       
     </div>
   
@@ -295,11 +310,11 @@
       <p class="site-description motion-element">思绪偶尔在这里停留</p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">53</span>
+          <span class="site-state-item-count">55</span>
           <span class="site-state-item-name">日志</span>
         </div>
         <div class="site-state-item site-state-tags">
-            <span class="site-state-item-count">41</span>
+            <span class="site-state-item-count">44</span>
             <span class="site-state-item-name">标签</span>
         </div>
         <div class="site-state-item site-state-pages">
@@ -360,7 +375,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于泛型"><span class="nav-number">1.</span> <span class="nav-text">关于泛型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Class-newInstance"><span class="nav-number">2.</span> <span class="nav-text">Class.newInstance</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile"><span class="nav-number">3.</span> <span class="nav-text">volatile</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#transient"><span class="nav-number">4.</span> <span class="nav-text">transient</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wait()"><span class="nav-number">5.</span> <span class="nav-text">wait()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CountDownLatch"><span class="nav-number">6.</span> <span class="nav-text">CountDownLatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NoClassDefFoundError_vs_ClassNotFoundException"><span class="nav-number">7.</span> <span class="nav-text">NoClassDefFoundError vs ClassNotFoundException</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于泛型"><span class="nav-number">1.</span> <span class="nav-text">关于泛型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Class-newInstance"><span class="nav-number">2.</span> <span class="nav-text">Class.newInstance</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile"><span class="nav-number">3.</span> <span class="nav-text">volatile</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#transient"><span class="nav-number">4.</span> <span class="nav-text">transient</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wait()"><span class="nav-number">5.</span> <span class="nav-text">wait()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CountDownLatch"><span class="nav-number">6.</span> <span class="nav-text">CountDownLatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NoClassDefFoundError_vs_ClassNotFoundException"><span class="nav-number">7.</span> <span class="nav-text">NoClassDefFoundError vs ClassNotFoundException</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java_Cookies"><span class="nav-number">8.</span> <span class="nav-text">Java Cookies</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口的默认实现"><span class="nav-number">9.</span> <span class="nav-text">接口的默认实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apache_vs_Tomcat"><span class="nav-number">10.</span> <span class="nav-text">Apache vs Tomcat</span></a></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -891,24 +906,30 @@
   
 
   
+  
 
   
+
     
+      
+    
+
+    <script type="text/javascript">
+      var disqus_shortname = 'foolbear';
+      var disqus_identifier = '2015/04/06/java-tips/';
+      var disqus_url = 'http://jxy.me/2015/04/06/java-tips/';
+
+      (function(){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }());
+    </script>
   
 
-  <script type="text/javascript">
-    var duoshuoQuery = {short_name:"foolbear"};
-    (function() {
-      var ds = document.createElement('script');
-      ds.type = 'text/javascript';ds.async = true;
-      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-      ds.charset = 'UTF-8';
-      (document.getElementsByTagName('head')[0]
-      || document.getElementsByTagName('body')[0]).appendChild(ds);
-    })();
-  </script>
 
-  
   
   <script type="text/javascript">
     (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
