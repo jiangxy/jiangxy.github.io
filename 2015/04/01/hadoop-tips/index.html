@@ -188,6 +188,21 @@
 <p>前提：maven、protoc.exe 2.5.0、avro<br>按BUILDING.txt的说明：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="built_in">cd</span> hadoop-maven-plugins/</div><div class="line">mvn install</div><div class="line"><span class="built_in">cd</span> ..</div><div class="line">mvn eclipse:eclipse -DskipTests</div><div class="line"><span class="comment"># 这时已经可以导入eclipse了，但有些类是proto和avro生成的，现在导入的话hadoop-common项目会有些error</span></div><div class="line"><span class="built_in">cd</span> hadoop-common-project/hadoop-common/src/test/proto</div><div class="line">protoc test_rpc_service.proto --java_out=../java</div><div class="line">protoc test.proto --java_out=../java</div><div class="line"><span class="built_in">cd</span> ../avro</div><div class="line"><span class="comment"># avro的jar可以从官网下载</span></div><div class="line">java -jar avro-tools-<span class="number">1.7</span>.<span class="number">7</span>.jar compile schema avroRecord.avsc ../java</div><div class="line"></div><div class="line"><span class="comment"># 这时导入的话，hadoop streaming项目的classpath有些问题，要修改hadoop streaming项目的.classpath文件</span></div><div class="line"><span class="comment"># 注释掉包含hadoop-yarn-project/hadoop-yarn/hadoop-yarn-server/hadoop-yarn-server-resourcemanager/conf的一行</span></div><div class="line"><span class="comment"># 有什么副作用不知道</span></div><div class="line"></div><div class="line"><span class="comment"># 在eclipse里导入existing project，选择root directory即可，eclipse会自动扫描所有项目并导入</span></div><div class="line"></div><div class="line"><span class="comment"># 导入后classpath一般会有问题，找不到M2_REPO路径。不要用eclipse内置的maven，修改Windows-&gt;Preferences-&gt;Maven-&gt;Installations，改成自己的maven路径。</span></div><div class="line"><span class="comment"># 之后所有项目都OK了，没有error，但有些warn，关系不大</span></div></pre></td></tr></table></figure>
 
+<p>补充：在JDK8的情况下导入步骤似乎又不太一样。环境：JDK8、macOS 10.12、hadoop-2.6.0-cdh5.6.1。</p>
+<ul>
+<li>需要修改根pom.xml中的<code>&lt;javaVersion&gt;1.7&lt;/javaVersion&gt;</code>属性为1.8，否则maven-enforcer-plugin插件会报错。</li>
+<li>直接<code>mvn eclipse:eclipse -DskipTests</code>似乎有些问题，据说是eclipse插件的bug，需要用<code>mvn org.apache.maven.plugins:maven-eclipse-plugin:2.6:eclipse -DskipTests</code></li>
+<li>eclipse插件执行过程中出现了一个非常诡异的<code>missing tools.jar</code>错误，参考<a href="http://blog.csdn.net/bigdatahappy/article/details/41707251" target="_blank" rel="external">这个帖子</a>解决即可。</li>
+</ul>
+<p>导入eclipse后还是会报一些奇怪的error，有些error要手动修改build path引入jar包，有些error要手动修改项目编译级别到1.7（参考<a href="http://www.cnblogs.com/xiangyangzhu/p/5243324.html" target="_blank" rel="external">这个</a>）。也可能是eclipse本身的bug。<br>不管怎样，最终完成后，所有error都可以消除。</p>
+<p>顺便说下hive代码的导入。环境：JDK8、macOS 10.12、hive-1.1.0-cdh5.6.1。</p>
+<p>参照<a href="http://lib.csdn.net/article/hive/49921" target="_blank" rel="external">这篇文章</a>依次执行以下命令即可：</p>
+<ul>
+<li><code>mvn clean install -DskipTests -Phadoop-2</code></li>
+<li><code>mvn eclipse:clean</code></li>
+<li><code>mvn eclipse:eclipse -DdownloadSources -DdownloadJavadocs -Phadoop-2</code>（虽然我觉得这两个-D参数可以不要）</li>
+</ul>
+<p>然后导入eclipse，也是会报一些奇怪的error，一般都是build path有问题。我碰到的是报一个<code>scala-compiler-2.10.0.jar</code>有错误，手动将有问题的项目的build path中的这个jar删除，就可以去除error。</p>
 <h1 id="如何开启客户端DEBUG日志">如何开启客户端DEBUG日志</h1>
 <p>设置环境变量即可</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">export</span> HADOOP_ROOT_LOGGER=DEBUG,console</div></pre></td></tr></table></figure>
@@ -341,7 +356,7 @@
       <p class="site-description motion-element">思绪偶尔在这里停留</p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">55</span>
+          <span class="site-state-item-count">56</span>
           <span class="site-state-item-name">日志</span>
         </div>
         <div class="site-state-item site-state-tags">

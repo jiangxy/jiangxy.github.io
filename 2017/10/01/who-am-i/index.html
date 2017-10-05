@@ -22,9 +22,9 @@
 
 
 
-	<meta name="keywords" content="小程序," />
+	<meta name="keywords" content="杂谈," />
 
-  <title> 不务正业again // foolbear的冥想盆 </title>
+  <title> 驽马十驾 // foolbear的冥想盆 </title>
 </head>
 
 <body>
@@ -111,7 +111,7 @@
           
           
             
-              不务正业again
+              驽马十驾
             
           
         </h1>
@@ -120,15 +120,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            发表于 2016-12-07
+            发表于 2017-10-01
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2016/12/07/wx-applet/#comments" >
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/07/wx-applet/"></span>
+            <a href="/2017/10/01/who-am-i/#comments" >
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/10/01/who-am-i/"></span>
             </a>
           </span>
           
@@ -143,64 +143,64 @@
         
 
         
-          <p>又一次不务正业，研究了下微信小程序。</p>
-<p>其实微信小程序已经火了好久了。几个月之前内测的时候，很多人就迫不及待去研究，各种破解资料、教程满天飞。公司内部也专门组织人去学习了下。<br>可惜当时我事情比较多，只是打了个酱油，等公测开始才真正去研究了下。<a href="https://github.com/jiangxy/wxapplet-canvas-demo" target="_blank" rel="external">写了个简单的小游戏</a>，算是对小程序有了个大概的了解。话说最好的学习方式果然还是实践。古人云：“纸上得来终觉浅，须知此事要躬行”。</p>
-<p><strong>本文不是一个教程</strong>，只是总结下学习过程中的感想。</p>
+          <p>好久没写，拖延症又发作了。<br>另一方面，最近刚换了工作，各种事情还是挺头疼的，此间曲折难与人言。</p>
 <a id="more"></a>
-<h1 id="初印象">初印象</h1>
-<p>其实最早的传闻，是微信要做一个叫“服务号”的东西，老大说要我们关注下，但完全没有头绪，网上也没有啥靠谱的资料。</p>
-<p>题外话，我一直觉得微信的生态好复杂，订阅号/服务号/企业号傻傻分不清楚，公众平台/开放平台到底是啥关系，工作中碰到各种openId/unionId、各种授权的问题也总是会晕。而且这个生态特别封闭，自成体系，微信会管的很多，比如外链的限制、对外部接口的限制等等。这倒是和appstore有点像。<br>在这种封闭的生态中做开发，其实挺难受的。。。但生态封闭、开发难受，用户体验就能得到保证。参考ios vs android。而且，能做出这样一个生态真是挺NB的，不得不服。</p>
-<p>另外，总有人纠结HTML5 vs H5，我觉得这种纠结很无聊啊。写作<code>HTML5</code>就比<code>H5</code>高大上了？有人看到H5就一定要去纠正一下：“你这样是不对的，应该是<code>HTML5</code>，H5是中国人自己发明的叫法”，以此彰显自己的专业。知乎上这种风气尤甚。你咋不说茴字有四种写法呢╮(╯_╰)╭？嘛，你们开心就好，我反正是个二手前端，图省事一般都叫做H5。</p>
-<p>小程序的<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/structure.html?t=20161122" target="_blank" rel="external">结构</a>还是比较简单的，无非是<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxml/?t=20161122" target="_blank" rel="external">WXML</a>和<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxss.html?t=20161122" target="_blank" rel="external">WXSS</a>解决视图层的问题，JS解决逻辑层的问题。WXML和WXSS可以认为是HTML和CSS的方言，只是有些特殊的限制，其实经过编译之后还是HTML和CSS。这套逻辑和各种概念早就被各种JS的MVVM框架玩烂了，实在没啥新鲜的。<br>WXML除了常规的数据绑定/模版/引用等概念，值得注意的是<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxml/event.html?t=20161122" target="_blank" rel="external">事件绑定</a>，和普通的HTML不同，不过用起来挺顺手的。<br>WXSS和CSS没啥区别，写起来还是一样的痛苦。。。我本来还期望着微信能有什么方法解决布局的问题，释放二手前端生产力。。。为啥前端一直没有一种可视化的布局工具嘞？像若干年的VB6一样，拖拖拽拽就能搭出一个页面。mac上有个软件<a href="http://www.maczapp.com/sparkle-pro-visual-web-design" target="_blank" rel="external">Sparkle</a>实现了类似的想法，可是不太好用。</p>
-<p>因为我之前有研究过一点React，于是学习小程序的过程中总是会不自觉的和React对比。小程序也确实和React有点像。比如<code>setData</code>明显就是抄的<code>setState</code>，还有组件化/生命周期等概念。但用户无法自定义组件是一大问题，而且只有页面级别的组件，也许这是微信为了降低开发复杂度而做的妥协吧。<br>应该说，页面是唯一的“容器组件”，所有的状态都在页面组件中。另外<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/app-service/page.html?t=20161122" target="_blank" rel="external">页面路由</a>的管理也真是很迷。。。经常有些诡异的状况出现。</p>
-<p>在视图层，微信提供了一些可用的<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/component/?t=20161122" target="_blank" rel="external">基础组件</a>，这些应该被称为“UI组件”（感觉是脱胎于<a href="https://mp.weixin.qq.com/wiki/2/ae9782fb42e47ad79eb7b361c2149d16.html" target="_blank" rel="external">WeUI</a>），最大意义在于提供统一的视觉风格，跟React的组件不是一个概念。还不是很完善，尤其是对比Ant Design之类的。不知道什么时候会有小程序的第三方UI KIT。</p>
-<p>小程序在WXML中绑定数据的逻辑又和angular有点像。不过我挺喜欢<a href="http://mustache.github.io/" target="_blank" rel="external">Mustache</a>的语法的，有点像jsx表达式，但区别也很多。<br>WXML中的模版概念，感觉也是从angular中搞过来的。</p>
-<p>总的来说，小程序开发框架（传说这个框架名字叫MINA？）就是个大杂烩，吸收了各种JS框架的理念，同时加入一些自己<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/api/?t=20161122" target="_blank" rel="external">特有的API</a>（我要吐槽微信的canvas API真是超难用，跟标准的canvas完全不一样，让我找到了小学用logo语言画图的感觉。。。）。<br>如果你之前使用过一些MVVM框架，那小程序完全没啥学习成本，直接就能上手。<br>就算之前没有接触过，相对于让人望而生畏的厚厚一本《Angular JS实战》/《深入React技术栈》，小程序对新手无疑也要友好很多。</p>
-<h1 id="一些思考">一些思考</h1>
-<p>由于工作原因，我接触过一些<a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html" target="_blank" rel="external">JS-SDK</a>。在我看来，使用了JS-SDK的H5页面已经可以很接近原生app的体验了，可以调用各种原生app的能力，除了慢点。参考微信自带的理财通。</p>
-<p>那问题来了，微信小程序就是加强版的JS-SDK么？小程序和普通的H5区别在哪里？为啥微信要再造个轮子？</p>
-<p>我的感觉：<br><strong>1.运行时&amp;效率的不同</strong><br>这是最重要的区别。之前有消息说小程序使用了ReactNative。我以为是编译成native代码执行，但目测不是啊。摘自微信官方文档：</p>
-<blockquote>微信小程序运行在三端：iOS、Android 和 用于调试的开发者工具<br><br>在 iOS 上，小程序的 javascript 代码是运行在 JavaScriptCore 中<br>在 Android 上，小程序的 javascript 代码是通过 X5 内核来解析<br>在 开发工具上， 小程序的 javascript 代码是运行在 nwjs（chrome内核） 中</blockquote>
-
-<p>看来小程序的代码还是要有一个JS运行时环境去支持的。但微信应该有做过一些优化，坊间传言视图层（WXML中的块级元素）的渲染都是native的。否则打开微信小程序=扫码打开一个网页，那也太low了吧。。。至于是否有其他优化策略，还不得而知。<br>而普通的H5么，因为是用浏览器打开，效率明显会低一些。iOS上微信会调用系统自带的浏览器内核，Android上会使用内嵌的QQ浏览器X5内核（所以一直被吐槽是手机上的IE6）。</p>
-<p><strong>2.简化&amp;规范开发流程，约定大于配置</strong><br>相比开发一个H5页面，开发一个小程序的难度是很低的。摘自微信官方文档：</p>
-<blockquote>小程序开发框架的目标是通过尽可能简单、高效的方式让开发者可以在微信中开发具有原生 APP 体验的服务。</blockquote>
-
-<p>如果想用H5+JS-SDK实现类似于原生APP的体验，无疑是超级麻烦的，光是各种设备的适配就能搞个半死。。。而且使用标准的HTML时，要去关注很多跟业务逻辑无关的东西，比如各种<code>&lt;meta&gt;</code>标签、<code>&lt;script&gt;</code>的顺序、CSS属性的各种特定前缀之类的。<br>而小程序将这些复杂的事情都交给框架去做，同时对工程结构做了很多约定，简化了开发流程。从某种意义上说，JS-SDK只是个“工具”，而小程序才是真正的“框架”，就是jquery和react的区别。<br>这也是所谓的DRY原则。</p>
-<p><strong>3.重新整合微信特有的API</strong><br>小程序提供了各种微信特有的API，比如登录/微信支付/照片/设备信息等等。我对比了下JS-SDK提供的API，发现二者是互相交叉的，小程序去掉了JS-SDK中很多用不到的API，而且小程序的API也好用很多。或者说，原来的JS-SDK的API设计的太烂了。。。用过的没有不吐槽的。</p>
-<p>不过小程序应该也从JS-SDK借鉴了很多经验。</p>
-<p><strong>4.增加对生态的控制力</strong><br>微信的生态一直是封闭的。而H5很难控制，你不知道一个页面是做什么用的，打开之后会发生什么，请求哪些服务端，也很难封杀。同样的页面内容，完全可以换个马甲就出来了。。。从战略上来说，对整个生态是不利的。<br>而小程序请求哪些域名、能做什么事、呈现什么内容，可以说完全在微信的控制之下。尤其是上架还要经过审核，想改就改，想封杀就封杀。越来越像老大哥了啊。。。对于所有的权利集团而言，当然是权利越集中对自己越有利啊。</p>
-<p><strong>5.渠道的问题</strong><br>微信小程序的入口现在还不清楚。有说是二级菜单的，有说是像公众号一样的，甚至有说可以直接放在系统桌面的（估计只有android能做到这种吧，桌面widget）。不过不管怎样，相比只能在朋友圈里以url形式传播的H5页面，小程序的渠道肯定更丰富吧，离用户更近，也就更容易获得流量。</p>
-<p>说到底，大家为什么这么看好小程序，还不是因为微信巨大的流量，9亿的注册用户，5亿的月活，还自带社交渠道的推广属性，怎么想都是很诱人。关键就看腾讯爸爸怎么分配入口和流量了。。。如果能拿到更核心的社交关系数据，想象空间更是无限大，不过这个腾讯肯定是不会给的，毕竟隐私策略也是个大问题。</p>
-<p>个人感觉，小程序的关键在于“小”。小就意味着简单：开发简单，不需要投入太多；使用简单，用户进入后很快找到需要的功能，不会有太多的干扰因素；功能上也应该简单，即开即用，用完就走，不需要有什么顾虑。很多公司开发小程序，就是把自己已有的APP原样照搬过去，俺对此持保留意见。。。<br>感觉上，用户在打开一个小程序之前，就应该知道要干什么，知道要打开哪个程序。程序被打开后，让用户做完想做的事就可以了，而不要提供各种乱七八糟的额外功能。小程序应该专注于特定的本职功能。<br>所以我觉得一些工具类/游戏类的小程序会比较契合主题，一些“大而全”的小程序反而是理念有问题。可以参考下小程序的<a href="https://mp.weixin.qq.com/debug/wxadoc/design/index.html?t=20161109" target="_blank" rel="external">设计指南</a>。</p>
-<p>还有啊，为啥大家默认小程序就是H5页面？各种视觉、交互都是按照网页的风格去设计，很多原来的在线H5设计工具，改一改就号称是小程序在线设计了。。。如果打开小程序就等于是打开了一个浏览器，那还有啥意思。<br>我理想中的小程序，应该是体验和native app一样的，用户打开app时，不应该明显的感觉到从app进入到了一个网页。用户都不傻的，“画风突变”还是能分别出来的。<br>我在使用一些APP时，碰到这种画风突变的情况，也会很蛋疼。。。不管你背后的技术是native还是H5还是hybird，至少体验要一致吧。</p>
-<p>小程序一出来，很多人就叫嚣着“H5要取代app”，“H5开发需求要爆发”，“微信将统一所有APP”，“ios/android开发要失业”。。。嗯，开心就好。。。<br>这让我想到Facebook Messenger刚推出<a href="https://developers.facebook.com/docs/messenger-platform/product-overview" target="_blank" rel="external">Bot平台</a>时，大家也是各种激动，号称以后各种APP都将消亡，很多用户需求都将在Bot上满足，人工智能将迎来春天。甚至Bot上将形成自己的appstore。<br>乐观是好的，但忽悠人就不对了。客观的说，冲击肯定是有的，但说取代APP还为时过早。微信对APP的冲击从公众号时代就开始了。现在我们试水一个新业务，很多都是先做一个公众号而不是APP。至于小程序会带来哪些改变，谁知道呢，上帝的归上帝，凯撒的归凯撒吧。对个人而言，多关注些业界，多了解些技术总是不会错的，但也没必要过度反应。</p>
-<p>之前不是也有好多人担心微信能不能过appstore审核。如果微信小程序真的能发展到威胁appstore的程序，苹果也不会坐视不理吧。之前为啥ios封杀flash，安全/性能只是一方面，更大的原因是flash“不受控”，adobe完全可以在flash上发展出自己的生态，flash生态中的应用/用户/数据，都完全不受控制。</p>
-<p>不管怎样，拭目以待吧。</p>
-<h1 id="Hybird">Hybird</h1>
-<p>我对APP开发的经验是0，仅有的一点点经验来自React Native。但平常跟各个APP的同学打交道还是比较多的，也知道一些概念。对Hybird这个概念一直比较模糊，正好顺道google下。</p>
-<p>Hybird也就是所谓的混合开发，一个APP中，部分使用native实现，部分使用H5实现。一般而言展示性强的页面偏向于H5，功能性强的页面偏向于native。但也没有定式。好处嘛就是降低开发成本，但出现问题调试也比较麻烦。<br>我以前一直以为所谓的Hybird APP就是一个浏览器。。。所有的页面都是H5的，app本身只负责提供一些底层的接口。看了<a href="http://www.infoq.com/cn/articles/hybrid-app-development-combat" target="_blank" rel="external">这篇文章</a>才知道，Hybird也分很多种，H5甚至可以只负责局部的渲染。</p>
-<p>感觉上，React Native应该不算Hybird吧，毕竟它是编译成原生代码。有点像编译型语言和解释型语言的区别。</p>
-<p>H5和native通信的组件被称为JsBridge，但似乎没有一个标准的规范？各家APP都有自己的实现，个人没事也可以写一个玩，基本就是在原生的WebView上各种hack，拦截H5页面请求的一些特殊的url（比如<code>weidian://methodName?k1=v1&amp;k2=v2</code>）再做出相应的处理。微信的JS-SDK调用native API也是同样的道理。<br>通过JS调用java方法，想想还是挺带感的。。。</p>
-<p>话说，我最早记住的Hybird开发工具是<a href="https://www.xamarin.com/" target="_blank" rel="external">Xamarin</a>，忘了是从哪里看到的了。我一看这名字，“厦门人”，哎呦有个性啊。。。</p>
-<h1 id="参考资料">参考资料</h1>
-<p>小程序现在不需要去看第三方的破解资料了，直接看<a href="https://mp.weixin.qq.com/debug/wxadoc/introduction/index.html?t=20161122" target="_blank" rel="external">官方文档</a>就好。</p>
-<p>腾讯云的小程序解决方案，能解决很多问题，session/websocket/https证书/域名之类的，但要有内测资格才能使用，而且收费：<br><a href="https://www.qcloud.com/solution/la.html" target="_blank" rel="external">https://www.qcloud.com/solution/la.html</a><br><a href="https://github.com/tencentyun/weapp-solution" target="_blank" rel="external">https://github.com/tencentyun/weapp-solution</a></p>
-<p>两个用于小程序界面设计的在线工具：<br><a href="http://www.coolsite360.com/wxapp/" target="_blank" rel="external">http://www.coolsite360.com/wxapp/</a><br><a href="http://jisuapp.cn/" target="_blank" rel="external">http://jisuapp.cn/</a></p>
-<p>一个小程序论坛，有很多开源代码：<br><a href="https://weappdev.com/" target="_blank" rel="external">https://weappdev.com/</a></p>
-<p>对小程序比较透彻的分析：<br><a href="https://github.com/phodal/weapp-quick" target="_blank" rel="external">https://github.com/phodal/weapp-quick</a></p>
-<p>一个比较好的小程序教程：<br><a href="https://segmentfault.com/a/1190000007033827" target="_blank" rel="external">https://segmentfault.com/a/1190000007033827</a></p>
-<p>两个纯用canvas做的小游戏，当作canvas入门挺好的：<br><a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript</a><br><a href="http://www.w3schools.com/graphics/game_intro.asp" target="_blank" rel="external">http://www.w3schools.com/graphics/game_intro.asp</a></p>
-<p>CSS布局教程，对我这样CSS苦手的人是一大福音：<br><a href="http://zh.learnlayout.com/toc.html" target="_blank" rel="external">http://zh.learnlayout.com/toc.html</a></p>
-<h1 id="碎碎念">碎碎念</h1>
-<ol>
-<li>JS真是无所不在，不光能写移动端的，还能写桌面端的。。。微信官方的开发工具其实就是个react应用，见<a href="https://www.phodal.com/blog/weapp-demo-process-webkit-app/" target="_blank" rel="external">这篇文章</a>的分析。这种技术被称为<a href="http://nwjs.io/" target="_blank" rel="external">node-webkit</a>，感觉就是桌面版的Hybird啊，有空研究下。</li>
-<li>canvas是个好东西。理论上在canvas中可以做任意事情，发挥自己的想象力。Flipboard甚至搞出个<a href="https://github.com/Flipboard/react-canvas" target="_blank" rel="external">react-canvas</a>，所有UI都在canvas上绘制，真是有毅力。据说是为了避免DOM的性能问题？有空研究下。</li>
-<li>强烈要求微信改进开发者工具，至少要可以自定义背景色和字体，白背景看得眼睛好痛。而且字体也太小了，也不支持html/css的格式化。</li>
-<li>最近手贱<code>rm -rf /</code>了一下。。。这种事我一直是当作段子来看的啊，没想到居然会发生在我身上。看来不能高估自己的san值。</li>
-<li>无论什么语言、框架、工具，甚至无论什么事情，生活中/工作上，<strong>想象力</strong>都是最重要的，它决定了一个人的上限。做出有想象力的作品是很难的，只会循规蹈矩很难有出路。为啥会有这个感慨呢，因为组里有个树莓派，在想能拿来干点啥。。。google的过程中惊叹于各种神奇的作品。有时候脑洞大点真不是坏事。</li>
-<li>最近稍微看了些<a href="https://zh.wikipedia.org/wiki/%E5%B0%BD%E7%AE%A1%E5%8E%BB%E5%81%9A" target="_blank" rel="external">GTD</a>相关的东西，在想要不要搞下“规范的”时间管理。这种方法论呢，<a href="http://www.mifengtd.cn/articles/do-you-need-a-complete-gtd.html" target="_blank" rel="external">没有定式</a>，不要沦为单纯的使用工具，适合自己的才是最好的。</li>
-</ol>
+<p>换工作这种事呢，也不是第一次经历，没有那么多感慨了。但总归是一个比较大的变动，也有了一些新的体会与想法。整个过程虽称不上一帆风顺，但秉承着一贯的革命乐观主义精神，还是有些东西值得说道说道的。经历和见识有限，博君一笑罢了。</p>
+<h1 id="面试感想？">面试感想？</h1>
+<p>为啥会想到换工作呢？我出去面试的最大感受，就是很难说清我过去两年做了什么。。。这就是问题所在了。</p>
+<p>虽然我一直吐槽自己是“<a href="/2017/04/02/lazy-busy-lazy#关于业务">打杂工程师</a>”，啥都干，对很多领域都有些了解。但从个人成长来说，这未必是好事。有我的原因，有团队的原因，也有公司的原因。在“打杂”的过程中，想要去沉淀一些什么，真的很难。如果说是技术上的沉淀，业务都没起来何谈技术架构？只会慢慢变成一个crud boy；如果是业务上的沉淀，隔个几个月就换个业务方向，又能有啥深入的思考？</p>
+<p>这种情况下，面试时就会很被动。我的技术基础还可以，所以一般一面都能聊得很开心，跟面试官天南海北的瞎扯。我也挺喜欢这种感觉的，就像技术交流一样，平时工作中真的很难有这种机会。<br>但后续的面试中，往往会涉及一些很“大”很“虚”的问题。包括你对业务的理解，对架构的思考和规划，甚至是方法论。有次面试官直接让我谈谈对DDD（领域建模）的理解。。。如果是我年轻的时候，估计会觉得这特么都是扯淡，就像魏晋玄学一样，清谈而不解决实务。确实谈论这些很容易变成嘴皮功夫、变成ppt（某司的核心竞争力），但这些东西是真实存在并且有用的，前提是自己真的有经历过、思考过，而不是看了一些文章、一些书籍便到处吹嘘。当一个人在谈论这些的时候，分辨他是否有真材实料，也是个技术活。</p>
+<p>某次二面，从头到尾都没有问一点技术细节，就是讲系统是如何设计的，我说一些细节甚至会被阻止。我举了自己之前在做的一个社区系统的例子，被问的十分狼狈。说来惭愧，社交领域真的没咋思考过，这个系统也只是为了应付功能。如果是大数据、分布式相关领域的，我还能扯上两句。说到底还是做的事情太杂太浅，不够深入。结果不出意外的挂了。<br>事后反思，这块其实有很多事情可以讲的。风控、服务化、结构化、数据挖掘、个性化推荐。。。但之前从来没有想过，所以这波挂掉也不冤。</p>
+<p>出去面试之前我曾联系过一个猎头，大致介绍了下我的情况。他说我之前搞大数据，现在做业务开发，如果还做业务想拿到好的offer可能比较难。当时我不以为然，觉得他很外行，都是相通的嘛。没想到他一语成谶。。。略显讽刺的是，最终还是凭大数据相关的经验拿到了不错的offer，又滚回去搞数据平台了。。。换言之，我这两年到底有没有成长。。。不过也没啥好抱怨的，路都是自己走的嘛。</p>
+<p>面试中的另一个问题在于我只敢说自己确定了解的一些事情，一些了解不多的领域都会很谨慎，这其实也是有些吃亏的。对于那些很“虚”的问题，适当的吹水还是有必要的。要给人一个侃侃而谈的印象，不要有不确定的观点，不要犹豫。有些时候太实在不是好事，说到底还是程序员思维作祟。<br>话说技术分享也是一样的，看看别人的题目：系统稳定性保障核武器、高可用架构演进之路、海量数据场景下解决方案。。。看着就不明觉历有木有，气场就不一样。</p>
+<p>总的来说我还是挺喜欢面试的感觉的，能让我看到自己的不足，这已是万幸了。如果一直沉浸在已有的小圈子中，很容易变成温水煮青蛙。有句话说的好，人受憋屈武艺高，跳出舒适区去外面看看，还是很有必要的。</p>
+<p>P.S. 面试过程中感觉没怎么碰到算法题啊，唯一碰到的一道题是kSum，我特么还没答出来。。。其实这个题也是很经典了，在leetcode上做3Sum/4Sum之类的我也写过通用的解法，但面试中状态不佳也没啥好说的。。。</p>
+<p>P.P.S. 面试中遇到了一些“话术”，像是销售一样。。。一般就是各种挑你的错误，不断的打击你，但这种套路一旦识破了就很容易出戏，就像一个销售对另一个销售使用话术一样。。。</p>
+<h1 id="十字路口">十字路口</h1>
+<p>我之前说自己中年危机，还是戏谑的意味多一些。但这次换工作的经历，让我觉得自己正站在一个十字路口上，必须做出一些很重要的改变。</p>
+<p>对于年轻人，只要技术基础好、态度积极、踏实肯干、听话就可以了。一直以来无论我在哪家公司，招聘应届生、工作一两年的人，标准差不多都是这样。但对于我这种老年选手，就没那么简单了。这也就是我一直在强调的“沉淀”的重要性。</p>
+<p>你要明白如果公司招你进去，对你的“期待”是什么。如果只是简单的crud，干嘛要招你这么贵的一个人，找个应届生培养个两个月，不是一样的效果？又不是皇亲国戚。。。是要你带起某块业务？是从头搭建技术架构？是看中你的经验还是资历？总不会是看中颜值吧，又不是孙红雷。。。要思考对公司的“价值”是什么。想清楚这些东西，以后的路才好走，不至于浑浑噩噩的混日子。</p>
+<p>从个人发展的角度，我大概想了下：</p>
+<ul>
+<li>要有自己的“领域”。也可以说是自己的护城河、核心竞争力，一个意思。通俗点说就是在某个方向上要能有深入的理解，要能别人所不能，这样才能体现自己的价值。所谓的领域，可能是技术的，可能是非技术的。一个典型的例子就是现在的算法工程师，随着AI的火热，身价也水涨船高，但算法的壁垒还是比较高的，如果之前没研究过想进入这个领域还是挺难的，就算进入这个领域想达到一定的高度也要旷日持久的投入，这就是他们的“护城河”。另外总有些人会拿“深度”、“广度”来说事，说自己“深度”不行，“广度”还可以之类的。但这只是块遮羞布而已，你在某个深度上证明自己之前，没人在乎你的广度。</li>
+<li>更多的关注人，而不是事。换言之，be social。在某个年纪之前，只要埋头做事就可以了。但如果还想持续保持竞争力，就要更多的关注人。不说八面玲珑，至少要能融洽相处吧，如果要带团队，更是如此，要清楚每个人的性格，擅长/不擅长什么，才能合理安排。对我这种脸盲症中期患者而言，还是有点难度的。。。隐居的高手什么的，那都是扯淡，现在哪有单打独斗做事的，都是靠团队冲锋。有人会拿多隆举例子，说他一心钻研技术取得什么什么成就。但多隆只有一个，而所谓的技术宅到处都是，性格乖僻无法合作的我也见过不少。还有很多人以乔布斯为偶像，但没学到乔布斯的才华，只学到了他的刻薄和偏执。反正我看到的混得好的人，都是非常擅于处理人际关系的。</li>
+<li>有自己的想法，别怕发言，能独当一面，不要等别人指挥。因为越向上走，接收到的“指令”往往越模糊，可能只是一句话。要把这句话落地实现，跟拿着详细设计文档写代码，完全不是一个层次的事情。必须要自己去思考如何实现，全权的own这个东西，很多事情要主动的牵头和推动。关键在于做事的意愿，也可以叫做野心、aggressive、匪气。说到匪气，有时候工作真的和土匪一样，太书生气是要吃亏的。。。生活中亦是如此，<a href="https://zh.wikipedia.org/wiki/%E8%8B%8F%E4%BA%AB%E8%8C%82%E8%87%AA%E6%9D%80%E4%BA%8B%E4%BB%B6" target="_blank" rel="external">善良又胆小的人没有活路</a>。</li>
+<li>职责没有边界。所谓小富即安：搞好我自己这一块就可以了，其他的天塌下来也不关我的事。这种想法挺常见的，但对于自身的长远发展其实是不利的。</li>
+<li>严禁追求完美。这是很多程序员的通病，总是想找一个完美的解决方案。领先别人一步是天才，领先十步就是神经病了。同理，思虑周全是好事，但导致瞻前顾后不敢行动就是SB了。我们当然要思考长期的解决方案，但很多时候我们要先拿出一个短期的“补丁”，才有资格去思考中长期的事情。</li>
+<li>尽量去做核心业务，去接触核心的技术、核心的圈子。毕竟扎马步之类的练得再好，也只是基础动作，也比不上九阴真经里的一招半式。。。关键在于开拓“眼界”，这是很抽象但是也很重要的一个东西。好比谈到创业，有些人只能想到学校门口开个炒饭大排档，有些人却可以写商业计划书去骗风投。。。而且不同的圈子里，能接触到的人也不一样，从其他人身上学习往往是一条捷径。</li>
+</ul>
+<p>乱七八糟写了这么一通，感觉还是说的不清楚。。。就是隐隐的有一种感觉，但很难写出来，所谓的“升咖”的机会。</p>
+<p>话说回来，其实很多时候都是因事成人，一个人的成功不是因为能力如何出众，而是做对了某件事。但如何在恰当的时机把握住机会，就是成功者区别于常人之处了。君子善假于物，此言不虚，顺大势而行方是正途。你可以说是狗屎运，但不得不服。</p>
+<p>最后摘录一段鸡汤：</p>
+<blockquote>
+<p>在某个年纪之前，你可以靠透支身体、小聪明和老天给你的运气一直取巧地活着。然而到了某个年纪之后，真正能让你走远的，是自律、积极和勤奋。</p>
+</blockquote>
+<h1 id="还是架构">还是架构</h1>
+<p>架构这个东西，就像盲人摸象一样，每个人都有自己的理解。架构说到底就是“做某件事的方法”。这个东西不能没有，但是也不能过于纠结。我也说不清楚，但我经历过一些反模式，倒是可以说说。</p>
+<p>这两年参与了各种业务，每次一有新需求，开发们就开始叫，这个做不了，那个改动太大。。。然后开始和产品撕逼，要求砍需求，或者评估一个很长的开发时间，让产品们知难而退。。。就算最后迫于压力接下需求，也是各种吐槽。<br>但仔细想想的话，有些需求是合理的，反而是技术架构设计的不好才导致各种问题。产品说我要做一个能发140字短文本的社区，好的技术们去实现了；后续产品们又要求能发图片，但上一个版本的设计只能支持文字，于是又是各种大改。。。但这个问题开始的时候就应该想到啊。这就像代码里的hard code一样，既然当初偷了懒，欠下技术债务，给自己埋了坑，踩坑的时候就别抱怨。</p>
+<p>过于短视，只关注眼前的一些需求，只关注一些“点”，缺少全面的思考就可能导致各种问题，因为大家都抱着一种事不关己的态度，反正我把分给自己的需求做完没bug就行了。。。<br>正常来说要先有个通用的架子，然后结合需求和产品的未来规划来做设计。</p>
+<ul>
+<li>尽管有许多架构都能满足功能需求，但其中只有一少部分能满足品质需求，比如可变性、性能、容量、安全</li>
+<li>在设计的过程中，有许多“决定”要做，未必是架构师来做决定，有些决定是“隐含”的</li>
+<li>越早期的“决定”，影响越大</li>
+<li>越早期的阶段，修复错误就越容易</li>
+<li>不要让架构“自动出现”。切忌不断的“堆日常”，最后只会让整个系统失控。</li>
+</ul>
+<p>一个好的架构通常也是有些套路的：</p>
+<ul>
+<li>关注状态。可能是整个系统的状态，也可能是一行数据的状态、一次调用的状态。也可以说是生命周期、链路。画个状态图，把整个状态变化的过程捋顺了，很多时候就能看出有哪些扩展点，就像AOP一样。</li>
+<li>分层。所有的架构都有一个根本的目标，就是解耦，分层是最简单的手段。层与层之间的交互尽量清晰。</li>
+<li>关注元数据和配置。它们都可以用于增加系统的可变性和扩展性，可以适当使用DSL等，像规则引擎之类的，但也不宜过度。</li>
+<li>关注各种非功能性需求，像是监控、SLA、安全等等。即使很长时间内都没有这种需求，初始设计时也必须考虑到。</li>
+<li>参考已有的架构。一些已经有最佳实践的领域，可以直接借鉴。更重要的是注意各种反模式，就像代码里的“坏味道”一样，一旦出现类似的“不和谐”的感觉就要注意了。</li>
+</ul>
+<p>具体到大数据这块，我感觉我现在就是个造发动机的。。。数据平台的职责在于向下屏蔽各种基础设施（hadoop/spark/kafka之类），向上提供友好的、业务相关的UI和API，提供各种使用数据的能力。在它上面会有数据仓库、各种数据驱动的应用等强业务相关的系统。所以感觉它就是个发动机，数据就是汽油。。。最差的架构就是一堆基础设施，直接暴露给用户，没有一点平台的概念。就像暴露一堆“裸设备”给别人用，这就是为啥要有文件系统。<br>一个不太恰当的比喻：就像NewSQL一样，我们应该提供sql给用户使用，而不是直接丢一堆low-level API给他，说你自己玩去吧。。。</p>
+<p>P.S. 关于业务和技术，我现在还是觉得应该是以业务为导向的，即使现在搞平台相关，离业务稍远。这是一种“思考方式”，脱离业务需求去单独的研究技术是很危险的：不注重业务意义、不注重与人交流、搞各种奇技淫巧。一个反例就是，我曾经研究过一些guava中函数式编程的接口，然后用到了自己的系统中，这tm就是给后来的人埋坑，我保证他们看不懂。。。业务是应该驱动技术的，应该从业务的角度去思考，我要用技术去做哪些事。</p>
+<p>P.P.S. 既然说到了奇技淫巧，我发现很多程序员都有这个坏习惯：喜欢在正式项目里“练手”，把简单的东西写的很复杂，看到一些新奇的东西就强行用在项目里，还喜欢自己造轮子，最后都没人维护。。。所以说，好的代码总是相似的（有最佳实践），烂的代码则是千奇百怪。</p>
+<h1 id="END？">END？</h1>
+<p>年纪渐长，心中总是难免有些感慨。现在我的很多文字，如果给几年前的我看，估计会被吐槽“这谁啊这么矫情”吧。。。有很多事情，希望自己能早点明白。很多道理不是不知道，但只有亲身经历过才会懂，这真是个矛盾。我已经过了为赋新词强说愁的年纪了（大概），但幸好吐槽的功力还保留着几分。。。</p>
+<p>有时候我也会想，生活&amp;工作咋就这么复杂呢，就不能只是简单的吃着火锅唱着歌么。。。但不管你喜不喜欢，现实如此。不想被麻匪绑走的话，还是努力些吧。<br>似乎我从来不是一个聪明的人，旁人对我的形容多是“踏实”。驽马十驾，功在不舍，聊以自慰吧。</p>
+<p>一些文章：<br><a href="http://geek.csdn.net/news/detail/235751" target="_blank" rel="external">http://geek.csdn.net/news/detail/235751</a><br><a href="https://zhuanlan.zhihu.com/p/27891140" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/27891140</a></p>
 
         
       </div>
@@ -211,8 +211,8 @@
         
           <div class="post-tags">
             
-              <a href="/tags/小程序/">
-                #小程序
+              <a href="/tags/杂谈/">
+                #杂谈
               </a>
             
           </div>
@@ -222,13 +222,11 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2017/01/15/2017-and-redux/">时间倏忽而逝</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2016/10/24/1024-festival/">壹〇二四</a>
+                <a href="/2017/06/03/distributed-mess/">分布式大杂烩</a>
               
             </div>
           </div>
@@ -353,7 +351,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初印象"><span class="nav-number">1.</span> <span class="nav-text">初印象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一些思考"><span class="nav-number">2.</span> <span class="nav-text">一些思考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hybird"><span class="nav-number">3.</span> <span class="nav-text">Hybird</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#碎碎念"><span class="nav-number">5.</span> <span class="nav-text">碎碎念</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#面试感想？"><span class="nav-number">1.</span> <span class="nav-text">面试感想？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#十字路口"><span class="nav-number">2.</span> <span class="nav-text">十字路口</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#还是架构"><span class="nav-number">3.</span> <span class="nav-text">还是架构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#END？"><span class="nav-number">4.</span> <span class="nav-text">END？</span></a></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -894,8 +892,8 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'foolbear';
-      var disqus_identifier = '2016/12/07/wx-applet/';
-      var disqus_url = 'http://jxy.me/2016/12/07/wx-applet/';
+      var disqus_identifier = '2017/10/01/who-am-i/';
+      var disqus_url = 'http://jxy.me/2017/10/01/who-am-i/';
 
       (function(){
         var dsq = document.createElement('script');
