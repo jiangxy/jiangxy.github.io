@@ -22,9 +22,9 @@
 
 
 
-	<meta name="keywords" content="小程序," />
+	<meta name="keywords" content="bigdata," />
 
-  <title> 不务正业again // foolbear的冥想盆 </title>
+  <title> 北游记 // foolbear的冥想盆 </title>
 </head>
 
 <body>
@@ -111,7 +111,7 @@
           
           
             
-              不务正业again
+              北游记
             
           
         </h1>
@@ -120,15 +120,15 @@
       <div class="post-meta">
         <span class="post-time">
           
-            发表于 2016-12-07
+            发表于 2018-05-12
           
         </span>
         
           
             <span class="post-comments-count">
             &nbsp; | &nbsp;
-            <a href="/2016/12/07/wx-applet/#comments" >
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2016/12/07/wx-applet/"></span>
+            <a href="/2018/05/12/2018-qcon/#comments" >
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/05/12/2018-qcon/"></span>
             </a>
           </span>
           
@@ -143,64 +143,104 @@
         
 
         
-          <p>又一次不务正业，研究了下微信小程序。</p>
-<p>其实微信小程序已经火了好久了。几个月之前内测的时候，很多人就迫不及待去研究，各种破解资料、教程满天飞。公司内部也专门组织人去学习了下。<br>可惜当时我事情比较多，只是打了个酱油，等公测开始才真正去研究了下。<a href="https://github.com/jiangxy/wxapplet-canvas-demo" target="_blank" rel="external">写了个简单的小游戏</a>，算是对小程序有了个大概的了解。话说最好的学习方式果然还是实践。古人云：“纸上得来终觉浅，须知此事要躬行”。</p>
-<p><strong>本文不是一个教程</strong>，只是总结下学习过程中的感想。</p>
+          <p>早就该写了，与之前的<a href="/2015/11/29/south-trip/">《南游记》</a>对应。</p>
 <a id="more"></a>
-<h1 id="初印象">初印象</h1>
-<p>其实最早的传闻，是微信要做一个叫“服务号”的东西，老大说要我们关注下，但完全没有头绪，网上也没有啥靠谱的资料。</p>
-<p>题外话，我一直觉得微信的生态好复杂，订阅号/服务号/企业号傻傻分不清楚，公众平台/开放平台到底是啥关系，工作中碰到各种openId/unionId、各种授权的问题也总是会晕。而且这个生态特别封闭，自成体系，微信会管的很多，比如外链的限制、对外部接口的限制等等。这倒是和appstore有点像。<br>在这种封闭的生态中做开发，其实挺难受的。。。但生态封闭、开发难受，用户体验就能得到保证。参考ios vs android。而且，能做出这样一个生态真是挺NB的，不得不服。</p>
-<p>另外，总有人纠结HTML5 vs H5，我觉得这种纠结很无聊啊。写作<code>HTML5</code>就比<code>H5</code>高大上了？有人看到H5就一定要去纠正一下：“你这样是不对的，应该是<code>HTML5</code>，H5是中国人自己发明的叫法”，以此彰显自己的专业。知乎上这种风气尤甚。你咋不说茴字有四种写法呢╮(╯_╰)╭？嘛，你们开心就好，我反正是个二手前端，图省事一般都叫做H5。</p>
-<p>小程序的<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/structure.html?t=20161122" target="_blank" rel="external">结构</a>还是比较简单的，无非是<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxml/?t=20161122" target="_blank" rel="external">WXML</a>和<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxss.html?t=20161122" target="_blank" rel="external">WXSS</a>解决视图层的问题，JS解决逻辑层的问题。WXML和WXSS可以认为是HTML和CSS的方言，只是有些特殊的限制，其实经过编译之后还是HTML和CSS。这套逻辑和各种概念早就被各种JS的MVVM框架玩烂了，实在没啥新鲜的。<br>WXML除了常规的数据绑定/模版/引用等概念，值得注意的是<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/view/wxml/event.html?t=20161122" target="_blank" rel="external">事件绑定</a>，和普通的HTML不同，不过用起来挺顺手的。<br>WXSS和CSS没啥区别，写起来还是一样的痛苦。。。我本来还期望着微信能有什么方法解决布局的问题，释放二手前端生产力。。。为啥前端一直没有一种可视化的布局工具嘞？像若干年的VB6一样，拖拖拽拽就能搭出一个页面。mac上有个软件<a href="http://www.maczapp.com/sparkle-pro-visual-web-design" target="_blank" rel="external">Sparkle</a>实现了类似的想法，可是不太好用。</p>
-<p>因为我之前有研究过一点React，于是学习小程序的过程中总是会不自觉的和React对比。小程序也确实和React有点像。比如<code>setData</code>明显就是抄的<code>setState</code>，还有组件化/生命周期等概念。但用户无法自定义组件是一大问题，而且只有页面级别的组件，也许这是微信为了降低开发复杂度而做的妥协吧。<br>应该说，页面是唯一的“容器组件”，所有的状态都在页面组件中。另外<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/framework/app-service/page.html?t=20161122" target="_blank" rel="external">页面路由</a>的管理也真是很迷。。。经常有些诡异的状况出现。</p>
-<p>在视图层，微信提供了一些可用的<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/component/?t=20161122" target="_blank" rel="external">基础组件</a>，这些应该被称为“UI组件”（感觉是脱胎于<a href="https://mp.weixin.qq.com/wiki/2/ae9782fb42e47ad79eb7b361c2149d16.html" target="_blank" rel="external">WeUI</a>），最大意义在于提供统一的视觉风格，跟React的组件不是一个概念。还不是很完善，尤其是对比Ant Design之类的。不知道什么时候会有小程序的第三方UI KIT。</p>
-<p>小程序在WXML中绑定数据的逻辑又和angular有点像。不过我挺喜欢<a href="http://mustache.github.io/" target="_blank" rel="external">Mustache</a>的语法的，有点像jsx表达式，但区别也很多。<br>WXML中的模版概念，感觉也是从angular中搞过来的。</p>
-<p>总的来说，小程序开发框架（传说这个框架名字叫MINA？）就是个大杂烩，吸收了各种JS框架的理念，同时加入一些自己<a href="https://mp.weixin.qq.com/debug/wxadoc/dev/api/?t=20161122" target="_blank" rel="external">特有的API</a>（我要吐槽微信的canvas API真是超难用，跟标准的canvas完全不一样，让我找到了小学用logo语言画图的感觉。。。）。<br>如果你之前使用过一些MVVM框架，那小程序完全没啥学习成本，直接就能上手。<br>就算之前没有接触过，相对于让人望而生畏的厚厚一本《Angular JS实战》/《深入React技术栈》，小程序对新手无疑也要友好很多。</p>
-<h1 id="一些思考">一些思考</h1>
-<p>由于工作原因，我接触过一些<a href="https://mp.weixin.qq.com/wiki/7/aaa137b55fb2e0456bf8dd9148dd613f.html" target="_blank" rel="external">JS-SDK</a>。在我看来，使用了JS-SDK的H5页面已经可以很接近原生app的体验了，可以调用各种原生app的能力，除了慢点。参考微信自带的理财通。</p>
-<p>那问题来了，微信小程序就是加强版的JS-SDK么？小程序和普通的H5区别在哪里？为啥微信要再造个轮子？</p>
-<p>我的感觉：<br><strong>1.运行时&amp;效率的不同</strong><br>这是最重要的区别。之前有消息说小程序使用了ReactNative。我以为是编译成native代码执行，但目测不是啊。摘自微信官方文档：</p>
-<blockquote>微信小程序运行在三端：iOS、Android 和 用于调试的开发者工具<br><br>在 iOS 上，小程序的 javascript 代码是运行在 JavaScriptCore 中<br>在 Android 上，小程序的 javascript 代码是通过 X5 内核来解析<br>在 开发工具上， 小程序的 javascript 代码是运行在 nwjs（chrome内核） 中</blockquote>
-
-<p>看来小程序的代码还是要有一个JS运行时环境去支持的。但微信应该有做过一些优化，坊间传言视图层（WXML中的块级元素）的渲染都是native的。否则打开微信小程序=扫码打开一个网页，那也太low了吧。。。至于是否有其他优化策略，还不得而知。<br>而普通的H5么，因为是用浏览器打开，效率明显会低一些。iOS上微信会调用系统自带的浏览器内核，Android上会使用内嵌的QQ浏览器X5内核（所以一直被吐槽是手机上的IE6）。</p>
-<p><strong>2.简化&amp;规范开发流程，约定大于配置</strong><br>相比开发一个H5页面，开发一个小程序的难度是很低的。摘自微信官方文档：</p>
-<blockquote>小程序开发框架的目标是通过尽可能简单、高效的方式让开发者可以在微信中开发具有原生 APP 体验的服务。</blockquote>
-
-<p>如果想用H5+JS-SDK实现类似于原生APP的体验，无疑是超级麻烦的，光是各种设备的适配就能搞个半死。。。而且使用标准的HTML时，要去关注很多跟业务逻辑无关的东西，比如各种<code>&lt;meta&gt;</code>标签、<code>&lt;script&gt;</code>的顺序、CSS属性的各种特定前缀之类的。<br>而小程序将这些复杂的事情都交给框架去做，同时对工程结构做了很多约定，简化了开发流程。从某种意义上说，JS-SDK只是个“工具”，而小程序才是真正的“框架”，就是jquery和react的区别。<br>这也是所谓的DRY原则。</p>
-<p><strong>3.重新整合微信特有的API</strong><br>小程序提供了各种微信特有的API，比如登录/微信支付/照片/设备信息等等。我对比了下JS-SDK提供的API，发现二者是互相交叉的，小程序去掉了JS-SDK中很多用不到的API，而且小程序的API也好用很多。或者说，原来的JS-SDK的API设计的太烂了。。。用过的没有不吐槽的。</p>
-<p>不过小程序应该也从JS-SDK借鉴了很多经验。</p>
-<p><strong>4.增加对生态的控制力</strong><br>微信的生态一直是封闭的。而H5很难控制，你不知道一个页面是做什么用的，打开之后会发生什么，请求哪些服务端，也很难封杀。同样的页面内容，完全可以换个马甲就出来了。。。从战略上来说，对整个生态是不利的。<br>而小程序请求哪些域名、能做什么事、呈现什么内容，可以说完全在微信的控制之下。尤其是上架还要经过审核，想改就改，想封杀就封杀。越来越像老大哥了啊。。。对于所有的权利集团而言，当然是权利越集中对自己越有利啊。</p>
-<p><strong>5.渠道的问题</strong><br>微信小程序的入口现在还不清楚。有说是二级菜单的，有说是像公众号一样的，甚至有说可以直接放在系统桌面的（估计只有android能做到这种吧，桌面widget）。不过不管怎样，相比只能在朋友圈里以url形式传播的H5页面，小程序的渠道肯定更丰富吧，离用户更近，也就更容易获得流量。</p>
-<p>说到底，大家为什么这么看好小程序，还不是因为微信巨大的流量，9亿的注册用户，5亿的月活，还自带社交渠道的推广属性，怎么想都是很诱人。关键就看腾讯爸爸怎么分配入口和流量了。。。如果能拿到更核心的社交关系数据，想象空间更是无限大，不过这个腾讯肯定是不会给的，毕竟隐私策略也是个大问题。</p>
-<p>个人感觉，小程序的关键在于“小”。小就意味着简单：开发简单，不需要投入太多；使用简单，用户进入后很快找到需要的功能，不会有太多的干扰因素；功能上也应该简单，即开即用，用完就走，不需要有什么顾虑。很多公司开发小程序，就是把自己已有的APP原样照搬过去，俺对此持保留意见。。。<br>感觉上，用户在打开一个小程序之前，就应该知道要干什么，知道要打开哪个程序。程序被打开后，让用户做完想做的事就可以了，而不要提供各种乱七八糟的额外功能。小程序应该专注于特定的本职功能。<br>所以我觉得一些工具类/游戏类的小程序会比较契合主题，一些“大而全”的小程序反而是理念有问题。可以参考下小程序的<a href="https://mp.weixin.qq.com/debug/wxadoc/design/index.html?t=20161109" target="_blank" rel="external">设计指南</a>。</p>
-<p>还有啊，为啥大家默认小程序就是H5页面？各种视觉、交互都是按照网页的风格去设计，很多原来的在线H5设计工具，改一改就号称是小程序在线设计了。。。如果打开小程序就等于是打开了一个浏览器，那还有啥意思。<br>我理想中的小程序，应该是体验和native app一样的，用户打开app时，不应该明显的感觉到从app进入到了一个网页。用户都不傻的，“画风突变”还是能分别出来的。<br>我在使用一些APP时，碰到这种画风突变的情况，也会很蛋疼。。。不管你背后的技术是native还是H5还是hybird，至少体验要一致吧。</p>
-<p>小程序一出来，很多人就叫嚣着“H5要取代app”，“H5开发需求要爆发”，“微信将统一所有APP”，“ios/android开发要失业”。。。嗯，开心就好。。。<br>这让我想到Facebook Messenger刚推出<a href="https://developers.facebook.com/docs/messenger-platform/product-overview" target="_blank" rel="external">Bot平台</a>时，大家也是各种激动，号称以后各种APP都将消亡，很多用户需求都将在Bot上满足，人工智能将迎来春天。甚至Bot上将形成自己的appstore。<br>乐观是好的，但忽悠人就不对了。客观的说，冲击肯定是有的，但说取代APP还为时过早。微信对APP的冲击从公众号时代就开始了。现在我们试水一个新业务，很多都是先做一个公众号而不是APP。至于小程序会带来哪些改变，谁知道呢，上帝的归上帝，凯撒的归凯撒吧。对个人而言，多关注些业界，多了解些技术总是不会错的，但也没必要过度反应。</p>
-<p>之前不是也有好多人担心微信能不能过appstore审核。如果微信小程序真的能发展到威胁appstore的程序，苹果也不会坐视不理吧。之前为啥ios封杀flash，安全/性能只是一方面，更大的原因是flash“不受控”，adobe完全可以在flash上发展出自己的生态，flash生态中的应用/用户/数据，都完全不受控制。</p>
-<p>不管怎样，拭目以待吧。</p>
-<h1 id="Hybird">Hybird</h1>
-<p>我对APP开发的经验是0，仅有的一点点经验来自React Native。但平常跟各个APP的同学打交道还是比较多的，也知道一些概念。对Hybird这个概念一直比较模糊，正好顺道google下。</p>
-<p>Hybird也就是所谓的混合开发，一个APP中，部分使用native实现，部分使用H5实现。一般而言展示性强的页面偏向于H5，功能性强的页面偏向于native。但也没有定式。好处嘛就是降低开发成本，但出现问题调试也比较麻烦。<br>我以前一直以为所谓的Hybird APP就是一个浏览器。。。所有的页面都是H5的，app本身只负责提供一些底层的接口。看了<a href="http://www.infoq.com/cn/articles/hybrid-app-development-combat" target="_blank" rel="external">这篇文章</a>才知道，Hybird也分很多种，H5甚至可以只负责局部的渲染。</p>
-<p>感觉上，React Native应该不算Hybird吧，毕竟它是编译成原生代码。有点像编译型语言和解释型语言的区别。</p>
-<p>H5和native通信的组件被称为JsBridge，但似乎没有一个标准的规范？各家APP都有自己的实现，个人没事也可以写一个玩，基本就是在原生的WebView上各种hack，拦截H5页面请求的一些特殊的url（比如<code>weidian://methodName?k1=v1&amp;k2=v2</code>）再做出相应的处理。微信的JS-SDK调用native API也是同样的道理。<br>通过JS调用java方法，想想还是挺带感的。。。</p>
-<p>话说，我最早记住的Hybird开发工具是<a href="https://www.xamarin.com/" target="_blank" rel="external">Xamarin</a>，忘了是从哪里看到的了。我一看这名字，“厦门人”，哎呦有个性啊。。。</p>
-<h1 id="参考资料">参考资料</h1>
-<p>小程序现在不需要去看第三方的破解资料了，直接看<a href="https://mp.weixin.qq.com/debug/wxadoc/introduction/index.html?t=20161122" target="_blank" rel="external">官方文档</a>就好。</p>
-<p>腾讯云的小程序解决方案，能解决很多问题，session/websocket/https证书/域名之类的，但要有内测资格才能使用，而且收费：<br><a href="https://www.qcloud.com/solution/la.html" target="_blank" rel="external">https://www.qcloud.com/solution/la.html</a><br><a href="https://github.com/tencentyun/weapp-solution" target="_blank" rel="external">https://github.com/tencentyun/weapp-solution</a></p>
-<p>两个用于小程序界面设计的在线工具：<br><a href="http://www.coolsite360.com/wxapp/" target="_blank" rel="external">http://www.coolsite360.com/wxapp/</a><br><a href="http://jisuapp.cn/" target="_blank" rel="external">http://jisuapp.cn/</a></p>
-<p>一个小程序论坛，有很多开源代码：<br><a href="https://weappdev.com/" target="_blank" rel="external">https://weappdev.com/</a></p>
-<p>对小程序比较透彻的分析：<br><a href="https://github.com/phodal/weapp-quick" target="_blank" rel="external">https://github.com/phodal/weapp-quick</a></p>
-<p>一个比较好的小程序教程：<br><a href="https://segmentfault.com/a/1190000007033827" target="_blank" rel="external">https://segmentfault.com/a/1190000007033827</a></p>
-<p>两个纯用canvas做的小游戏，当作canvas入门挺好的：<br><a href="https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript" target="_blank" rel="external">https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript</a><br><a href="http://www.w3schools.com/graphics/game_intro.asp" target="_blank" rel="external">http://www.w3schools.com/graphics/game_intro.asp</a></p>
-<p>CSS布局教程，对我这样CSS苦手的人是一大福音：<br><a href="http://zh.learnlayout.com/toc.html" target="_blank" rel="external">http://zh.learnlayout.com/toc.html</a></p>
-<h1 id="碎碎念">碎碎念</h1>
+<p>跑到北京参加了<a href="https://2018.qconbeijing.com/schedule" target="_blank" rel="external">QCon</a>，写写感想。这也是老习惯了，我对其他同学也是这样要求的，不管是参加什么规格的会议、看了些什么样的书籍、或者研究了什么新鲜玩意，一定要有总结或分享。这是梳理自己思路的一个过程，你的思考不一定是对的（毕竟人类一思考那啥就发笑），但至少证明有思考过。如果不去思考，很多道理即使摆在你面前你也不会发现，无论那道理多么浅显。<br>深度思考，真的不只是说说。</p>
+<h1 id="还是大数据">还是大数据</h1>
+<p>QCon其实并不是一个专门的大数据会议，而是综合性的。但纵观下来，大数据仍然热度不减。其实几个热门的主题大家都能想像到，按我自己的感觉，排名大概是这样的：</p>
 <ol>
-<li>JS真是无所不在，不光能写移动端的，还能写桌面端的。。。微信官方的开发工具其实就是个react应用，见<a href="https://www.phodal.com/blog/weapp-demo-process-webkit-app/" target="_blank" rel="external">这篇文章</a>的分析。这种技术被称为<a href="http://nwjs.io/" target="_blank" rel="external">node-webkit</a>，感觉就是桌面版的Hybird啊，有空研究下。</li>
-<li>canvas是个好东西。理论上在canvas中可以做任意事情，发挥自己的想象力。Flipboard甚至搞出个<a href="https://github.com/Flipboard/react-canvas" target="_blank" rel="external">react-canvas</a>，所有UI都在canvas上绘制，真是有毅力。据说是为了避免DOM的性能问题？有空研究下。</li>
-<li>强烈要求微信改进开发者工具，至少要可以自定义背景色和字体，白背景看得眼睛好痛。而且字体也太小了，也不支持html/css的格式化。</li>
-<li>最近手贱<code>rm -rf /</code>了一下。。。这种事我一直是当作段子来看的啊，没想到居然会发生在我身上。看来不能高估自己的san值。</li>
-<li>无论什么语言、框架、工具，甚至无论什么事情，生活中/工作上，<strong>想象力</strong>都是最重要的，它决定了一个人的上限。做出有想象力的作品是很难的，只会循规蹈矩很难有出路。为啥会有这个感慨呢，因为组里有个树莓派，在想能拿来干点啥。。。google的过程中惊叹于各种神奇的作品。有时候脑洞大点真不是坏事。</li>
-<li>最近稍微看了些<a href="https://zh.wikipedia.org/wiki/%E5%B0%BD%E7%AE%A1%E5%8E%BB%E5%81%9A" target="_blank" rel="external">GTD</a>相关的东西，在想要不要搞下“规范的”时间管理。这种方法论呢，<a href="http://www.mifengtd.cn/articles/do-you-need-a-complete-gtd.html" target="_blank" rel="external">没有定式</a>，不要沦为单纯的使用工具，适合自己的才是最好的。</li>
+<li>AI/深度学习。没啥好说的，近几年最火热的主题，虽然我觉得有些泡沫，面临着和前几年大数据一样的问题：技术飞速发展，但炒作概念过多，落地很难。但总体还是看好的。</li>
+<li>大数据。下文详述。</li>
+<li>高并发/高可用/大规模架构。永不过时的主题。</li>
 </ol>
+<p>意外的是，没有看到太多区块链的分享。<br>同行的人感慨到，以前的QCon，讲讲系统、讲讲搜索之类的就可以了。现在不跟什么热门的概念搭上边，都不好意思上去讲。。。</p>
+<p>大数据领域，虽然热度不减，但其实也有一些变化：</p>
+<ol>
+<li>从技术角度来讲，越来越规范了，或者说，同质化。以前那种百花齐放（或者说群魔乱舞？）的架构、方案，很少有了。也许已经进入了一个需要“微创新”的时代？</li>
+<li>越来越实时。lambda architecture之类的，只是计算能力不足时的一种妥协。离线与实时的融合，是一个大趋势。</li>
+<li>越来越多的SQL。尽量使用SQL来表达计算逻辑，已是业界共识。根本的好处在于便于优化执行计划，毕竟SQL已经研究了这么多年。但由于SQL不是图灵完备的，一些复杂的逻辑必须辅以UDF。</li>
+<li>越来越偏向于应用。我不是第一次吐槽“落地太难”了，但感觉大家已经慢慢摸索出了一些套路，成功落地的案例越来越多了。说的更大些，是数据文化的落地。而且我们以前所理解的“应用”还是太狭隘，数据无处不在。</li>
+</ol>
+<p>如果按所谓的<a href="https://zh.wikipedia.org/wiki/%E6%8A%80%E6%9C%AF%E6%88%90%E7%86%9F%E5%BA%A6%E6%9B%B2%E7%BA%BF" target="_blank" rel="external">技术成熟度曲线</a>，也许是行业正在慢慢成熟吧，应该是好事。话说每次看到这个曲线，我总是想到生物课上的<a href="https://baike.baidu.com/item/%E7%BB%86%E8%8F%8C%E7%94%9F%E9%95%BF%E6%9B%B2%E7%BA%BF/8888040" target="_blank" rel="external">细菌生长曲线</a>。。。</p>
+<h1 id="部分干货">部分干货</h1>
+<p>只写写印象比较深刻的几个，我也不会完整复述每个演讲的内容，只是吐吐槽。ppt都在QCon官网上，可以自己去看。</p>
+<h2 id="京东的spark_on_k8s">京东的spark on k8s</h2>
+<p>与Intel合作的。怎么说呢，脑洞真是大。。。话说科技的进步就是来源于脑洞，要敢想，关键人家能把脑洞变成现实。大跃进式的放卫星就算了。</p>
+<ul>
+<li>来自Databricks。已经随spark 2.3正式发布。</li>
+<li>k8s的好处就不说了，在业务系统中其实已经应用的很多了。</li>
+<li>本质是为了异构计算，统一的抽象所有的GPU/CPU/存储等资源。更多的用于算法训练、深度学习之类。<ul>
+<li>并不能替代传统的hive+MR，定位不一样。</li>
+</ul>
+</li>
+<li>但为什么不是用YARN来做这些事呢？我知道的业界一些做法是增强YARN的docker支持，然后在YARN上跑tensorflow/caffe之类。<ul>
+<li>讲师的一个解释是YARN双层调度的性能损失，这无法否认。但影响面有多大不知道。</li>
+<li>另一个可能的原因是和业务系统一样统一用k8s管理，降低运维成本。</li>
+</ul>
+</li>
+<li>传统观点来看，数据本地性是个大问题，但既然是定位于算法、训练，根本就不用care数据本地性。取决于你的workload类型。</li>
+</ul>
+<h2 id="阿里的MaxCompute">阿里的MaxCompute</h2>
+<p>MaxCompute，就是原odps，在业界也算很知名了。当初大数据刚开始兴起时，BAT各家都有自己的自研框架，似乎只有阿里坚持下来并发展到如今规模，还打赢了内部pk（分别起源于阿里云和电商的两套体系），这份魄力，佩服。<br>也可能是其他两家发声太少？至少baidu当初是大张旗鼓搞过很多东西的，自研的BigTable什么的。</p>
+<p>本次相关的分享有两个，分别是MaxCompute和它对应的运维体系。有点不够接地气，这也没啥办法，太复杂而且全都是自研。<br>话说去年云栖大会的时候我也去听过MaxCompute，讲师也是同一个人。</p>
+<ul>
+<li>自研就是好，可以做各种深层次的优化：索引、缓存、文件格式甚至指令级的优化。</li>
+<li>对于各种应用场景和痛点的整理，非常有价值。</li>
+<li>HBO印象深刻，大家也都认可它的必要性，但不知道咋做的。。。</li>
+<li>profileing也是印象深刻，也是不知道咋做的。</li>
+<li>运维体系超复杂，比被运维的系统还复杂。</li>
+</ul>
+<h2 id="链家网的数据平台">链家网的数据平台</h2>
+<p>对于这个分享，用一个词来形容就是“扎实”。没有黑科技，没有令人眼花缭乱的概念和包装。就是讲构建数据平台的过程中碰到的各种问题和解决方法，从规模和技术上都和我现在面临的情况最像。可惜ppt没放出来。</p>
+<ul>
+<li>了解清楚业务和用户，比了解技术和架构更重要，尤其对于中小公司。<ul>
+<li>印象深刻的是，讲师很清楚自己的数据有哪些（人和房）；也很清楚自己的数据会被怎么使用（BI/to C/to B等等）；我羞愧的低下了头。。。</li>
+<li>这也是业务模式决定的。链家的业务模式注定数据量有限，或者说上限比较低。毕竟房子总不可能9.9包邮。</li>
+</ul>
+</li>
+<li>技术上的问题，倒是都差不多。但链家的平台化起步更早一些。</li>
+</ul>
+<h2 id="实时专场">实时专场</h2>
+<p>这个专场比较有意思。总共4场分享，分别来自于实时三大流派：databricks的spark streaming、阿里的flink（最近blink很火）、pinterest的Kafka Stream（虽然我觉得跟前两者不是一个量级），还有一个比较另类的来自于美团（下文详述）。三大流派同场争锋，场下的观众们也是煽风点火：“spark streaming相对于flink有哪些优势？”，“为什么要选择flink，而不是上一场讲到的streaming？”，很好玩。可惜的是，这个专场的ppt大多都没有放出来。</p>
+<ul>
+<li>说是三大流派，其实我觉得flink会一家独大。<ul>
+<li>kafka就不说了，优点在于简单，缺点也是简单。</li>
+<li>spark的优势在于批处理和流处理可以部分共用同样的逻辑，但在SQL语义下，这个优势正被弱化。</li>
+<li>spark的另一个优势是推广做的好，但也正被其他人追赶上来，尤其是blink这种有阿里站台的。</li>
+<li>后发优势了解一下？</li>
+</ul>
+</li>
+<li>本来以为会讲spark 2.3新出的continous streaming，结果只是一笔带过。<ul>
+<li>提到了一个datatricks delta，正在尝试融合离线与实时，感兴趣可以了解。</li>
+</ul>
+</li>
+<li>阿里的ppt非常赞，讲了实时处理中的各种问题：chandy lamport、retraction、exactly-once等，可惜没放出来。<ul>
+<li>同样也是缺少细节，很多东西只是大概提了下。</li>
+</ul>
+</li>
+</ul>
+<h2 id="美团的SnappyData">美团的SnappyData</h2>
+<p>非常另类。这个分享来自于美团的酒店团队，是一个纯业务团队。它展示了业务团队是如何看待大数据相关技术、如何确定自己需求、如何选型的，这个思考过程值得深思。在三大流派下场后，安排这样一个分享也许是别有深意：对业务方而言，争论各种引擎的优劣毫无价值。这个演讲的ppt放出来了，我建议每一个数据团队的同学都去仔细看看。</p>
+<ul>
+<li>通俗点说，SnappyData就是一个内存数据库。美团的解决方案就是所有数据放内存，然后用SQL去做adhoc。<ul>
+<li>内存数据库不是个新鲜东西，但在大数据场景下蛮少见。</li>
+<li>我提了个问题，如果要查大量数据，比如一年，内存放不下咋整？答案是他们仔细评估过，一年的数据量也不会有多少。。。而且机器成本换人力成本很值。</li>
+</ul>
+</li>
+<li>也许在“内行”看来，这个解决方案很不完美。我们早期也是各种东西乱用：mongo/hbase/cassandra/greenplum之类，导致现在很痛苦。但业务团队就是这样思考的，我们有必要去理解。</li>
+<li>平台 vs 业务，通用 vs 专有，长期 vs 短期，想取得平衡很难。“在正确的阶段做正确的事”，说起来很简单，道理大家都明白，但没有通用的解法。</li>
+</ul>
+<h2 id="数据应用">数据应用</h2>
+<p>上面我也说过，大数据领域越来越重视应用和落地。我们以前所谓的“应用”更多是“在业务上产生价值”，也就那么几种方式：BI、推荐、风控、算法之类的。但其实很多其他领域也是会用到数据的，比如运维（滴滴《数据驱动的风险防范体系建设》），比如测试（腾讯《手Q性能优化的大数据实战》）。本次会议甚至有一个“大数据下的软件质量建设实践”专场。虽然吧，很多在我看来只是跟大数据沾个边，而且很多只是T+1的报表或统计（这在大数据领域是要被鄙视的），但真的能产生价值。只能说以前还是太狭隘。。。</p>
+<h2 id="杂七杂八">杂七杂八</h2>
+<ul>
+<li>几场海外的演讲，感觉都收获不大，更像是请来镇场子的。一个java的，讲了些Java9和Java10的新特性；一个kafka的，讲了些kafka的历史和一些基本特性。其实这些东西，随便搜一下就能知道的。</li>
+<li>kotlin和go的两个演讲，主要关注于协程。这种纯语言特性的分享，还是挺少见的，可惜这两种我都不会。。。</li>
+<li>阿里的微服务实践，题目很大但落点比较小。在线btrace印象深刻。</li>
+</ul>
+<h1 id="鸡汤时间">鸡汤时间</h1>
+<p>写文章要首尾呼应啊。</p>
+<p>参加这种会议，会接触各种各样的技术，看到各种各样的点子，但切忌头脑发热。不能落地的idea，都是YY。有一个词：buzzword-driven architecture，就是指这种情况，看到什么新鲜的东西都想拿过来。很多东西可以借鉴，但真的是无法复制。</p>
 
         
       </div>
@@ -211,8 +251,8 @@
         
           <div class="post-tags">
             
-              <a href="/tags/小程序/">
-                #小程序
+              <a href="/tags/bigdata/">
+                #bigdata
               </a>
             
           </div>
@@ -222,13 +262,11 @@
           <div class="post-nav">
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2017/01/15/2017-and-redux/">时间倏忽而逝</a>
-              
             </div>
 
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2016/10/24/1024-festival/">壹〇二四</a>
+                <a href="/2018/04/01/xuan-zhi-you-xuan/">玄之又玄</a>
               
             </div>
           </div>
@@ -353,7 +391,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#初印象"><span class="nav-number">1.</span> <span class="nav-text">初印象</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一些思考"><span class="nav-number">2.</span> <span class="nav-text">一些思考</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hybird"><span class="nav-number">3.</span> <span class="nav-text">Hybird</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考资料"><span class="nav-number">4.</span> <span class="nav-text">参考资料</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#碎碎念"><span class="nav-number">5.</span> <span class="nav-text">碎碎念</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#还是大数据"><span class="nav-number">1.</span> <span class="nav-text">还是大数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#部分干货"><span class="nav-number">2.</span> <span class="nav-text">部分干货</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#京东的spark_on_k8s"><span class="nav-number">2.1.</span> <span class="nav-text">京东的spark on k8s</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#阿里的MaxCompute"><span class="nav-number">2.2.</span> <span class="nav-text">阿里的MaxCompute</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#链家网的数据平台"><span class="nav-number">2.3.</span> <span class="nav-text">链家网的数据平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实时专场"><span class="nav-number">2.4.</span> <span class="nav-text">实时专场</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#美团的SnappyData"><span class="nav-number">2.5.</span> <span class="nav-text">美团的SnappyData</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据应用"><span class="nav-number">2.6.</span> <span class="nav-text">数据应用</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#杂七杂八"><span class="nav-number">2.7.</span> <span class="nav-text">杂七杂八</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#鸡汤时间"><span class="nav-number">3.</span> <span class="nav-text">鸡汤时间</span></a></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
@@ -894,8 +932,8 @@
 
     <script type="text/javascript">
       var disqus_shortname = 'foolbear';
-      var disqus_identifier = '2016/12/07/wx-applet/';
-      var disqus_url = 'http://jxy.me/2016/12/07/wx-applet/';
+      var disqus_identifier = '2018/05/12/2018-qcon/';
+      var disqus_url = 'http://jxy.me/2018/05/12/2018-qcon/';
 
       (function(){
         var dsq = document.createElement('script');
