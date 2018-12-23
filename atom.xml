@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2018-05-13T13:29:56.466Z</updated>
+  <updated>2018-12-23T09:14:01.767Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -13,6 +13,288 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[元吐槽]]></title>
+    <link href="http://jxy.me/2018/11/25/meta-gossip/"/>
+    <id>http://jxy.me/2018/11/25/meta-gossip/</id>
+    <published>2018-11-24T18:55:38.000Z</published>
+    <updated>2018-12-23T08:42:03.000Z</updated>
+    <content type="html"><![CDATA[<p>又要开始胡言乱语了。</p>
+<a id="more"></a>
+<p>其实这个md文件的创建时间是“2018-05-28 02:55:38”，却拖了半年才写完。。。时间跨度比较大，各种内容比较杂，想到哪写到哪。我的习惯就是想到什么先记下来，然后慢慢去补充。</p>
+<p>为啥叫“元吐槽”呢，大概是“关于吐槽的吐槽”吧。</p>
+<h1 id="元数据">元数据</h1>
+<p>元数据系统应该是数据平台中最“玄学”的系统了，很多人认识不到它的价值，也很难说清楚它到底是做什么用的。如果你去搜索“元数据”的定义，一般都会告诉你元数据是“关于数据的数据”，这特么就是废话。。。你还是不知道它是啥。就像《易经》一样，你可以说它包罗万象，也可以说他废话连篇。因为它太抽象，每个人总能找到自己的方式去“适配”它，都会有自己的理解，还都觉得自己是对的。还有人说：哲学是关于科学的科学、哲学是科学之母，一个道理。各种方法论/各种主义，一向是我吐槽的重灾区。。。</p>
+<p>扯远了。元数据不是个新鲜概念，而且非常宽泛，任何系统运行时需要的数据，都可以叫做元数据。所以别纠结，我们讨论的更多是大数据场景中的元数据和对应的系统。</p>
+<p>就像大数据领域很多系统都以Google为原型一样，关于元数据Google也有一篇论文：<a href="https://static.googleusercontent.com/media/research.google.com/zh-CN//pubs/archive/45390.pdf" target="_blank" rel="external">Goods: Organizing Google’s Datasets</a>，介绍了google如何管理自己的数据集（Dataset），包括自动发现、组织、计算血缘、检索等。通俗点说就是数据集不断增多，但没人知道这些数据是什么，所以需要一个方式来管理。没什么太难的概念，但有几个值的注意的地方：</p>
+<ul>
+<li>goods非常注重事后处理（post-hoc），给出的理由是不要干扰用户的正常使用。这也是现在业界大多数系统通用的做法，但并不绝对。在并不那么遥远的过去，还有一个概念：EDM（企业数据管理，真是拗口）。感觉上就是所有数据都必须先要在一个中心化的系统中注册，通过这种事前的方式去维护元数据。这也未必就完全是错的。最近接触了一些政府的系统，不同部门之间通过文本文件、excel文件、数据库等传递各种数据，强行事后反而麻烦。事后的前提是有统一的数据存储和处理方式。</li>
+<li>goods中的很多元数据信息是“推断”而来，并不能保证准确。典型的就是schema，可能从proto文件中获取，可能从底层文件存储获取。这可能是google特殊的环境导致的。我们不一样，我们有hive啊，schema反而不是问题（当然前提是你所有数据在hive里）。</li>
+<li>有些元数据必须是手动补全的，这点非常重要，不要想着程序能做所有的事情</li>
+<li>goods倡导的所谓data-culture，不明觉历</li>
+</ul>
+<p>论文中还一再提到DataLake，感觉这又是最近炒起来的一个概念？（还有所谓的数仓2.0）来回来去就是数据集成整合那点事，摘录一段：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">資料湖泊儲存的資料是最原始的形式，未經過任何處理及管理</div><div class="line">資料湖泊不需要使用者在取得資料前事先建立好資料結構 (schema)</div></pre></td></tr></table></figure>
+
+<p>感觉是各种数据无脑灌进去，需要的时候再去解析。</p>
+<p>说回元数据。就像之前说的，我们有hive，所有大多数小公司的元数据系统其实就是依托于hive，数据换一种组织方式，再补充一点自己的业务信息，就成了。很多个人开源的元数据项目，也就这么回事。业界的开源系统：<a href="https://atlas.apache.org/" target="_blank" rel="external">Apache Atlas</a>/<a href="https://github.com/Netflix/metacat" target="_blank" rel="external">Netflix Metacat</a>（最近刚开源的），会支持更多的组件，但大多数情况下应该也是hive为主，而且鲜少见到有实际的应用案例。</p>
+<p>结合我们的一些实践，尝试总结元数据的一些特点：</p>
+<ul>
+<li>很少有自顶向下的设计，都是被逼的。。。大家会更关注于那些“看得到的事情”：hadoop、spark、调度器、数据同步等等。元数据天生弱势，易被忽略。所以每个公司的元数据系统一般是跟整个体系紧密结合的，很少能拿来主义，就算有一些开源项目，也很少能开箱即用。</li>
+<li>可以回溯历史：这是最重要的特性，比如hive meta中只会有最新的schema，而元数据系统可以看到历史schema和操作人。这跟数仓有点像，元数据也是要抽象、要建模、有层次的。</li>
+<li>很多数据是统计性的，可能不准确，而且不要求/做不到实时更新</li>
+<li>受限于上一条特性，也许并不适合作为runtime的依赖，看场景</li>
+<li>数据来源庞杂，清洗逻辑也非常复杂（相对于业务的ETL流程而言）</li>
+<li>未来的趋势是和在线meta的融合</li>
+</ul>
+<p>如果是hive表的元数据，大概有哪些：</p>
+<ul>
+<li>基本属性：owner、schema、分区、变更历史、sample data、对应的调度任务（或者说是表的更新逻辑）</li>
+<li>字段属性：安全等级、枚举值</li>
+<li>存储属性：大小、文件数、记录数、存储格式、压缩格式、副本数、生命周期</li>
+<li>业务属性：业务描述、所属业务线</li>
+<li>访问属性：创建时间、更新时间、访问情况（次数+时间跨度）</li>
+<li>其他：是否拉链表、是否源头表、增量/全量更新、各种统计信息（比如字段的count distinct）等</li>
+</ul>
+<p>此外还有各种衍生属性：</p>
+<ul>
+<li>血缘（表+字段）：最常见的衍生属性</li>
+<li>DataProfile：来自阿里的概念，是否废弃表、是否有重复数据、是否不更新、存储健康分等，有点类似用户画像</li>
+</ul>
+<p>别纠结概念，元数据的概念非常宽泛，上面列的只是比较常见的。</p>
+<p>但有这些数据之后嘞？能干啥用？这也是我经常吐槽的点，不要跟我说要计算血缘，而是说要血缘做什么。</p>
+<ul>
+<li>数据发现：帮助用户找到想要的数据，可能需要引入类似电商的类目和标签体系，还可以借鉴一些概念：收藏夹啊、详情页啊之类</li>
+<li>报表：比如计算每个部门/人的账单</li>
+<li>存储治理：比如删除无用数据，比如对于冷存的数据降低副本数，比如找到可删除的衍生数据</li>
+<li>监控/报警：典型的就是血缘，上游的数据变更要给下游预警</li>
+<li>数据服务：这个比较玄学，“正确的组织方式有可能帮助用户发现数据的价值”，就像xmind有助于我们去思考问题一样，关键要将所有的数据视为“资产”去管理，通过数据资产去产生利益（应该没有负资产吧。。）</li>
+</ul>
+<p>这还只是hive表的元数据管理，更进一步，还有调度任务的、hdfs的、数据源的、kafka topic的、hbase表的等等。<br>广义上来说，运维的CMDB也是元数据系统。甚至可以说一切皆元数据（听着就很神棍）。。。</p>
+<p>参考资料：</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzU3OTA5MjY1MQ==&amp;mid=2247483748&amp;idx=1&amp;sn=f696e9fef70a14f4ac9d861a3cb99486&amp;chksm=fd6a28a0ca1da1b6f7675dac05083d775445522fb30e623388e32a5a1e863796bd2e29dd2321&amp;mpshare=1&amp;scene=1&amp;srcid=0415psCeVG2o7mxY5ZuNh1gg##" target="_blank" rel="external">元数据管理系统解析</a><br>打个广告，我老板的文章</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzU1NDA4NjU2MA==&amp;mid=2247489633&amp;idx=3&amp;sn=5279e6d914b21498193b5d6702cc22ca&amp;chksm=fbe9a1aecc9e28b80470fdd134bc74a5102ec24ee777e7d181f83c1e41213b47aab201f53874&amp;scene=27#wechat_redirect" target="_blank" rel="external">自服务数据共享与服务架构详解</a><br>这个文章有点“官方”，讲的有些晦涩，而且更侧重事前处理？<br>痛点分析的不错：过程不可控、数据不开放、缺乏共享。<br>自服务的概念挺有意思，但与post-hoc的理念相悖，而且会带来额外的成本。<br>如何从一个数据的管理者变为数据资产的经营者，带来新的业务？</p>
+<p><a href="https://medium.com/@intelisef47/%E4%BD%95%E8%AC%82%E8%B3%87%E6%96%99%E6%B9%96%E6%B3%8A-data-lake-dda35fe6cb6f" target="_blank" rel="external">淺談資料湖泊(Data Lake)</a></p>
+<p><a href="https://mp.weixin.qq.com/s/_9WoyQd6ksPKuRbYiFpPdQ" target="_blank" rel="external">重磅！Netflix开源大数据发现服务框架Metacat</a></p>
+<p><a href="https://cwiki.apache.org/confluence/display/Hive/StatsDev#StatsDev-Scope" target="_blank" rel="external">Hive wiki: StatsDev</a>  /  <a href="https://issues.apache.org/jira/browse/HIVE-2526" target="_blank" rel="external">HIVE-2526</a><br>hive本身自带一些统计信息，可以作为元数据的一部分，但并不准确<br>而且通过spark sql进行的操作无法统计（有人问hive on spark和spark sql的差别，这就是一例）<br>如果想要准确的数据需要analyze table，但有代价</p>
+<h1 id="分布式小杂烩">分布式小杂烩</h1>
+<p><a href="/2017/06/03/distributed-mess/">分布式大杂烩</a>续集。<br>最近重看了遍Raft的论文，又引出了一大堆乱七八糟的问题，整理下。</p>
+<h2 id="关于CAP">关于CAP</h2>
+<p>我一直都知道CAP中的C和ACID的C是不一样的，但是说不清楚。也知道“一致性”这个词非常混乱，业务的一致性和副本的一致性完全是两个东西，甚至还有人说storm是弱一致性的（意思应该是计算结果不准确吧）。直到看了知乎上这个回答：<a href="https://www.zhihu.com/question/56073588/answer/253106572" target="_blank" rel="external">如何理解数据库的内部一致性和外部一致性？</a>，真的是豁然开朗，很多概念都澄清了。像Spanner论文中一直提到的外部一致性，之前就一直似懂非懂。</p>
+<p>尝试总结下，其实很多地方可以类比java的并发机制：</p>
+<ul>
+<li>ACID中的C，核心在于“约束”，事务前后DB的约束不被破坏。什么是约束？其实我们很多时候都意识不到约束的存在，比如主键、唯一索引、字段类型，换句话说，这是DBMS定下来的“规矩”，不可逾越<ul>
+<li>经常有人用转账的例子来说明一致性，但感觉这并不是一个好的例子。“转账前后总金额不变”，真实中可能并不是DB的约束，而是业务系统的约束。</li>
+</ul>
+</li>
+<li>ACID中的I，关注的是多个事务并发时的表现，一个事务是否能“意识”到其他事务的存在<ul>
+<li>在Serializable级别下，所有事务都是隔离的、互不干扰，有点像as-if-serial（并不准确，as-if-serial指的是单个线程的行为）</li>
+<li>但其实ANSI定义的Serializable并不准确。这种隔离级别下，虽然不会有常见的脏读/不可重复读等问题，但会有其他问题，比如write skew。所以ANSI的Serializable也可以被称作Snapshot Isolation（经典论文<a href="https://www.microsoft.com/en-us/research/wp-content/uploads/2016/02/tr-95-51.pdf" target="_blank" rel="external">A Critique of ANSI SQL Isolation Levels</a>）</li>
+</ul>
+</li>
+<li>CAP中的C，核心在于“顺序”，类比java中的happens-before语义<ul>
+<li>CAP中的C，其实跟DB没啥关系，甚至跟并发也没啥关系。所有系统中都要考虑到操作的顺序性。我先set a=10，然后再读a的值，我读到的是10么？这看起来像是废话，那是因为我们在用的很多系统中，隐式的保证了这个语义（一个线程中的每个操作，happens-before于该线程中的任意后续操作），在单机系统中也很容易做出这种保证。但分布式系统中，再引入并发的情况下，就没那么容易。</li>
+<li>CAP中的C，严格指的是Linearizability，翻译做线性一致性。我的理解：对同一份数据的读/写都是原子的，并且按顺序（一般情况下是时间顺序）发生，后面的操作可以看到前面操作的结果。类比java中的volatile关键字。</li>
+<li>具体到DB中的事务，其实指的是：如果某个事务写入的值对外界可见了，那后续所有的事务都能读到这个值（可能是那个写事务提交了，也可能是脏读之类）</li>
+</ul>
+</li>
+<li>ACID中的I和CAP中的C，针对的其实是两种不同的特性，虽然跟并发都有点相关。二者结合才能完整的描述一个系统。比如我们大概可以说mysql默认是Repeatable Read + Linearizable的。同时满足Serializable + Linearizable的系统，也可以称作Strict Serializable，或External Consistency，也就是Spanner这种。</li>
+<li>既然顺序如此重要，那如何决定操作的顺序？单机系统很容易生成一个全局递增的id，比如mysql中的事务id；zk虽然不是单机系统，但zxid的设计也是类似的。而在分布式系统中，更多是使用时间来决定。见Lamport大爷的经典论文：<a href="https://amturing.acm.org/p558-lamport.pdf" target="_blank" rel="external">Time, Clocks, and the Ordering of Events in a Distributed System</a>。<ul>
+<li>如果有一个全局唯一的、准确的时间服务（比如Percolator中的中的TSO），那一个写事务完全可以选用当前时间作为事务id（或者说是数据的版本号），因为后续的读事务id肯定大于这个写事务，也就能读取到写入的数据，保证Linearizability会更容易</li>
+<li>Spanner中的commit wait time，其实也是为了保证Linearizability，保证写入数据的版本号小于后续任意读事务的版本号，排除时间误差的影响</li>
+</ul>
+</li>
+</ul>
+<p>感觉上，似乎CAP理论中的三个维度，并不是true or false，而是0~100，不可能在3个方向上都达到100。<br>话说分布式领域，还有很多非常经典的论文值得一看，可惜精力有限，而且都比较偏理论，研究起来很花时间。</p>
+<p>参考资料：</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&amp;mid=2247489096&amp;idx=1&amp;sn=222de2e8729fd85d90bbc7529585f777&amp;source=41#wechat_redirect" target="_blank" rel="external">聊聊事务的30年发展历史</a><br>很赞，讲了各种隔离级别的历史问题，我以前总是搞不清SI和SSI。其中有一例精彩吐槽：</p>
+<blockquote>
+<p>也正是从此，大家开始意识到他们需要关心可串行性，一部分原因是 Jeff Dean 认为其非常重要。与此同时，持续呼吁该观点将近 20 年的 Michael Stonebraker 表示很无奈，大家显然只在 Google 明星工程师声明某件事的重要性时才会关心它。</p>
+</blockquote>
+<p><a href="http://kaiyuan.me/2018/04/21/consistency-concept/" target="_blank" rel="external">分布式系统一致性</a></p>
+<p><a href="https://www.jianshu.com/p/3673e612cce2" target="_blank" rel="external">一致性模型</a><br>很赞，讲清楚很不容易。对pingcap还挺有好感的，很佩服能把这些玩的溜的人</p>
+<p><a href="https://www.jianshu.com/p/8500882ab38c" target="_blank" rel="external">分布式系统的时间</a><br><a href="https://zhuanlan.zhihu.com/p/48782892" target="_blank" rel="external">[译] 分布式系统中的一致性模型</a></p>
+<p><a href="https://www.zhihu.com/question/60278698/answer/305657878" target="_blank" rel="external">OCC和MVCC的区别是什么</a><br>感觉这个区别挺微妙的，别被那么多概念绕进去，按逻辑想想，很多东西大概就能明白了</p>
+<p><a href="https://blog.csdn.net/chao2016/article/details/81149674" target="_blank" rel="external">强一致性、顺序一致性、弱一致性和共识</a><br><a href="https://www.jianshu.com/p/c348f68fecde" target="_blank" rel="external">隔离级别、SI 和 SSI</a></p>
+<p><a href="https://blog.csdn.net/yyd19921214/article/details/68953629" target="_blank" rel="external">2PC与3PC的区别</a><br>很多人其实没有搞清楚3PC</p>
+<h2 id="分布式共识">分布式共识</h2>
+<p>提到分布式一致性，大多都会提到paxos/raft之类。但其实这是个翻译的锅，paxos中的一致其实是consensus，指的是“共识”；而ACID和CAP中的C，指的是consistency。paxos/raft应该称作分布式共识算法，解决的问题是“分布式环境下多个节点如何对某个问题达成一致”，区块链中的PoW算法也在此列。paxos和raft经常被拿来对比，却较少有paxos/zab的对比。</p>
+<p>raft就不说了，这是我这些年看过的最通俗易懂的一篇论文，作者生怕你不懂，遣词造句都尽量简单。你需要的一切都能在论文里找到。而且raft就像kafka一样，有种简单但强大的感觉。<br>paxos就不一样了。首先论文本身就非常抽象，而且又缺少了很多细节，工程实现中也有非常多的坑。chuppy的论文中（没记错的话）也有吐槽：“工程中实现的paxos和原本的paxos，根本就是两个东西了，所以大多数系统都是运行在一个未经证明的算法上”。</p>
+<p>一些关键点：</p>
+<ul>
+<li>对于basic paxos，理解paxos instance的概念非常重要。虽然论文里好像没有明确提出这个概念。简单点说一次表决过程就是一个instance。也正是在paxos instance概念之上，才能衍生出multi paxos（虽然Lamport大爷没有用这个词，全靠自己想象）</li>
+<li>单次paxos instance的流程，是非常好理解的，如果我们不去关心它的证明。</li>
+<li>如何生成提案号，论文中并没有指出。<ul>
+<li>这个提案号不需要是全局有序的，甚至不用偏序，理论上随机生成都可以。。。就是提案通过的概率会很低而已。两个proposer完全可能生成一样的提案号，但只有一个能通过phase-1。</li>
+<li>工程实现中，如果能保证全局有序，当然是最佳的，或者至少保证单个节点是递增的。一些文章会说将机器的IP作为提案号的一部分，比如高位放时间戳，低位放IP，这样某些机器的话语权会天生“较大”，不过算法的目的是尽快达成共识，也许这也不是问题。</li>
+<li>chuppy的论文中，给处理了一个算法：s = 已知的最大值 * 节点个数 + 自身编号</li>
+</ul>
+</li>
+<li>集群的各个节点状态是有可能不一致的，所以每次读也必须走一次paxos流程，这样才能保证读的一致性<ul>
+<li>论文中也说：为了确定被选定的value，必须重新发起一次新的提案，这事一般是learner角色来做</li>
+<li>也有这么说的：通过learner角色使所有Acceptor达到最终一致性。</li>
+</ul>
+</li>
+<li>理论上来讲，一次提案不必发给所有的acceptor，提案发起者自己选定一个majaroity发送就可以了，所以各个节点的状态很可能是不一致的<ul>
+<li>majaroity的概念需要准确理解，是整个集群的大多数，而不是活着的节点的大多数，所以成员变更是一件非常麻烦的事，Lamport大爷也没说成员变更的事，后续的<a href="http://read.seas.harvard.edu/~kohler/class/08w-dsi/mazieres07paxos.pdf" target="_blank" rel="external">《Paxos Made Practical》</a>进行了补全</li>
+<li>只有收到majaroity的commit成功消息后，才能回复客户端</li>
+</ul>
+</li>
+<li>活锁问题很好理解，如果所有节点都能任意提议。由此引出了leader的概念<ul>
+<li>leader如何选举，并没有规定，可以通过paxos来选，但未必</li>
+<li>leader还一般还要搭配lease机制，持续保持leader身份</li>
+<li>而且竞选leader不需要有最新的状态，这点和raft很不一样</li>
+</ul>
+</li>
+<li>multi-paxos并不是为了解决活锁问题，而是为了在某些场景下（单一proposer连续多次提交）提高效率，跳过prepare阶段，直接commit<ul>
+<li>有些资料中提到leader必须先执行一段时间正常的两阶段流程，大概是为了catch up状态</li>
+<li>状态catch up包括两部分：最大的instanceId，和日志重确认。因为新的leader状态很可能是落后的，而且命令序列中可能有“空洞”。这个时候leader其实扮演的是learner角色。</li>
+<li>关于命令空洞的问题，论文中说的不是特别清楚，我觉得典型场景就是并发处理多个请求，后面的请求先成功，然后leader挂了</li>
+</ul>
+</li>
+<li>理解paxos的关键在于，每个节点都是一个状态机，如何让各个状态机保持一致？<ul>
+<li>最常见的机制就是State machine replication，也是Lamport大爷的经典论文，让所有节点回放相同的命令序列。这也正是multi-paxos做的事：在所有节点上确认相同的instance序列。</li>
+<li>这是一个非常抽象的模型，可以用在很多地方，但每一个场景中都必须自己思考如何应用。Lamport大爷只提供水泥的配方，然后每个人开始自己造房子。</li>
+</ul>
+</li>
+</ul>
+<p>总的来说，建议还是不要直接看论文，太tm难懂了。应该先大概了解些paxos的概念再去看。而且各种关于paxos的文章太多了，不乏很多误导性的（我也不敢说自己的理解是对的），工程实现也是五花八门，还是直接看原文、看wiki比较好。</p>
+<p>相比之下，zab就简单明确的多，估计很大程度上是因为有zookeeper这样一个“标准”实现。<br>zab和paxos的区别，<a href="https://cwiki.apache.org/confluence/display/ZOOKEEPER/Zab+vs.+Paxos" target="_blank" rel="external">官方wiki</a>中说的很清楚，前提是真的理解了paxos的状态机本质；zab论文的也道出了关键区别：<a href="https://ieeexplore.ieee.org/document/5958223" target="_blank" rel="external">《Zab: High-performance broadcast for primary-backup systems》</a>。我来尝试着解说下：</p>
+<ul>
+<li>paxos可能会对请求“重排序”的，只要没有处理过的请求（或者是说没有返回给客户端成功消息的请求），先后顺序无所谓，所有参与的节点，会“商议”出一个顺序。paxos只要最终形成的“instance序列”是一致的就可以了，所有的replica基于这个序列去回放，最终就能达到一致的状态。</li>
+<li>而在某些场景中，是不能重排序的。能重排序的，往往是“外部client请求”；不能重排序的，往往是“增量状态更新”（incremental state changes）。这也就是state machine replication和primary-backup这两种机制的差别。</li>
+<li>paxos也能用于primary-backup，但性能会差；而zab就是为这类场景而设计的，借鉴了paxos中的很多思想，比如两阶段、表决机制</li>
+<li>zab中的所有写操作，是严格有序的（因果有序），所有写请求都由leader处理。leader生成递增的zxid，proposal会按顺序提交，tcp协议保证follower也是按顺序收到，follower保证按顺序回复<ul>
+<li>这种设计必然会限制吞吐量，所以写性能堪忧（虽然我没看代码求证过），而且不能水平扩展。之前一篇文章<a href="https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&amp;mid=2247489041&amp;idx=1&amp;sn=b58745994c0c98662e2330c966b5036f&amp;source=41#wechat_redirect" target="_blank" rel="external">阿里巴巴为什么不用 ZooKeeper 做服务发现</a>也有提到这个问题。</li>
+<li>我猜测，表决的时候不必一次次表决，可以一次表决多个事务，这样比较合理</li>
+</ul>
+</li>
+<li>zxid还是一个挺巧妙的设计的，配合epoch概念，保证即使leader    切换，zxid也是递增的</li>
+</ul>
+<p>zab总体还是比较简单的，感觉上就像mysql binlog replication的威力加强版。。。但zookeeper不等于zab，zookeeper还是额外做了很多事情的。</p>
+<p>此外常提到的算法还有<a href="https://dl.acm.org/citation.cfm?id=62549" target="_blank" rel="external">Viewstamped Replication</a>，据说和paxos本质上是一样的，时间上还要更早些。raft的论文中也有提到自己和VR/zab的区别。</p>
+<p>还有个画风不太一样的算法就是<a href="https://en.wikipedia.org/wiki/Gossip_protocol" target="_blank" rel="external">GOSSIP</a>，常见的应用是cassandra和redis。据说可以在O(logN)的时间上收敛，但不会有一个“精确”的时间点，很好玩。</p>
+<p>所有这些共识算法吧，你可以绞尽脑汁想各种异常状况，但还是难以覆盖，很难证明它是完备的，至少我的脑子是不行。。。</p>
+<p>参考资料：</p>
+<p><a href="http://dsdoc.net/paxosmadesimple/index.html" target="_blank" rel="external">【译】Paxos Made Simple</a><br>即使是paxos made simple，也没那么好懂</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MjM5MDg2NjIyMA==&amp;mid=203607654&amp;idx=1&amp;sn=bfe71374fbca7ec5adf31bd3500ab95a&amp;key=8ea74966bf01cfb6684dc066454e04bb5194d780db67f87b55480b52800238c2dfae323218ee8645f0c094e607ea7e6f&amp;ascene=1&amp;uin=MjA1MDk3Njk1&amp;devicetype=webwx&amp;version=70000001&amp;pass_ticket=2ivcW%2FcENyzkz%2FGjIaPDdMzzf%2Bberd36%2FR3FYecikmo%3D" target="_blank" rel="external">一步一步理解Paxos算法</a><br>英文wiki：<a href="https://en.wikipedia.org/wiki/Paxos_(computer_science)#Basic_Paxos" target="_blank" rel="external">https://en.wikipedia.org/wiki/Paxos_(computer_science)#Basic_Paxos</a><br>中文wiki：<a href="https://zh.wikipedia.org/zh-cn/Paxos%E7%AE%97%E6%B3%95" target="_blank" rel="external">https://zh.wikipedia.org/zh-cn/Paxos%E7%AE%97%E6%B3%95</a></p>
+<p><a href="https://blog.csdn.net/voidccc/article/details/39647787" target="_blank" rel="external">Paxos历史回顾</a><br>各种历史渊源讲的比较好</p>
+<p><a href="http://oceanbase.org.cn/?p=90" target="_blank" rel="external">使用Basic-Paxos协议的日志同步与恢复</a><br>OceanBase大神的一系列文章，blog中除了paxos还有很多其他内容，非常赞</p>
+<p><a href="http://paxos.systems/index.html" target="_blank" rel="external">http://paxos.systems/index.html</a><br>一个非常赞的站，集合了各种资料</p>
+<p><a href="http://blog.fnil.net/blog/ac1fa10ff9b2404ed0b91bdfaf76a87d/" target="_blank" rel="external">分布式一致性论文阅读阶段性小结</a><br><a href="https://my.oschina.net/liangtee/blog/304779" target="_blank" rel="external">Multi Paxos：Basic Paxos的进化</a>：这里提到的队列策略我没太懂</p>
+<p>各种paxos made系列：<br><a href="https://www.cs.utexas.edu/users/lorenzo/corsi/cs380d/papers/paper2-1.pdf" target="_blank" rel="external">Paxos Made Live</a>：google最让人印象深刻的就是强大的工程能力<br><a href="https://pdos.csail.mit.edu/archive/6.824-2007/papers/mazieres-paxos.pdf" target="_blank" rel="external">Paxos Made Practical</a><br><a href="https://www.inf.usi.ch/pedone/MScThesis/marco.pdf" target="_blank" rel="external">Paxos Made Code</a><br><a href="https://www-cs.stanford.edu/~matei/courses/2015/6.S897/readings/paxos-moderately-complex.pdf" target="_blank" rel="external">Paxos Made Moderately Complex</a></p>
+<p><a href="https://www.jianshu.com/p/fb527a64deee" target="_blank" rel="external">Zab：Zookeeper 中的分布式一致性协议介绍</a><br><a href="https://www.cnblogs.com/mindwind/p/5231986.html" target="_blank" rel="external">Raft 为什么是更易理解的分布式一致性算法</a><br><a href="https://my.oschina.net/pingpangkuangmo/blog/782702" target="_blank" rel="external">Raft对比ZAB协议</a><br><a href="http://zookeeper.apache.org/doc/r3.4.13/recipes.html" target="_blank" rel="external">ZooKeeper Recipes and Solutions</a></p>
+<p><a href="https://www.infoq.cn/article/consensuspedia-an-encyclopedia-of-29-consensus-algorithms" target="_blank" rel="external">30 种共识算法完全列表</a>：币圈真是群魔乱舞。。。</p>
+<h2 id="其他">其他</h2>
+<p>很多算法中都涉及到<a href="https://en.wikipedia.org/wiki/Leader_election" target="_blank" rel="external">选主</a>，这其实是一个很古老的话题，也经过很多研究了，比如<a href="https://en.wikipedia.org/wiki/Bully_algorithm" target="_blank" rel="external">Bully算法</a>。每个算法都可以定义自己的选主机制，比如zab中的快速选举，raft中的随机超时等。</p>
+<p>研究的过程中，突然想到BT下载，这也是个挺神奇的东西。以前有tracker服务器的时候还好理解，磁力链是真的挺神奇的，各个节点是怎么知道数据块所在的位置的？虽然一直知道是所谓的DHT，以后有空再研究。<br>期间也接触了一些<a href="https://zh.wikipedia.org/wiki/%E8%BF%9C%E7%A8%8B%E7%9B%B4%E6%8E%A5%E5%86%85%E5%AD%98%E8%AE%BF%E9%97%AE" target="_blank" rel="external">RDMA</a>的概念，似乎是要专门的硬件？还找到了一个RDMA与HDFS集成的项目：<a href="https://github.com/Mellanox/R4H" target="_blank" rel="external">R4H</a>，不过已经废弃了。</p>
+<p>参考资料：</p>
+<p><a href="https://www.jianshu.com/p/f1659aba5aed" target="_blank" rel="external">https://www.jianshu.com/p/f1659aba5aed</a><br><a href="https://zh.wikipedia.org/wiki/%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5" target="_blank" rel="external">https://zh.wikipedia.org/wiki/%E7%A3%81%E5%8A%9B%E9%93%BE%E6%8E%A5</a></p>
+<h1 id="数据平台">数据平台</h1>
+<p>老生常谈了。时不时我就会思考一下，数据的价值是什么，平台的价值是什么。</p>
+<p>有段时间我经常以“xxx bigdata archtecture”为关键字在google中搜索，xxx可以是uber/airbnb/netflix/linkedin等等。一直以来各种分享、文章、架构图也看了不少，各种《大数据xxx》的书也看了不少。单纯说技术架构吧，大同小异，尤其各种小厂，毕竟有能力造轮子的还是少数。可能在规模、一些细节上有差异，但都不是本质的区别。那我们所做的事情意义何在？不就是搭个hadoop？（题外话，我很不喜欢这种“不就是xxx”的句式，这样说的人，要么非常资深，要么非常无知，而且无知的居多。比如我也可以说，所谓运营不就是拉新/转化/留存/召回，但这几个字背后是多少辛酸泪啊。。。）</p>
+<p>平台 ≠ 各种开源组件的堆砌，同样的水泥，造出来的可能是陋室也可能是别墅。它的意义在于：</p>
+<ul>
+<li>赋能，我一直觉得这是所有大数据技术，甚至可以是所有技术的根本价值。它能拓宽你的想象空间，做到之前做不到的事。<ul>
+<li>我一直说，我是造发动机的，也是卖铁锹的，工具本身不产生价值；或者说，它是整个价值链的最上游；</li>
+<li>我能对外提供什么样的能力？可以是数据开发的能力，可以是可视化能力，可以是调度能力。能力也是有层次的：我们可以笼统的说，我们提供的是“洞察”数据的能力，是在数据中淘金的能力。然后再对这些能力进行细分/下钻，大概可以总结出一个能力模型吧。</li>
+</ul>
+</li>
+<li>提升效率与稳定性。解决了“能不能”的问题，接下来就是“好不好”。毕竟基础组件就那些，能提供的能力也不会差太多。最重要的衡量标准就是效率和稳定，经历过烟囱式架构或者大单体应用的人，大概能够体会其中痛点。<ul>
+<li>包括提升用户开发效率和降低管理成本两方面。更进一步，关注用户的体验与口碑。我喜欢讲的一个例子就是docker，它刚出现时只是把各种技术“黏合”起来，但就是极端好用，才有了后续的发展机会。广大人民群众就是这么耿直。。。</li>
+<li>所以产品化是很重要，但也很容易被搞技术的人忽视的一个方面。</li>
+<li>稳定不是靠运气的，而是靠系统化的建设，靠制度和规范的推进，需要自顶向下的规划</li>
+</ul>
+</li>
+<li>与业务的契合度，这是每个公司之间最大的差别，不是所有经验都可以复制。<ul>
+<li>大多数技术都会有一个支撑业务（满足现有需求） -&gt; 预见业务（满足未来需求） -&gt; 驱动业务（创造需求）的过程，尤其是各种新的技术。</li>
+<li>我不光是个造发动机的，我还可以教你怎样用的更好。很多业务方自己是不够敏感的。</li>
+</ul>
+</li>
+<li>数据文化，这就比较玄学了。我一直觉得数据能力应该是所有开发同学必备的能力，就像数据库/SQL一样，而不应该是需要专门培养的。甚至产品/运营也要具备这种能力，或者说这种思维。如何降低这个门槛，倡导这种文化，因环境而异。</li>
+</ul>
+<p>有用户问我，你们是不是中间件？仔细想了下，还真有点像。提到中间件，一般会想到RPC/trace/分库分表/配置中心/统一网关/MQ等等。和运维也有点像，运维=CMDB/DBA/nginx/发布平台/监控/GIT/持续集成等等。都是提供一些基础的“能力”，都是将一些公共的技术抽象出来。差别大概在于我们更偏上层一点，如果去驱动业务会更方便，毕竟数据是可以渗透到业务的整个生命周期的。很多所谓的平台，如果做的更偏业务一些，就会变成业务系统，比如分领域的用户画像。<br>什么时候我们能做到像分库分表中间件一样，让所有人能“下意识”的去使用，大概这事就成了。有那么点润物细无声的意境。</p>
+<p>大多数平台也许大概是这么个发展路径：</p>
+<ol>
+<li>对需求从0开始支持。最开始的绝大多数需求都是报表，然后自己搭建hadoop、写各种ETL；</li>
+<li>引入更多开源组件，开始各种排列组合；开始出现分工；</li>
+<li>开始各种内部组件的开发，但大多是零散的点；对开源组件有限度的修改；快速的野蛮成长；</li>
+<li>开始平台化 + 填坑；开始数据体系的建设，而不只是单纯的关注技术；出现更广泛的应用场景；开始关注功能之外的东西，比如治理；</li>
+<li>对内大规模定制各种开源组件，整合各种需求，支撑并且驱动业务；对外做技术输出，持续提升影响力；</li>
+<li>自研 + 公有云？</li>
+</ol>
+<p>一家之言。太长远的我也看不清。<br>这个分类也很笼统，目前来说，我们大概处于第四阶段吧。</p>
+<p>说点题外话。价值这种东西，总是时不时困扰我，我相信其他人也是。我看到很多做“纯技术”的同学很焦虑，总觉得自己离业务太远；也看到很多做业务开发的同学很迷茫，觉得自己一直没有长进。这大概是一个永恒的话题吧，似乎每个人都在质疑自己在做的事的价值？那是不是可以推论所有的事情都没有价值。。。原来大家都是虚无主义的信徒啊。<br>我觉得吧，价值没有是否，只有难易。我们大多数的质疑，只是畏惧困难而已，人类天性可以理解。所以问题不在于有没有价值，而在于你自己是否愿意相信这个价值，在于如何让其他人也相信并且认同。如果我们自己不能笃定，也就没有资格回应别人的质疑。与其自己在角落怀疑人生，不如尝试去把它变成现实。</p>
+<p>最近总是一不小心就开始灌鸡汤。。。</p>
+<p>参考资料：</p>
+<p><a href="https://item.jd.com/12385129.html" target="_blank" rel="external">《大数据平台基础架构指南》</a><br>给老板的书打个广告，没有太多细节，更多是宏观的指导，适合从业一段时间的人看</p>
+<p><a href="https://help.aliyun.com/video_detail/88093.html" target="_blank" rel="external">DataWorks V2.0</a>：可以参考，很多在做的事情都类似</p>
+<p><a href="https://dwhsys.com/2017/03/25/apache-zeppelin-vs-jupyter-notebook/" target="_blank" rel="external">Apache Zeppelin vs Jupyter Notebook: comparison and experience</a><br>相对于传统IDE的另一种交互方式，最近应用场景越来越多</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzU1NTMyOTI4Mw==&amp;mid=2247484935&amp;idx=2&amp;sn=23252591e73d772379b5da59d8a381bb&amp;chksm=fbd4b46bcca33d7d2e6f83bd31c90f01cdc2642643b10bf3d8d0439639782754b3a0af57c737&amp;mpshare=1&amp;scene=1&amp;srcid=0529s3j9buN7E45gnlLMmti7#rd" target="_blank" rel="external">大数据平台架构从0到1之后</a><br>cluster+工具链+interface的分层，很特别；queryengine很赞，kylin玩的溜</p>
+<p><a href="https://mp.weixin.qq.com/s/x35DiLcGrGasPoKXW_wLMw" target="_blank" rel="external">58大数据平台架构演进</a><br>技术演进过程（稳定性 -&gt; 平台治理 -&gt; 性能 -&gt; 异构计算）和我们很像<br>对于各种故障实例的分享很赞，有很多是我们真实碰到过的</p>
+<p><a href="https://eng.uber.com/uber-big-data-platform/" target="_blank" rel="external">Uber’s Big Data Platform: 100+ Petabytes with Minute Latency</a><br>发展过程非常清晰，Incremental data modeling挺有意思</p>
+<p><a href="https://medium.com/netflix-techblog/evolution-of-the-netflix-data-pipeline-da246ca36905" target="_blank" rel="external">Evolution of the Netflix Data Pipeline</a></p>
+<h1 id="方法论和架构">方法论和架构</h1>
+<p>方法论我也不是第一次吐槽了。为什么各种方法论这么蛋疼，一方面很多方法论是不讲逻辑的，或者有一些逻辑但是不自洽；但更多是因为不分场景的胡乱套用。虽然这不是方法论本身的锅，但管杀不管埋也不行吧。。。</p>
+<p>大道至简，如果剥去所有包装，道理都是相通的，也是所有人都能理解的。儒学提炼下大概是“仁义礼智信”，心学提炼下大概是“知行合一”，xx宗教提炼下大概是“躺倒挨锤”（好像没什么不对）。这些文字大家都能读，但能领悟内涵的，很难；身体力行的，更难；想传达给其他人，难上加难。毕竟面对的是活生生的人，有思维、有智慧的人。人的理解总是有差别的，就像宗教的不同流派。为了防止这种分歧，又只能变得繁杂，对简单的概念附上各种“细则”去说明，真是矛盾。更蛋疼的是，有人总喜欢把简单的东西复杂化，演绎出一大套理论和术语。<br>如此说来，面对机器反而容易些。</p>
+<p>这就和鸡汤文一样，道理都是对的，可能也确实是别人从自身经历总结而来的，但直接灌给你是没用的，必须你自己感悟出来。自上向下的指导各种思想，一般效果都不咋样，毕竟知易行难；往往要自下而上的总结出来。凭空指挥总是容易的，我能想出无数种可能性，每一种逻辑上都说的通，但求证的过程十分痛苦，而且未必有结论。<br>所以我对各种方法论都比较警惕，很难全盘接受，批判并吸收才是正途。</p>
+<p>架构这个词，从某种意义上来说，也是方法论的一种，所以也会被滥用。架构是为了“更好的解决问题”，而不是为了架构而架构。各种抽象是真的有用，而不是为了抽象而抽象。大概是我最近看了一些反面例子，有些愤世嫉俗了。。。</p>
+<p>解决问题的前提是发现问题，但很多人欠缺这个能力，我也是。<br>能力的成长不是天生的，也很难是别人灌输的，而是来自于不断的挫折与思考。除非你天赋异秉，洞察力超群，否则大多数“正常人”都只有经历过痛苦才能成长。有句话怎么说的，“未长夜痛哭者，不足与语人生”。</p>
+<p>毕竟所谓的架构，如果放着不管，就会一直“腐烂”，就像热力学第三定律一样，无论当初设计的多么好。只不过腐烂的速度不一样而已，除非你的业务停滞不前。（业务倒逼技术升级，某些时候很无奈，但换一个角度来看，也是很幸福。。。）<br>大多数的系统，都是最初设计时，架构和需求非常match，然后不断的“打补丁”，最后实在补不上了，来一次重构。提前设计不是不可以，但小心变成过度设计。超前一步是天才，超前100步就是神经病了。如何在“现在”和“未来”之间平衡，如何在“架构”和“需求”之间平衡，会是永恒的难题。这可以说是技术的难处，也可以说是技术的魅力。<br>所谓架构师，就要思考更好的解决方法，即是“最佳实践”。不用最佳实践可以不？可以，但在可维护性、复用性、稳定性、扩展性上，就可能会有问题。<br>而且很多事情啊，都是粗略看很简单，但一细想就有很多问题。就说日志采集吧，h5/native、预聚合、降级、采样、设备标志、到达率。。。这些细节往往才是真正体现能力和深度的地方。</p>
+<p>参考资料：</p>
+<p><a href="http://www.infoq.com/cn/articles/alibaba-freshhema-ddd-practice" target="_blank" rel="external">阿里盒马领域驱动设计实践</a><br>非常赞，并不是DDD的无脑吹，让我真正理解了Persistence Ignorance的重要性</p>
+<p><a href="http://www.infoq.com/cn/articles/architecture-thought" target="_blank" rel="external">优秀架构师必须掌握的架构思维</a><br><a href="https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&amp;mid=2247489005&amp;idx=1&amp;sn=91ee65614ee01ac01caf9f105d6575d2&amp;source=41#wechat_redirect" target="_blank" rel="external">怎么样的架构才是好架构？</a></p>
+<p><a href="https://mp.weixin.qq.com/s/Dmymj3JpoEOt1MqGK5jNIQ" target="_blank" rel="external">PostgreSQL-51风控系统背后的利器</a><br>跟这哥们打过些交道，解决问题的思路很清晰，虽然他喜欢的postgre给我们带来很多麻烦。。。</p>
+<h1 id="以人为本">以人为本</h1>
+<p>很多时候，我经常在想，到底是因人成事还是因事成人，虽然实际情况必然是两个因素的混合。</p>
+<p>但就我观察到的情况来看，大多数还是人的因素更占主导，尤其是小公司。<br>大公司也许可以靠各种基础设施、靠制度、靠流程，让那些不那么优秀的人也发挥作用，比如amazon。说的露骨一点，大多数人在这里就是螺丝钉而已。但在小公司，一件事情是否能做成，很大程度取决于这件事的owner是否足够优秀，是否有足够的推动力。换句话说，靠人的优秀来弥补基础的不足。毕竟从事情本身来说，大多并没有特别的前瞻性，很多时候是有经验可以借鉴，有路可以重复走的。<br>有点像法治 vs 人治的区别？</p>
+<p>如果能源源不断招到优秀的人，很多问题都会迎刃而解。但毕竟这只是个理想状态。讽刺的是，大公司反而更容易招到优秀的人。<br>带领优秀的人做事总是更容易的，如何带领不那么优秀的人把事情做成，如何在管理成本很高的情况下把事情做成，才是管理能力的体现。“有多少人做多少事”，这不是一个很好的心态。我更希望是做“应该做的”、“正确”的事。从这个角度来说，事才是最终的目标，而人只是达成目标的一个手段，虽然是最重要的一个手段。</p>
+<p>怎样才是优秀的人？我也一直在思考。我理解的码农的基本素养：</p>
+<ol>
+<li>技术能力。吃饭的家伙，但也只是个最低的门槛。</li>
+<li>业务sense。这个标准就能刷掉一大波人。可以不直接参与业务，但必须要理解业务，知道如何产生价值。某些场景下，可以近似理解为产品意识。</li>
+<li>价值观。很玄学，但真的有用。区别度很高。</li>
+</ol>
+<p>每一点展开都能讲很多。</p>
+<p>价值观这个东西，也算是“恶名远扬”，我以前一直挺反感的。但我反感的是各种滥用和教条。<br>经历过的人越来越多之后，深深觉得“技术”只能决定人的下限，而“价值观”（或者说习惯/态度/方法）才能决定人的上限。而其中最重要的一条就是“积极”，或者叫自驱。不安于现状，主动思考如何做的更好，并能驱动整件事情的改进，碰到困难想办法解决而不是推诿，是否有不顾一切达成目标的心气。这些事情，说起来都很简单，但能做到的人真的是少数。很多人只是嘴上说着不甘于平庸，却不愿做出改变。<br>另外很重要的一条就是逻辑思考能力。虽然都是搞技术的，但很多人却欠缺这种能力。这世上虽然有很多不讲逻辑的事情，但庆幸的是大多数还是讲逻辑的，只是有些隐藏的比较深而已，只要稍微多想一点就能明白很多事情。</p>
+<p>如何培养优秀的人？这又是一个很大的话题。<br>如果换个角度想想呢，作为个体，如何成长最快？必然是有个牛人带你，言传身教。影响人成长最大的因素是环境，和优秀的人在一起非常重要。出淤泥而不染不是不行，只是大多数人没这个素质，更容易变成“比烂”。如何建立一个良性的循环，让优秀变成一种习惯和氛围，一直都是难题。</p>
+<h1 id="杂七杂八">杂七杂八</h1>
+<p>各种奇奇怪怪的读后感。</p>
+<p><a href="https://www.zhihu.com/question/22037987" target="_blank" rel="external">MPP 与 Hadoop是什么关系</a><br>所谓MPP，感觉是传统意义上的分布式数据库领域的？别纠结概念</p>
+<p><a href="https://www.infoq.cn/article/2018%2F10%2Fpublished-gRPC-Web" target="_blank" rel="external">gRPC-Web 发布，REST 又要被干掉了？</a><br>脑洞真大，刚开始看到题目还以为js真的具备调用RPC的能力了，其实后面还是有个proxy的</p>
+<p><a href="http://www.infoq.com/cn/articles/how-to-become-tech-master" target="_blank" rel="external">天天写「业务代码」，如何成为「技术大牛」？</a><br>来，干了这碗鸡汤</p>
+<p><a href="https://mp.weixin.qq.com/s/j94s-jQjJ11zXSDD_uEcAA" target="_blank" rel="external">知识图谱的技术与应用</a>：例子讲的比较简单，想象空间还是挺大的<br><a href="https://mp.weixin.qq.com/s?__biz=MzI4MTY5NTk4Ng==&amp;mid=2247489030&amp;idx=1&amp;sn=9d5514051c88584ddde28f6be4094fce&amp;source=41#wechat_redirect" target="_blank" rel="external">一个支付服务的最终一致性实践案例</a>：比较典型的案例，类似BASE</p>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzA3MDg4Nzc2NQ==&amp;mid=2652136254&amp;idx=1&amp;sn=bba9bbd24ac8e5c1f6ef5d1125a6975b&amp;chksm=84d53304b3a2ba12f88675c1bf51973aa1210d174da9e6c2ddcd1f3c84ec7e25987b3bce1071&amp;mpshare=1&amp;scene=1&amp;srcid=1020GPmfbEVP9QDNlZBHg47I&amp;pass_ticket=vR63tjXqn9DTRAEWRKRMIB8O1ybqCamYyCza7%2BE5YRJRfpf%2F5OwphFKHGOiDiS6u#rd" target="_blank" rel="external">Service Mesh：下一代微服务</a><br>大多数公司连上一代微服务还玩不好吧<br>看了下似乎是将服务发现、通信等又抽象了一层？</p>
+<p><a href="https://mp.weixin.qq.com/s/RuD4xNsr6DgEnyczB4_p9Q" target="_blank" rel="external">Bit Map在大数据精准营销中的应用</a><br>其实就是位图索引，但结合hbase做了很多事情<br>跟BloomFilter一样，都是非常精巧的数据结构</p>
+<p><a href="https://zhuanlan.zhihu.com/p/30971463" target="_blank" rel="external">布隆过滤器在实时指标计算中的应用</a><br>常见的估算UV方法：BloomFilter和HyperLogLog，很多时候从业务层面也可以优化</p>
+<p><a href="https://www.zhihu.com/question/20747381" target="_blank" rel="external">机器学习、优化理论、统计分析、数据挖掘、神经网络、人工智能、模式识别之间的关系是什么？</a><br>数据挖掘，也是一个很模糊的词，大概就是分类、聚类、预测、估算，还有NLP<br>或者说，机器学习指的是技术，而数据挖掘指的是业务目标？<br>这需要的不是多强大的算法能力，而是工程能力</p>
+<p><a href="http://zaa.ch/jison/demos/calc/" target="_blank" rel="external">Jison</a>：很好玩的小工具，自动生成parser，有点像antlr</p>
+<p><a href="https://zhuanlan.zhihu.com/p/35819123" target="_blank" rel="external">阿里技术参考图册</a><br>感觉PR的成分多一些，很多只是宏观的梳理，不过还是值得一看<br>话说梳理业务逻辑并不比技术简单，很佩服能梳理的头头是道的人</p>
+<p><a href="https://www.infoq.cn/article/EE2bAVOOWa0K_g5lLh7j" target="_blank" rel="external">深度剖析阿里巴巴对 Flink 的优化与改进</a><br>我对flink其实不太熟，印象深刻的是FlinkSQL，摘录一段：</p>
+<blockquote>
+<p>我们发现有了Dynamic-Table之后我们不需要再创造任何新的流式SQL的语义。因此我们得出这样的结论：流式SQL是没必要存在的。ANSI SQL完全可以描述Stream SQL的语义，保持ANSI SQL的标准语义是我们构建Flink SQL的一个基本原则</p>
+</blockquote>
+<p>这还是挺特殊的，大多数流式SQL还是要新增一些语法的吧，google dataflow也没做到这一点吧。以后再研究下。话说Blink最近也要开源了啊。</p>
+<p>说到流计算，前段时间看了<a href="https://www.oreilly.com/ideas/the-world-beyond-batch-streaming-101" target="_blank" rel="external">Streaming 101</a>和<a href="https://www.oreilly.com/ideas/the-world-beyond-batch-streaming-102" target="_blank" rel="external">Streaming 102</a>，又看了<a href="https://qconsf.com/sf2017/system/files/presentation-slides/foundations_of_streaming_sql_qcon_sf_2017.pdf" target="_blank" rel="external">Foundations of streaming SQL</a>，一路按图索骥找到<a href="http://streamingsystems.net/" target="_blank" rel="external">《Streaming Systems》</a>（这本书一定要看动图，不然很难懂），看了几章总算开了点窍。因为我大部分对流计算的认知还停留在storm的年代，虽然很早就知道<a href="https://ai.google/research/pubs/pub43864" target="_blank" rel="external">Dataflow</a>和<a href="https://beam.apache.org/" target="_blank" rel="external">Beam</a>，但也没仔细研究过。等读完了要好好总结下，批处理和流处理的对比还是很有意思的。</p>
+<p><a href="https://www.infoq.cn/article/the-evolution-of-large-scale-data-processing" target="_blank" rel="external">The Evolution of Large-Scale Data Processing</a><br>《Streaming System》最后一章的中文版，期待中文版上市</p>
+<h1 id="END？">END？</h1>
+<p>乱七八糟的写了这么多，我自己都觉得啰嗦了，不过写文字从来都不是目的，思考才是目的。<br>有人看了我的文字，说我挺纠结的，想太多。我也承认。<br>怎么说呢，有些人天生有成功的直觉，总是能凭直觉做出正确的选择；我好像还没显露出这种特质。。。所以还是多想想吧，总比浑浑噩噩的好，只是别因为思考而畏缩不前。<br>或者其实大家都在纠结，只是没有显露出来？</p>
+<p>很多时候，有些问题我觉得已经想明白了，但过段时间再看，又糊涂了。。。我就是不断的在“好像懂了” -&gt; “好像还是不懂” 之间循环。<br>而且当你无所事事太久，一直看剧、刷新闻啥的，思考能力就会退化，思维会变得“扁平化”，缺少深度。深度来自哪里？来自于日常的思考和积累，从来就没有什么灵丹妙药，而且这可能是很痛苦的一个过程。<br>不过我发现一个现象啊，好点子往往都是洗澡的时候想出来的。为一个问题苦思许久不得要领时，往往能在某次洗澡时灵感迸发。。。虽然比不上阿基米德的“eureka”，但也让我很欣慰了。</p>
+<p>现在最大的心愿就是下篇文章能写个“纯技术”的。。。但是吧太简单的（介绍类、tip类）写起来没意思，也没价值；复杂的吧，又需要很多时间研究。。。技术类的文章，要么就是对某个问题钻研的比较深，要说透彻；要么就是高屋建瓴，比较成体系。最关键的，还是要有自己的思考，copy-paste就没意思了。</p>
+<p>这篇文字拖了这么久，可以说是忙，可以说是诸事缠身，不过这都是借口，其实就是懒吧。。。拖到最后，看着一堆要填的坑，真是头疼。不过写着写着就high了，吐槽还是挺爽的。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>又要开始胡言乱语了。</p>
+]]>
+    
+    </summary>
+    
+      <category term="杂谈" scheme="http://jxy.me/tags/%E6%9D%82%E8%B0%88/"/>
+    
+      <category term="bigdata" scheme="http://jxy.me/tags/bigdata/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[北游记]]></title>
@@ -1669,7 +1951,7 @@
     <link href="http://jxy.me/2016/04/16/gitbook/"/>
     <id>http://jxy.me/2016/04/16/gitbook/</id>
     <published>2016-04-16T05:40:42.000Z</published>
-    <updated>2017-06-30T12:39:17.000Z</updated>
+    <updated>2018-12-23T08:47:52.000Z</updated>
     <content type="html"><![CDATA[<p>这是个大坑。<br>不过挖坑一向是我的优良品德之一，记得填就好。</p>
 <a id="more"></a>
 <p>说到坑，印象最深刻的是高中时看的某期《九州》，封底上用超大的黑色字体印着“<strong>十载巨坑，一朝填平！</strong>”。。。当时就吓尿了，这种挖坑不填的事好意思这么高调宣传的？忘了是哪个大大挖的坑了，好像是碎石。。。一个外星人入侵地球的故事。</p>
@@ -1713,6 +1995,7 @@
 <li><a href="http://pan.baidu.com/s/1bpDN9uv" target="_blank" rel="external">DNS原理&amp;安全</a></li>
 <li><a href="https://pan.baidu.com/s/1geZkgsb" target="_blank" rel="external">二手前端心得</a></li>
 <li><a href="https://pan.baidu.com/s/1o8DMGbw" target="_blank" rel="external">Spanner论文(2012)</a></li>
+<li><a href="https://pan.baidu.com/s/112rAhWfk26f2Nju51mworw" target="_blank" rel="external">Goods: Organizing Google’s Datasets</a></li>
 </ul>
 ]]></content>
     <summary type="html">
@@ -2178,149 +2461,6 @@
     </summary>
     
       <category term="杂谈" scheme="http://jxy.me/tags/%E6%9D%82%E8%B0%88/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[《Hadoop Application Architectures》]]></title>
-    <link href="http://jxy.me/2015/10/12/hadoop-application-architectures/"/>
-    <id>http://jxy.me/2015/10/12/hadoop-application-architectures/</id>
-    <published>2015-10-12T14:51:14.000Z</published>
-    <updated>2015-10-30T07:48:15.000Z</updated>
-    <content type="html"><![CDATA[<p>非常赞的一本书，链接：<a href="http://shop.oreilly.com/product/0636920033196.do" target="_blank" rel="external">OReilly Shop</a>，6月才出的。话说OReilly真是业界良心。<br>我订阅了<a href="http://www.hadoopweekly.com" target="_blank" rel="external">Hadoop Weekly</a>，某天它推荐了一篇cloudera blog，具体链接忘了，部分内容就是节选自本书，讲了实时处理的一些架构，当时就感觉很赞。于是找来原书看看，顿觉相见恨晚。<br>断断续续看了2个月，550多页啊，全英文。简单总结下。</p>
-<a id="more"></a>
-<p>书如其名，讲的是如何利用hadoop生态圈中的各个组件，构建自己的应用，或者叫data pipeline。只讲架构，而不会太深入细节。</p>
-<h1 id="先扯些别的">先扯些别的</h1>
-<p>我在<a href="/2015/03/24/some-thoughts/">以前的文章</a>中写到：大数据技术很多，但成熟的少，门槛很高，落地太难。<br>现在依然这样觉得。</p>
-<p>我认为hadoop圈已经发展的足够复杂了，各种开源项目可以覆盖到大部分需求。这么多apache顶级项目任君选择，还有各种孵化器项目。在hadoop-user的邮件列表中，还经常有人推销一些不太知名的第三方项目。<br>所谓的定制开发需求，很多是没有必要的，或者是从业务逻辑上可以绕过的，可以称作伪需求。说的不客气点就是自己YY出来的。有多少公司能达到阿里/腾讯那个数据量？会碰到他们的问题？不应该为一些很小的需求投入大量精力去改造。纯研究性质的另说。<br>hadoop现在真正欠缺的是<strong>易用性</strong>。技术已经很成熟，但对用户不友好。这里的用户不只是终端用户，也包括运维、开发。<br>很多项目为了追求技术的极致，为1%的性能提升而花费大量精力。一些出自学院派的项目尤其如此（想到scala，以用户大都是博士硕士为荣）。<br>其实如果能优化下用户体验，就推广上而言，远比1%的性能提升要好。<br>可能也是我最近做业务做多了。很多时候，技术都不是最重要的，够用就好。当然也不能太low。。。<br>Done is better than perfect嘛。<br>似乎我以前也<a href="/2015/06/27/some-gossip/">吐过这种槽</a>。。。<br>这算是学术界vs工业界？</p>
-<p>其实很多发行版都在做出努力优化用户体验，但是还不够。<br>如果我是一个新用户，面对这么多项目、这么复杂的系统，肯定无从下手。我只知道我要建一个数据仓库/我要分析日志/我要实时监控，有人跟我说hadoop能解决，但具体怎么做？</p>
-<p>咳，这本书就是告诉你怎么做的。扯了半天终于扯回正题了。。。</p>
-<h1 id="关于本书">关于本书</h1>
-<p>凭一本书当然不可能解决hadoop的易用性问题。<br>本书只是描述了各个组件的适用场景，结合一些实例，总结一些经验供读者参考。这些经验都是经过实践检验的，比较可靠，比自己慢慢摸索好多了。<br>对于我这样对hadoop比较了解，对其他项目也有一些了解，但缺少实践经验的人而言，本书非常适合，简直是雪中送炭。如果要我自己去构建一个系统，应该也能搞出来，但会比较痛苦，会踩很多坑，后续的维护性和扩展性也不好说。<br>但对新人而言，看这种书可能会比较累，一些设计上的抉择也不容易搞明白。建议先了解些基础知识。</p>
-<p>下面系统的总结下。<br>如果要构建一个基于hadoop的系统（无论离线还是实时），要从哪些角度去思考？或者说，要<strong>如何设计数据流</strong>？<br>一个前提：<strong>不存在one fits all的解决方案</strong>。</p>
-<h2 id="数据建模">数据建模</h2>
-<p>这是第一步，也是最重要的一步，但却很容易被忽视。我们以前直接纯文本，最多lzo压缩下，简单直接。<br>按本书的说法，这里有很多问题要考虑：</p>
-<ul>
-<li>数据格式。纯文本？二进制？是否有schema？</li>
-<li>文件格式。行式？列式？avro？parquet？sequence file？</li>
-<li>压缩。是否压缩？lzo/snappy？splittable？</li>
-<li>存储。数据存在哪里？hdfs/hbase/kafka？有些时候会存多份。如何分区？</li>
-<li>元数据管理。这是最抽象的。很多时候都意识不到元数据的存在。hive？hcatalog？</li>
-</ul>
-<p>数据格式，这是由各个应用决定的。<br>文件格式，我会尽量选择parquet。因为hadoop最大的应用场景是文本处理，或者类似OLAP，列式存储会有很大优势。以前还有种文件格式rcfile，现在好像很少用了。也要看具体的应用场景，如果是偏向于整行处理的，也可以选择avro。甚至可以基于sequence file设计自己的文件格式。总之还是看自己的应用模式。<br>压缩，尽量选择snappy。parquet+snappy是非常完美的。parquet/avro是一种类似于“容器”的格式，是splittable的，而不必关心容器内的数据是如何压缩的，于是snappy不能split的缺点也可以克服了。以前我们用的最多的是lzo，只是为了split。但每个lzo文件还要单独加index太蛋疼了。另外由于许可证问题，lzo的部署也比较麻烦，snappy就简单很多。如果要归档历史数据，也可以考虑gzip/bzip2。<br>存储的选择很简单，批处理就hdfs，实时就hbase/kafka。但直接用kafka存数据的比较少见，一般只是拿它过渡。<br>元数据管理没什么统一的方案，要看自己的应用。但有个偷懒的方式，尽量把数据全部导入hive，让hive去管理元数据。</p>
-<h2 id="数据导入">数据导入</h2>
-<p>这是数据开始“流动”的起点。如何将数据导入hadoop？</p>
-<ul>
-<li>数据类型？日志？数据库？纯二进制文件？</li>
-<li>数据处理模式？流式？批处理？随机读取？</li>
-<li>push or pull？</li>
-<li>传输过程中，是否需要一些处理/过滤？</li>
-<li>sink类型？是否要增量更新？append/overwrite？</li>
-</ul>
-<p>最简单的方式是直接以文件形式传到hdfs上，<code>hdfs fs -put</code>。这种方法虽然土，但有效，而且可以导入任意格式的数据。缺点是不太可靠。<br>如果是从rdbms导入，只能用sqoop了，没有太多选择。<br>其他情况下，一般flume都是最优选择。在hadoop圈的日志传输工具里，flume算是最成熟的了。而且flume提供interceptor机制，可以做一些简单的实时处理。但处理逻辑如果太复杂，会影响flume节点的吞吐率。<br>flume另一个问题是可能有数据重复。这是所有日志传输工具都会有的问题。flume的理念是“at least once”，优先保证数据不丢失，但故障时允许重复。<br>想要做到真正的“exactly once”是非常难的，而且势必会影响效率。<br>flume支持pull和push模式。但push模式需要改应用代码，直接在代码中像log4j一样调用，感觉不太好。。。常用的还是pull模式吧。flume实现了基于文件的pull模式，但只有当文件写完后才能pull，也就是说数据不是实时的，不支持类似tail的模式。</p>
-<p>如果目的地不是hdfs，而是hbase或是其他的系统，首先看下flume有没有提供对应的sink，没有的话就要自己写了。</p>
-<p>另外，kafka虽然不是用于数据导入的，但它像万金油一样，到处都可以用，能玩出很多花样。。。比如应用直接写数据到kafka，flume从kafka读取数据并归档到hdfs；或者flume直接写到kafka，让其他应用去消费。这样数据的可靠性可以交给底层的kafka保证。而且kafka中的数据可以有多个消费者，同一份数据可以用于多个地方。</p>
-<p>其实在现实中，很多公司会自己开发日志传输工具。<br>题外话，很多公司最常见的“定制开发”：日志传输和调度系统。这两个确实是和需求绑定比较紧的，不太容易通用。这种定制开发看着容易，随便写写就能cover 95%的需求，但剩下的5%才是真正的问题所在，决定了这个工具是“优秀”还是“能用”。</p>
-<h2 id="数据处理">数据处理</h2>
-<p>首先要明白自己的处理模式。<br>借用书中的一张图：<br><img src="/2015/10/12/hadoop-application-architectures/1.png" alt=""><br>如果简单点按响应时间分类，应该有3种：</p>
-<ul>
-<li>批处理/batch process，至少是分钟级别的。典型的比如MR、spark。特点是一次性处理大量数据，没有daemon。</li>
-<li>交互式查询/ad-hoc query。一般是秒级别，比如impala。特点是有daemon进程常驻内存。spark也能部分覆盖到这个场景。</li>
-<li>实时处理/流处理/stream process。处理模式跟前两者完全不同，基于每条日志去处理。比如storm。</li>
-</ul>
-<p>这是一种很模糊的分类，没有明确的界限，大概知道就可以。<br>ad-hoc query很多时候是由batch process优化得来的。如果能让MR有个线程池之类的东西，再加上一些优化，相信MR也可以作为ad-hoc query。<br>spark streaming虽然也号称是流处理，但真实的处理模型其实是micro batch。<br>所以不要纠结分类，知道每种工具的适用场景就可以了。</p>
-<p>上图中最左边的custom，意思是如果要更实时的处理，只能自己实现了。想到高频交易那帮人。。。<br>个人感觉，spark有一统天下的趋势，各种场合都可以用。</p>
-<h3 id="批处理">批处理</h3>
-<p>hadoop最主要的用处。<br>批处理和交互式查询除了响应时间，很多时候计算模式是类似的。放在一起说了。</p>
-<p>这里要区分计算引擎和工具：</p>
-<ul>
-<li>引擎：MR（经典/可靠/效率低）、spark（新贵/准备登基）、tez（已死/有事烧纸）、impala（没用过/不确定）。</li>
-<li>工具：hive、spark sql、pig、crunch、cascading。</li>
-</ul>
-<p>引擎和工具的区别，就是执行效率和开发效率的取舍。直接写MR可以控制大量细节，人为的做很多优化，但是要写大量代码，开发和维护的代价都很大；如果用hive，直接写sql就可以了，但hive sql编译出来的job往往不是最优的。spark/spark sql也是同理。</p>
-<p>重点说说MR和spark，至于其他的，其实不用关心。。。早晚会败在spark手下。。。<br>MR是非常经典的计算模型，最重要的设计是share nothing，所以可以简单的并行执行。在MR的过程中只有一次数据交换的机会，就是shuffle，所以多次迭代必须要多次MR。更为人诟病的是效率低，startup overhead非常大。<br>spark的初衷则是DAG处理，跟MR完全不同。spark感觉就是非常学院派的。。。spark在技术上的nb是毫无疑问的，发展非常快，但快也有很多问题，书中的原话是“Spark still has many rough edges”，以后应该会慢慢好转。</p>
-<p>hive是sql on MR的标准实现，很多项目都兼容hive的语法/元数据，hive也慢慢变成sql on hadoop的标准了。<br>spark sql也兼容hive。但鉴于他们放弃shark的“前科”，未来如何还要再观察。<br>另一个有趣的对比就是hive on spark和spark sql，二者功能上其实有些重叠的。但spark的东家databricks似乎对hive on spark非常不感冒，坐看他们撕逼了。。。</p>
-<p>对于impala，它是用C++写的，在hadoop圈中算是比较另类的存在。但对于交互式查询，好像只有impala比较成熟，其他一些类似的项目drill、stinger，基本都没人用的。所以在spark成熟前，在交互式领域，impala还是首选。</p>
-<h3 id="流处理">流处理</h3>
-<p>flume interceptor之类的暂不考虑，其实可选的工具就两种：storm和spark streaming。很久以前还有些其他的实时框架，S4什么的，但已经没人用了。</p>
-<p>流处理和批处理的区别是什么？其实处理上是没什么区别的。。。感觉是用吞吐量的下降换取实时性。另外由于每次只处理一条数据，一些上下文相关的处理会比较麻烦。</p>
-<p>我最早接触的实时框架就是storm，那时好像是0.7.x的版本。最让人惊艳是无状态的设计，nimbus可以随时重启，这是第一次见到。storm是最纯粹的record-based process，每次只处理一条。除了处理数据外，storm另一个重要作用是DRPC。ack机制也是storm的特色。<br>trident相当于扩展了storm，类似于hive与MR的关系，提供了更方便使用的接口，但似乎处理模型也有一些变化，变成了“伪batch”。<br>而spark streaming是“真batch”，它的实时只是降低了每次batch处理的数据量，同时提高处理频率。对实时性要求没那么高的情况下，性能会比storm好很多。不过，它真正的大杀器是批处理和流处理可以共用同样的代码。。。因为spark的RDD抽象层次很高，无论批处理还是流处理，都是对RDD的各种变换，只要改下作为输入源的RDD就可以。</p>
-<p>对于流处理，一个很重要的问题是可靠性保证，一共有3个级别：</p>
-<ul>
-<li>at most once。每条记录最多处理一次。简单的说，数据发出去就不管了，即使处理失败也不会重发。这是安全性最低的级别，可能会有数据丢失。</li>
-<li>at least once。每条记录至少处理一次。这也是大多数框架默认的级别。比如storm的ack机制，一条记录处理后必须ack一次，否则storm会认为处理失败，重发一次记录。但这样也可能造成重复处理。比如一条记录处理完毕，已经更改了外部的状态（比如mysql里的计数器+1），但ack()之前失败了，就会重复处理。</li>
-<li>exactly once。最严格的可靠性保证，每条记录只处理一次。使用上有很多限制，对输入源、输出目标、编码方式都有要求。而且对效率影响非常大。</li>
-</ul>
-<p>一般最常用的还是at least once。<br>稍微google了下exactly-once语义。要实现exactly-once，首先输入源必须是transactional的，大概的意思就是输入必须是严格有序的，可以根据id回放，并且回放的数据必须和以前的完全相同。无论storm还是spark streaming，目前只有kafka输入源能满足这个要求。其次，在写程序时，也必须一些额外的工作，处理一条记录后，不能直接修改状态（比如直接改数据库），而要把状态分成多个阶段，beforeCommit、commit等，实现相应的方法。这样把状态更新交给上层去处理（storm或spark），storm或spark会将状态变换暂时缓存到内存里，当前记录或batch处理完后，才会真正更新。如果失败，会回放数据并重新处理。这中间的机制很复杂。</p>
-<p>storm早期提供了一种transactional topology以支持exactly-once，大意就是每条记录必须完全处理完毕才能开始处理下一条，不用想就知道性能很差。<br>后来出现了trident、spark streaming等micro batch模型，对exactly-once友好了很多。换句话说，rollback的代价没有那么大了。<br>micro batch的另一个好处是写hbase性能会好很多，不用每条记录一次put。</p>
-<p>个人感觉，选择哪个工具还是要看自己的应用，一般情况下spark streaming是最优的。<br>如果有特殊需求，比如实时性要求较高、DRPC等，可以选择storm/trident。</p>
-<h3 id="处理模式">处理模式</h3>
-<p>只是总结下常见的数据处理模式，不限定于具体工具，不限定于具体应用，不区分批处理与实时。</p>
-<p>基础：filter、transform、aggregate<br>高级一点的：windowing analysis、graph processing<br>更高阶的：machine learning、visualization</p>
-<p>我暂时能想到的就是这些。<br>对于基础，用任何工具去做都很简单。但对于其他模式，是有所谓的最佳实践的。<br>比如图处理，可以用MR去算，像page rank那样多次迭代。但更好的办法是用专门的工具，比如spark GraphX。<br>比如machine learning，可以用mahout或spark MLlib。</p>
-<p>还是那句话，选哪种工具，看自己的应用场景。</p>
-<h3 id="Lambda_Architecture">Lambda Architecture</h3>
-<p>storm作者提出的一种架构：<a href="https://en.wikipedia.org/wiki/Lambda_architecture" target="_blank" rel="external">wiki</a>。</p>
-<p>大意就是说基于hadoop的系统都要是这样一种架构：有批处理和流处理两条线，数据是不可变的，同时进入批处理系统和流处理系统。批处理用于处理历史数据，流处理用于处理近期的数据。查询时会同时从两个系统中查询并合并结果。</p>
-<p>这种架构已经经过实践检验了，据说linkedin内部一直是这样的架构（我觉得是因为他们有kafka）。其实很多系统也会不自觉的向这种结构发展。</p>
-<p>但这种架构争议也很多。最大的争议是处理逻辑变化时，要同时更改两个地方的代码。摘录一段：</p>
-<blockquote>
-<p>以类推方式，想想跨数据库ORM框架臭名昭著的困难，试图跨越这两个系统提供一个近似标准接口语言也会如此，试图在两个不同编程范式的顶部建立一个抽象层是非常难的。</p>
-</blockquote>
-<p>如果流处理足够强大，也许就不需要批处理部分了。但这种合并了批处理和流处理的方式还是值得参考的。</p>
-<p>其实，很多理论未必是真理，尤其是提出时间不长的。比如CAP就有很多争议。BASE更是牵强。</p>
-<h2 id="调度系统">调度系统</h2>
-<p>这是永远的痛啊。。。hadoop圈中一直没有一种好用的调度工具，勉强能用的是oozie和azkaban。<br>如果用crontab能满足的话，还不如用crontab简单直接。<br>所以很多公司都会开发自己的调度系统。</p>
-<p>oozie的配置太过复杂了，让人望而生畏，workflow的管理也很不方便，不直观。其他传参数、传第三方lib之类的，也很麻烦。<br>azkaban的优点是强大的web界面，很多配置可以在web上修改。问题在于修改workflow很麻烦，不能部分修改，因为它是以zip包形式管理的，只能整个替换。更麻烦的是要修改自己的代码才能被azkaban调度。</p>
-<p>如果一定要选的话，也只能是azkaban了。最近似乎2.7.x版本发布了，不知道会不会有些改进。</p>
-<p>另外我能吐槽下linkedin么，似乎开源项目的代码质量都不高啊。。。我看过WhiteElephant的代码，这哥们以前不是写java的吧？我也看了azkaban一点代码，也不咋样。不过这两个项目的前端倒是都不错。<br>想看高质量的代码，可以看hadoop，我看过一点yarn和hdfs的，受益匪浅。</p>
-<h2 id="总结">总结</h2>
-<p>只是个人感觉。</p>
-<ol>
-<li>大部分系统从这几个角度去设计：storage/ingestion/processing/analyzing/orchestration。</li>
-<li>能用hive的尽量用hive，甚至整个pipeline架在hive上也可以，有很多好处：hive原生支持parquet/avro；支持各种计算引擎；可以方便的对接各种BI工具和查询工具；支持hiveserver；后续的索引支持；对hive sql的扩展更方便，写UDF比写MR/spark简单的多；方便做各种优化等等。说实话，我也不愿意写一大堆代码做ETL和各种计算，sql要简单的多。如果以后spark sql成熟了，也可以考虑。</li>
-<li>不能用/不好用hive的地方，用spark。<strong>不要用MR。写scala，不要写java。</strong></li>
-<li>尽量用parquet+snappy。</li>
-<li>数据导入一般是flume+sqoop。</li>
-<li>需要可实时读写的持久化存储时，考虑hbase。否则一般是hdfs。</li>
-<li>实时处理优先考虑spark streaming，不能满足需求再考虑trident，最次storm。</li>
-<li>kafka就像润滑剂一样，设计系统碰到困难时，试着扔个kafka进去。</li>
-<li>牢记，<strong>抱着spark的大腿总是没错的</strong>。</li>
-</ol>
-<h2 id="实例">实例</h2>
-<p>书中给出了几个实例，具体的设计过程我就不列了。看看架构图吧。</p>
-<h3 id="点击流分析">点击流分析</h3>
-<p>特点是完全离线处理。注意数据处理过程中的sessionization.<br><img src="/2015/10/12/hadoop-application-architectures/2.png" alt=""></p>
-<p><img src="/2015/10/12/hadoop-application-architectures/3.png" alt=""></p>
-<h3 id="反作弊">反作弊</h3>
-<p>实时+离线，就是所谓的lamda architecture。<br><img src="/2015/10/12/hadoop-application-architectures/4.png" alt=""></p>
-<h3 id="数据仓库">数据仓库</h3>
-<p>跟传统的数据仓库概念差不多。只不过是基于hadoop的。<br>数据仓库的关键在于建模，很多时候要反范式。从架构图上看不出什么东西。<br><img src="/2015/10/12/hadoop-application-architectures/5.png" alt=""></p>
-<h1 id="事实标准">事实标准</h1>
-<p>跟技术无关的一些想法。<br>hadoop已经是大数据处理事实上的标准。谈到大数据，必言hadoop。hadoop应该称为data hub更合适，各种技术、框架依附于它而存在。<br>作为大数据处理技术，hadoop未必是最早的，未必是最NB的，却是最普及的。</p>
-<p>在我心目中，hadoop生态圈中各种项目的“江湖地位”：</p>
-<ol>
-<li>事实标准：hdfs、yarn、hive、zookeeper</li>
-<li>将成为事实标准：spark、kafka</li>
-<li>能独当一面：hbase、flume、storm</li>
-<li>能解决特定问题：pig、sqoop、oozie、azkaban、impala、mahout、hue</li>
-<li>快退休的：MR、tez</li>
-</ol>
-<p>详细的项目列表见<a href="https://hadoopecosystemtable.github.io" target="_blank" rel="external">这里</a>，虽然我觉得其中一些项目不属于hadoop生态圈。<br>纯粹凭感觉分类。对我来说，大部分项目属于第4类，只是能解决特定的问题。如果能做的更好，覆盖特定领域的大多数问题，就会进化到第3类，能独当一面。至于能否进化到第2类甚至第1类，不光看技术，也要看推广，甚至是运气。</p>
-<p>话说，前些年如火如荼的nosql运动好像沉寂很长时间了？我记得当时隔几天就有一个新项目冒出来，mongo/redis/riak/neo4j/cassandra/hypertable/couchbase，还有各种不知名的项目。<br>还是我太久没关注。。。<br>似乎只有mongo和redis活的还不错。</p>
-<h1 id="题外话">题外话</h1>
-<p>这篇文章写了近2周。<br>近一万字，我特么都没想到写了这么多。。。<br>借着总结这本书的过程，沿着书中的脉络，也总结了自己的一些想法，想到哪写到哪，比较随意。<br>夸张点说，我个人关于hadoop的所有理解，都总结在本文中了。<br>以后没事再来翻翻。碰到一些架构上的问题时也可以做个参考。</p>
-<p>我看技术类书籍的习惯，喜欢在书上写写画画，文中很多内容其实是当时的笔记。<br>如果不能直接在书上写，一定要开着xmind，一边看一边总结。<br>个人觉得这样是比较好的读书方法。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>非常赞的一本书，链接：<a href="http://shop.oreilly.com/product/0636920033196.do" target="_blank" rel="external">OReilly Shop</a>，6月才出的。话说OReilly真是业界良心。<br>我订阅了<a href="http://www.hadoopweekly.com" target="_blank" rel="external">Hadoop Weekly</a>，某天它推荐了一篇cloudera blog，具体链接忘了，部分内容就是节选自本书，讲了实时处理的一些架构，当时就感觉很赞。于是找来原书看看，顿觉相见恨晚。<br>断断续续看了2个月，550多页啊，全英文。简单总结下。</p>
-]]>
-    
-    </summary>
-    
-      <category term="hadoop" scheme="http://jxy.me/tags/hadoop/"/>
-    
-      <category term="读书" scheme="http://jxy.me/tags/%E8%AF%BB%E4%B9%A6/"/>
     
   </entry>
   

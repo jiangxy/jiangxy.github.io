@@ -219,6 +219,14 @@
 <p>不管怎样，java+CGI没有成为主流，servlet成了java世界的标准，应该说这是历史的选择？从设计上来讲Servlet可以支持各种类型的请求，但实际中绝大多数实现都是用于处理http请求。Tomcat就是所谓的Servlet容器，符合servlet规范的java工程，直接部署到tomcat中即可运行。</p>
 <p>那么，为啥不能用tomcat直接处理所有请求？为啥要加一层Apache/Nginx？从理论上来说，是可以用tomcat处理所有请求的，但还要考虑到效率的问题。虽然Apache“结合CGI动态生成内容”这个功能被废掉了，但“处理静态文件”和“转发请求”这两个功能还在啊，可以用来减轻tomcat的负载，还能实现负载均衡等功能。<br>单纯说处理静态请求的话，各种Servlet容器还是不如Apache/Nginx，毕竟不是专门干这个的。虽然也能用<code>DefaultServlet</code>处理静态文件，但多了一层Servlet的处理逻辑，性能上总会有些损耗。</p>
 <p>一篇比较好的介绍Servlet的文章：<br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-servlet/" target="_blank" rel="external">https://www.ibm.com/developerworks/cn/java/j-lo-servlet/</a></p>
+<h1 id="如何减少JVM线程数">如何减少JVM线程数</h1>
+<p>前段时间碰到一个问题，JVM创建的线程数达到了系统上限。根本的解决方法当然是增加系统阈值，但JVM本身也是有些可以优化的地方，比如GC线程和Attach线程。参考：<a href="https://stackoverflow.com/questions/25682398/how-to-reduce-the-number-of-threads-used-by-the-jvm" target="_blank" rel="external">How to reduce the number of threads used by the jvm</a>。</p>
+<p>另一个资料：<a href="https://my.oschina.net/igooglezm/blog/757587" target="_blank" rel="external">https://my.oschina.net/igooglezm/blog/757587</a></p>
+<h1 id="JVM报错zip_file_closed">JVM报错zip file closed</h1>
+<p>很奇怪的错误，似乎是在加载jar文件的时候报错，还可能一同出现“Inflater has been closed”错误。debug了一下代码，似乎跟Java的SPI机制有关，原理暂时不明。新增一个jaxp.properties配置文件可以解决：</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="attribute">$ cat /usr/java/jdk1.7.0_151/lib/jaxp.properties</span></div><div class="line">javax.xml.parsers.DocumentBuilderFactory=<span class="string">org.apache.xerces.jaxp.DocumentBuilderFactoryImpl</span></div></pre></td></tr></table></figure>
+
+<p>xerces这个库好像还有各种各样的蛋疼问题。</p>
 
         
       </div>
@@ -310,7 +318,7 @@
       <p class="site-description motion-element">思绪偶尔在这里停留</p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">58</span>
+          <span class="site-state-item-count">59</span>
           <span class="site-state-item-name">日志</span>
         </div>
         <div class="site-state-item site-state-tags">
@@ -375,7 +383,7 @@
         <div class="post-toc">
           
           
-            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于泛型"><span class="nav-number">1.</span> <span class="nav-text">关于泛型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Class-newInstance"><span class="nav-number">2.</span> <span class="nav-text">Class.newInstance</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile"><span class="nav-number">3.</span> <span class="nav-text">volatile</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#transient"><span class="nav-number">4.</span> <span class="nav-text">transient</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wait()"><span class="nav-number">5.</span> <span class="nav-text">wait()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CountDownLatch"><span class="nav-number">6.</span> <span class="nav-text">CountDownLatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NoClassDefFoundError_vs_ClassNotFoundException"><span class="nav-number">7.</span> <span class="nav-text">NoClassDefFoundError vs ClassNotFoundException</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java_Cookies"><span class="nav-number">8.</span> <span class="nav-text">Java Cookies</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口的默认实现"><span class="nav-number">9.</span> <span class="nav-text">接口的默认实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apache_vs_Tomcat"><span class="nav-number">10.</span> <span class="nav-text">Apache vs Tomcat</span></a></li></ol></div>
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于泛型"><span class="nav-number">1.</span> <span class="nav-text">关于泛型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Class-newInstance"><span class="nav-number">2.</span> <span class="nav-text">Class.newInstance</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#volatile"><span class="nav-number">3.</span> <span class="nav-text">volatile</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#transient"><span class="nav-number">4.</span> <span class="nav-text">transient</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#wait()"><span class="nav-number">5.</span> <span class="nav-text">wait()</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#CountDownLatch"><span class="nav-number">6.</span> <span class="nav-text">CountDownLatch</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#NoClassDefFoundError_vs_ClassNotFoundException"><span class="nav-number">7.</span> <span class="nav-text">NoClassDefFoundError vs ClassNotFoundException</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Java_Cookies"><span class="nav-number">8.</span> <span class="nav-text">Java Cookies</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#接口的默认实现"><span class="nav-number">9.</span> <span class="nav-text">接口的默认实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Apache_vs_Tomcat"><span class="nav-number">10.</span> <span class="nav-text">Apache vs Tomcat</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如何减少JVM线程数"><span class="nav-number">11.</span> <span class="nav-text">如何减少JVM线程数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JVM报错zip_file_closed"><span class="nav-number">12.</span> <span class="nav-text">JVM报错zip file closed</span></a></li></ol></div>
           
         </div>
         <div class="post-toc-indicator-bottom post-toc-indicator"></div>
