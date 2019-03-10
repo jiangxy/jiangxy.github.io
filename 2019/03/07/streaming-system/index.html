@@ -1,0 +1,1010 @@
+<!doctype html>
+<html class="theme-next use-motion">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  <meta name="google-site-verification" content="5xgDjDYDdxdIb-75WSsQSK3Q7DJXJH-lnUsmFYEF2po" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.3.0"/>
+
+
+    <meta name="description" content="思绪偶尔在这里停留" />
+
+
+
+	<meta name="keywords" content="bigdata,streaming," />
+
+  <title> 《Streaming System》 // foolbear的冥想盆 </title>
+</head>
+
+<body>
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+    <a href="/" class="brand">
+        <span class="logo">
+          <i class="icon-logo"></i>
+        </span>
+        <span class="site-title">foolbear的冥想盆</span>
+    </a>
+</h1>
+
+
+  <ul id="menu" class="menu">
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-tags">
+        <a href="/tags">
+          <i class="menu-item-icon icon-tags"></i> <br />
+          标签
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-books">
+        <a href="/2016/04/16/gitbook/">
+          <i class="menu-item-icon icon-books"></i> <br />
+          书目
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+            
+          
+
+          <div id="posts" class="posts-expand">
+            
+  
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              《Streaming System》
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            发表于 2019-03-07
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2019/03/07/streaming-system/#comments" >
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/07/streaming-system/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          <p><a href="/2018/11/25/meta-gossip/">之前</a>就提到过，最近在看<a href="http://streamingsystems.net/" target="_blank" rel="external">《Streaming Systems》</a>这本书。趁着过年期间再加几个周末，终于看完了。自从<a href="/2015/10/12/hadoop-application-architectures/">《Hadoop Application Architectures》</a>之后，很少这样细致的看一本英文大部头了。</p>
+<p>我对流处理并不很熟悉，随便写写感想，可能有错误，也并不全是流处理相关的。</p>
+<a id="more"></a>
+<h1 id="关于本书">关于本书</h1>
+<p>本书并不是针对某个系统去讲解原理或使用，也并不是针对的讲某种技术，而是从比较抽象的角度去阐述“流处理系统应该是什么样子的”、“应该具备哪些能力”，可以作为系统设计时的参考。如果一定要类比的话，有点类似于《数据库系统概念》这种书。<br>所以本书并不适合初学者读，如果没有一些数据处理的实际经验（无论stream还是batch），上来就直接看各种概念，很容易懵逼，不知道为什么要这样设计。但反过来说，如果你有一些经验再来看这本书，会有种融会贯通的感觉。就好像你看到的不只是流处理系统，而是整个数据处理领域/相关系统的发展脉络和设计哲学，虽然这么说比较玄学。。。</p>
+<p>看书时的几点提示：</p>
+<ul>
+<li><a href="https://learning.oreilly.com/library/view/streaming-systems/9781491983867/" target="_blank" rel="external">Safari Books Online</a>真是非常好用，试用期内可以免费在线看书，不过还是推荐充值。</li>
+<li>Safari Books Online的另一个好处在于，本书的很多示意图是动态的，如果你只看纸质版本，很容易看不懂。而且很多概念本身有点抽象，如果你刚碰到时看不懂，很可能后面的章节也就完全不懂。所以一定要看懂动图、一定要看懂动图。</li>
+<li>可以和google的<a href="https://ai.google/research/pubs/pub43864" target="_blank" rel="external">Dataflow论文</a>结合着看。Dataflow可以指的是google的数据处理<a href="https://cloud.google.com/dataflow/" target="_blank" rel="external">系统</a>，也可以指的是它提出的那套模型和API，下文中我会混用。</li>
+<li>作者的用词有一点奇怪，经常会出现一些很生僻的单词。。。而且有些英文的梗实在是不太懂，大概因为我不是native english speaker吧。</li>
+</ul>
+<p>话说，阿里的哥们不是说在<a href="https://www.infoq.cn/article/the-evolution-of-large-scale-data-processing" target="_blank" rel="external">翻译中文版</a>么，说是年末上市，这都9102年3月了，也没看到。。。</p>
+<h1 id="啥是framework">啥是framework</h1>
+<p>看书的过程中，我一直在想，各种流处理系统之间的差别到底是啥，为什么以前storm一片繁荣，而现在面对flink败下阵来。如果直接对比功能特性，我们当然能列举出很多：window啊、exactly-once啊、event-time啊。但如果一定要较真，其他框架不能实现这些么？应该可以，但是有些side effect，而且需要用户自己去操心很多事情。如果用storm去实现event-time窗口，需要很小心的设计，很容易出错，而这实际上跟业务逻辑无关，实际的业务代码仅仅是系统代码很小一部分，不值得让用户付出心力。<br>前段时间看了介绍Jeff Dean的一些文章，讲了MapReduce的一些历史。无非就是以前大家在处理数据时都要从头开始写很多代码，各种烟囱式开发，而MR将这些抽象出来，让用户更能关注自己的逻辑。虽然以现在的眼光来看，MR也是很low-level的API了。<br>为什么SQL大行其道，很重要的原因在于，用户只是在“表意”，只关心自己的逻辑就可以了。</p>
+<p>从这个角度来讲，framework或者说框架，其意义在于屏蔽底层（尤其是infra）的各种细节，把各种脏活累活统一做掉。最典型的脏活就是failover，让用户自己去操心节点失败后如何恢复，闹呢？<br>框架做的越多，应用层需要做的就越少，这个边界其实挺难划的，而且不同时代需要的框架能力也不同。flink由于支持dataflow模型，这条线划的比较高，或者说抽象程度更高一些，恰逢其时。</p>
+<p>不只是数据处理领域，各种JavaEE框架、各种ORM、各种算法框架，甚至于各种library/utils、微服务、RPC、操作系统、编程语言，都是同样的演进过程。所以计算机科学，是不是就是一门关于“抽象”的科学？这在其他学科中好像还是比较少见的。<br>正如本书作者所说：Hooray for layers of abstraction!</p>
+<p>甚至在非技术领域也是如此，比如著名的<a href="https://wiki.mbalib.com/wiki/KISS%E5%8E%9F%E5%88%99" target="_blank" rel="external">KISS原则</a>。我们在设计自己的产品时，是否真的帮用户把所有他不需要关心的事屏蔽掉了？说来惭愧，总是有人吐槽我们的系统不好用/反人类，我觉得就是暴露给用户的、需要用户操心的东西太多了。</p>
+<p>这个道理虽然很简单很朴素，但却很容易被忽略。</p>
+<h1 id="流_vs_批">流 vs 批</h1>
+<p>一个很本真的问题：流处理和批处理到底差别在哪里？</p>
+<p>因为我们都是搞工程的，所以我们很容易列举出一些区别：</p>
+<ul>
+<li>批处理的数据是已知的、不可变的，流处理的数据往往是未知的、实时输入的</li>
+<li>流处理结果更实时，但相对并不准确，所以才会有所谓的lambda-architecture</li>
+<li>流处理需要有daemon进程常驻</li>
+<li>批处理往往是无状态的，而流往往是有状态的</li>
+<li>因为没有状态，批处理的failover只要重跑就可以了，而流的错误处理会更麻烦</li>
+<li>批处理由于能获取一些“全局”状态，可以做一些针对性优化，吞吐量更高</li>
+<li>批处理的join实现已经比较完善了，而流的join一直是个大难题</li>
+<li>等等等等</li>
+</ul>
+<p>但所有这些区别，更像是“结果”，是工程实现的差别，而不是本源。大家之所以觉得流处理系统不准确、吞吐量不高等等，只是因为它被实现成了那个样子。<br>本书最重要的一个理念，就是从更高的抽象层面，论证了批和流实际上是能统一的（作者实际上说的是stream是batch的超集，但我有点存疑，或者作者说的stream其实是更广义上的？）。我们不应该从工程实现的角度来分类，而应该从处理的问题域来划分。</p>
+<p>在真实的场景中，大多数数据其实都是无界（unbounded）+ 无序（unordered）的。很多我们用批处理系统（比如MR）去处理的有界数据，其实是一种“劣化”。亲身经历的场景：</p>
+<ul>
+<li>late data问题。以前用MR去计算各种报表，由于移动端的特殊性，上传必然是有延迟的。计算T+1报表也必然会少一部分数据，于是需要每天重跑过去3天的数据。为什么是3天呢，拍脑袋定的。。。日志延迟半个月都有可能，但重跑半个月之前的报表已经没啥意义了。</li>
+<li>session计算问题。以前通过MR去计算T+1的session，但用户的session很可能是跨天的，甚至可能跨几天。一般会多取几个小时的日志，但我也不知道应该多取多久的。只能“一刀切”：凌晨2点之后的日志全部不算在内。</li>
+</ul>
+<p>从这个角度来讲，面对这种unbounded数据，批处理只能划分成一个个小的batch来处理，结果其实是不准确的。而流处理天生就考虑到了数据的无界性，理论上准确性应该是优于批的。</p>
+<p>那为啥大家还会留下批处理结果准确、流处理结果不准确的印象嘞？这其实是两个层面的概念：accuracy和completeness。批处理的“准确”，指的是计算的accuracy，更多是系统层面：恒定的数据+恒定的计算逻辑=恒定的结果，就像不可变函数一样。即使这个最终结果不准确，也是计算逻辑或者数据的锅，而且误差也是相对恒定可接受的；流处理的“准确”，指的是数据的completeness，理论上能计算更准确的结果，但以前的各种流处理系统由于不能保证（或是实现代价很高）exactly-once，所以实际上算出来的可能不准。即使是同样的数据+同样的处理逻辑，你跑多次结果都可能是不一样的。。。但这不是流处理语义上的锅。</p>
+<p>即使是有界（bounded）数据，按无界数据的方式来处理，准确性（accuracy）上也没有什么问题。而且很多我们所谓的有界数据，其实都不是真正的有界。</p>
+<p>所以stream和batch更像是处理同一个问题的两种方式，真正的区别在于latency和throughput，这是一种trade-off（有句名言怎么说的，“distributed systems are all about trade-offs”）：</p>
+<ul>
+<li>latency：用stream的方式去处理时，你可以提前观察到结果，虽然这个结果可能不准，是一个提前观测甚至预测。但流处理语义保证当数据完整时结果是正确的（所谓的refinements of results）。而用batch的方式去处理时，如果想要正确的结果，必须保证数据完整后才能开始计算。</li>
+<li>throughput：batch方式吞吐量更高，因为有全局的数据，可以对shuffle做更多优化。而且failover简单，也就不需要持久化很多状态。而stream的方式需要提前计算结果，消耗更多资源，而且failover需要保存更多中间状态，所以吞吐相对没有batch高。<ul>
+<li>题外话，关于shuffle：毫不夸张的说，所有的分布式计算框架，最重要的就是shuffle过程。shuffle的语义是否强大决定了框架的能力，shuffle的实现方式决定了框架的效率。</li>
+</ul>
+</li>
+</ul>
+<p>问题域统一后，流和批的API也是可以统一的（Dataflow/Beam）。这也很好理解，如果要解决的问题是相同的，而API是更多表意的（不掺杂太多底层逻辑），那表达方式应该也是相同的。</p>
+<p>真正麻烦的在于引擎层面（或者说runner），目前还没有一个很好的解，估计很长一段时间内也都很难统一。现阶段Beam这套API，还是用于流处理更实际一点。即使flink宣称同时支持流和批，实际上批处理那套API也没啥人用。</p>
+<p>所以上面说的各种统一更多是理论上的，我们作为工程开发人员还是要实际一点。。。仰望星空，脚踏实地嘛。不过这应该是未来可以探究的一个方向，各大公司也有很多投入（<a href="https://cloud.google.com/dataflow/" target="_blank" rel="external">Google Cloud Dataflow</a>/<a href="https://databricks.com/product/databricks-delta" target="_blank" rel="external">Databricks Delta: Unified Analytics Engine</a>），嘴上说着没有one size fits all/no silver bullet，身体还是很诚实的。。。</p>
+<h1 id="Stream_vs_Table">Stream vs Table</h1>
+<p>本书认为衡量数据的特性应该从两个维度出发：cardinality和constitution（看到这两个词直接懵逼了，不查根本不知道什么意思）。</p>
+<ul>
+<li>cardinality：数据的规模，是有界还是无界；</li>
+<li>constitution：数据的组织方式，或者说对外的表现形式，有两种：stream和table；</li>
+</ul>
+<p>就像波粒二象性一样，stream和table其实是针对数据的两种视角（不过应该是特指结构化数据，书中没有明确写出来）。这么说有点抽象，最直接的例子就是mysql的binlog：binlog代表了数据变化的过程，应用binlog后的table代表着数据的一份快照。另一个例子就是物化视图，视图会随着数据源的变化而更新（可以认为是接收到了一条数据变化的消息通知）。<br>或者这么说，在大多数database中，虽然呈现给我们的是table形式，但实际上的底层都存在一种append-only的数据结构（innodb的redo log，hbase的WAL）。呈现出来的table形式，是更上一层的“抽象”。这种机制也被称作CDC（<a href="https://en.wikipedia.org/wiki/Change_data_capture" target="_blank" rel="external">Change Data Capture</a>），不光在数据库领域，在其他领域也是非常常见的。</p>
+<p>于是作者提出了stream和table的相关性（streams and tables are really just two different sides of the same coin）：</p>
+<ul>
+<li>Streams → tables：The aggregation of a stream of updates over time yields a table.</li>
+<li>Tables → streams：The observation of changes to a table over time yields a stream.</li>
+</ul>
+<p>另一种表述：</p>
+<ul>
+<li>Tables are data at rest.</li>
+<li>Streams are data in motion.</li>
+</ul>
+<p>其实点破的话，也没那么难理解，虽然有点抽象。但是然后嘞？就算论证了stream和table的相关性，意义在哪里？这就有点纯理论研究的性质了：</p>
+<ul>
+<li>任何data processing system，无论流还是批，其实就3个要素：stream、table、operation<ul>
+<li>作者论证了现有的各种系统（MR、Beam等）都能适配到这个理论中，具体的论证过程不详述</li>
+<li>但是各种系统中会有偏向（biased），比如Beam中，stream才是first class citizen，table的概念是隐式的，MR则反之</li>
+</ul>
+</li>
+<li>operation会导致stream和table之间的变换，共有4种情况：<ul>
+<li>stream → stream：nongrouping operation，或者说是对单个元素的处理（filter/map等），很好理解，storm等传统意义上的流处理都是针对的这种情况</li>
+<li>stream → table：grouping operation，或者说是需要shuffle的操作，shuffle后每个operator需要保存一个internal state，其实就是这个所谓的table，典型的就是各种聚合（参考spark中的stage划分策略）</li>
+<li>table → stream：ungrouping operation，典型的就是dataflow中的各种trigger</li>
+<li>table → table：不存在，所有对table的修改都是通过先ungroup再group实现的</li>
+</ul>
+</li>
+<li>更关键的一点：对于table我们已经有了很完善的处理手段（比如SQL），而这些手段都是能直接应用于stream的，至少理论上是完备的</li>
+</ul>
+<p>关于StreamSQL，本书中有专门的一章来讨论，作者描述了一种比较完善的流式SQL语义。其大概思想就是在传统的关系代数（RDBMS的理论基础）中加上时间这一维度，用所谓的TVR（Time-Varying Relations）来描述各种变换，进而扩展现有的SQL语法（前提是尽量精简，保证一个最小集）以支持流式处理。感觉上，有一点像数仓理论中的拉链表？表中的每条数据，其实都是有生命周期的。<br>不过作者也承认，这是一个比较理想的模型，现有的各种系统没有一个真正实现了这套完备的SQL语义。好像ANSI也在讨论流式SQL的标准，准备制定规范了？不知道最终的规范会是什么样。</p>
+<p>总的来说，这个“stream/table二象性”还是比较抽象的，更多是一种理论上的指导意义。了解下可以，别过于纠结。</p>
+<p>P.S.：关于append-only和CDC，还有一篇经典文章：<a href="https://github.com/oldratlee/translations/tree/master/log-what-every-software-engineer-should-know-about-real-time-datas-unifying" target="_blank" rel="external">The Log</a>。</p>
+<h1 id="状态是万恶之源">状态是万恶之源</h1>
+<p>很早以前我也这么说过，不过那时针对的是<a href="/2016/09/06/zhen-second-hand-qianduan/">React</a>。</p>
+<p>不只是在分布式领域中，哪怕是单机的业务系统，我们也要很小心的设计状态，包括各种状态的转移、状态的持久化、状态的恢复等。在面对复杂的业务规则时，使用状态机也往往是一个比较好的选择。完全没有状态似乎不太可能，不过合理使用shared storage可以尽量减少维护成本。</p>
+<p>说回流处理领域，如果我没记错，storm里是没有状态的概念的，所有的一切都要自己管理，第一个完善状态管理的好像是samza？状态带来的问题主要有两方面：</p>
+<ul>
+<li>failover：一个有状态的task/node，挂掉后如何恢复？</li>
+<li>rescale：一个有状态的operator，修改parallelism后，状态如何拆分？（operator/instance的概念需要区分）</li>
+</ul>
+<p>实际中讨论的更多的问题好像还是failover，rescale的问题我只在flink的文档中看到一些，动态修改并行度一直都是个大难题。</p>
+<p>如果说的抽象一些，所谓的状态就是上文中“stream/table二象性”理论中“stream → table”变换生成的table。这个“table”往往都是各个operator自己维护在内存中，不对外暴露，待到trigger触发后才对外emit一个值。不过本书中提到，如果这个internal state可以直接对外暴露，很多情况下可以省略掉sink阶段，flink中也有一些类似的做法：<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/dev/stream/state/queryable_state.html" target="_blank" rel="external">Queryable State</a>。</p>
+<p>如果从状态的分类来说，大概可以分为两种：</p>
+<ul>
+<li>operator内部的状态，比如window的聚合、kafka的offset等；</li>
+<li>transformation的中间状态，用户也可以将自己code中的状态交给系统托管；</li>
+</ul>
+<p>感觉上，系统提供了一个托管状态的“容器”，所有在这个容器中的状态，其生命周期、持久化、failover都由系统管理。如果你写自己的transform逻辑时，非要自己维护状态（比如在redis中），也不是不行，谁也拦不住对吧。（“我就是要出狂战斧”，这个梗还有多少人懂。。。）<br>由系统维护的状态，如果要保证其可靠性，要么写到shared storage中，将可靠性交给底层存储来保证；要么就是定期checkpoint，相当于定期备份。其实很多系统的机制都差不多，比如hdfs的editlog+fsimage。至于备份的状态失败时如何恢复、如何split，那就是另外一个话题了，跟下文要讨论的exactly-once也有关。</p>
+<p>参考flink相关文档：<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/dev/stream/state/state.html" target="_blank" rel="external">Working with State</a>和<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/internals/stream_checkpointing.html#checkpointing" target="_blank" rel="external">Checkpointing</a>。</p>
+<h1 id="exactly-once">exactly-once</h1>
+<p>老生常谈了，为啥流处理经常被人吐槽结果不准，还有人说“storm是弱一致性的”（“一致性”这个词在个场景是很模糊的，我觉得就等价于exactly-once），就是因为很难保证exactly-once语义，数据处理过程很难做到replayable。同样的输入每次计算的结果都可能不一样（nondeterministic），让别人如何相信你（虽然这种不确定性不完全是由于框架本身导致的）。。。所以才有了Nathan Marz的lambda-architecture，但也带来了各种其他问题，更像是一个过渡方案。</p>
+<p>为啥exactly-once这么难，根本原因还是在于failover，或者说fault tolerance（在分布式的环境下框架不可能忽略这个问题）。如果框架要处理节点失败的情况，至少也是at-least-once。我们要考虑的是如何在此基础之上达成exactly-once。<br>需要注意的是，exactly-once并不保证user code只运行一次，所以如果在代码内部做了一些外部操作，比如访问外部系统服务，还是可能有副作用的。数据也未必真的只是处理一次，只要保证最后的结果与“只处理一次”的场景下一致就可以了。</p>
+<p>如果细分的话，exactly-once其实分3个层面，只有这三个层面都得到保证，才是完整的端到端exactly-once语义：</p>
+<ul>
+<li>shuffle：every record is shuffled exactly once，或者说是系统内部的exactly-once语义。非shuffle的场景下（比如单个stage内）通常都能隐式的保证exactly-once。</li>
+<li>source：every source record is processed exactly</li>
+<li>sink：every sink produces accurate output</li>
+</ul>
+<p>很多系统（包括flink的旧版本）宣称提供exactly-once，但实际上只能保证第一个层面，即shuffle。</p>
+<p>shuffle的exactly-once的常用解决方法通俗点说就是去重。at-least-once是如何保证的？一般是上游直接重试，比如storm的ack机制，这种机制也被称作upstream backup，由上游保证消息被正确传递，ack丢失时就可能出现重复。如果在接收端维护一个hashmap之类的结构，给每条消息分配唯一的ID，理论上就可以避免重复。当然实际上肯定没这么简单，书中还提到了graph optimization、bloom filter等策略以提高效率。<br>书中还讨论了另一个有趣的case：部分transformation的结果是nondeterministic的，尤其是用户自己写的代码。比如每次去查一下redis再决定输出什么值。如果发生了失败和retry，很可能每次重跑的结果都是不一样的，虽然理论上讲这个锅和系统本身无关。为了应对这种情况Dataflow会在shuffle前将每个stage的输出的值加上unique id写到stable storage，再发送到下一个stage。发生retry时，直接使用stable storage中的值输出给下游。这种场景大多数框架都不会考虑吧，也许google内部有什么特殊需求，实现中也必然还是有一些优化的。</p>
+<p>除了这种常见的重试（at-least-once）+去重的策略，还有个画风不太一样的就是flink。它通过自身的checkpoint机制（其实就是当前pipeline的状态的快照），当出现错误时直接回滚到上一个checkpoint，而且是全局回滚。理论上来讲这种操作代价还是比较大的？仅适用于错误概率比较小的情况吧。从这个角度来说，flink不是failover，而更像是failback。<br>而且通过对checkpoint机制的扩展，flink衍生出了<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/ops/state/savepoints.html" target="_blank" rel="external">savepoint</a>的概念，可以从任意savepoint重启整个pipeline，还是挺nb的。看了下逻辑上似乎就是一个 &lt; operator-id, state &gt; 的map，只要从这个savepoint重启，就会按照id去恢复状态。甚至拓扑结构完全不一样都可以，只要id能对上。</p>
+<p>source/sink端的exactly-once保证更多要依赖于具体的存储系统，比如kafka。<br>source端为了防止重复消费，常见的策略也是去重。在kafka 0.11之前，都是需要每个source端自己去做去重（应该是根据partition+offset吧）；0.11版本之后引入了幂等和事务特性，理论上不再需要source端处理。sink端似乎更麻烦一点，需要自己去实现各种幂等操作。flink是将kafka的事务特性与checkpoint机制结合（<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/dev/connectors/kafka.html#kafka-producers-and-fault-tolerance" target="_blank" rel="external">Kafka Producers and Fault Tolerance</a>），引入两阶段提交才实现的exactly-once，好像还挺复杂的我也没仔细看。</p>
+<p>总的来说，感觉exactly-once已经不是那么遥不可及的的一个东西了，之前很多人甚至说exactly-once是不可能的。当然可能他们定义的exactly-once更严格，也许是学术界与工业界的gap？</p>
+<p>参考资料：</p>
+<p><a href="https://bravenewgeek.com/you-cannot-have-exactly-once-delivery/" target="_blank" rel="external">You Cannot Have Exactly-Once Delivery</a><br>文章比较老了，还是可以看看</p>
+<p><a href="https://streaml.io/blog/exactly-once" target="_blank" rel="external">Exactly once is NOT exactly the same</a><br>直接对比了Distributed snapshot和at-least-once event delivery plus deduplication</p>
+<p><a href="https://my.oschina.net/u/992559/blog/1819948" target="_blank" rel="external">Apache Flink 端到端（end-to-end）Exactly-Once特性概览</a></p>
+<h1 id="其他">其他</h1>
+<p>以上我只总结了自己印象深刻的几个点，也不全是书里的内容，加上了自己的一些理解。</p>
+<p>书中还有很多其他有意思的东西，不一一赘述了，比如：</p>
+<ul>
+<li>watermark概念也是很有意思的，还有low/high watermark的设计理念上的差别</li>
+<li>session的计算、window的合并</li>
+<li>不同的Accumulation模式：discarding、accumulating、retracting</li>
+<li>在event-time时间域实现process-time处理逻辑</li>
+<li>StreamJoin的各种实现策略</li>
+<li>所谓的What/Where/When/How等等</li>
+</ul>
+<p>作者在QCon等场合也有一些presentation，可以结合着一起看。</p>
+<p>其实很多问题都不难想到，只要你真实使用MR、storm之类做过数据处理。比如时间漂移/状态存储/重复消费等等，dataflow只不过把这些问题抽象化、系统化了，并且在一个框架内提供了统一的解决手段。如果之前没有经验，可能很难理解为啥google要搞得这么复杂，这么多概念。</p>
+<p>最后说说flink，这应该是最近最火热的流处理框架了吧。总结原因大概有几点：</p>
+<ol>
+<li>语义上更完备，支持dataflow模型，对于无界、无序数据提供更好的支持；</li>
+<li>全局快照机制，解决了状态问题并基于此提供强一致性保证。而且还玩出了花样，又是增量又是异步的，并衍生出了savepoint能力； </li>
+<li>SQL能力的加持；</li>
+<li>开源社区活跃 + 大公司站台；</li>
+</ol>
+<p>以后有时间还是要好好研究下。</p>
+
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/bigdata/">
+                #bigdata
+              </a>
+            
+              <a href="/tags/streaming/">
+                #streaming
+              </a>
+            
+          </div>
+        
+
+        
+          <div class="post-nav">
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2018/11/25/meta-gossip/">元吐槽</a>
+              
+            </div>
+          </div>
+        
+
+        
+        
+      </div>
+    
+  </div>
+
+
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="disqus_thread">
+          <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        </div>
+      
+    </div>
+  
+
+          </div>
+
+          
+        </div>
+
+        
+<div class="sidebar-toggle">
+  <div class="sidebar-toggle-line-wrap">
+    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  </div>
+</div>
+
+<div id="sidebar" class="sidebar">
+  <div class="sidebar-inner">
+
+    
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview">
+          站点概览
+        </li>
+      </ul>
+    
+
+    <div class="site-overview">
+      <div class="site-author motion-element">
+        <img class="site-author-image" src="/about/avatar.jpg" alt="foolbear" />
+        <p class="site-author-name">foolbear</p>
+      </div>
+      <p class="site-description motion-element">思绪偶尔在这里停留</p>
+      <div class="site-state motion-element">
+        <div class="site-state-item site-state-posts">
+          <span class="site-state-item-count">60</span>
+          <span class="site-state-item-name">日志</span>
+        </div>
+        <div class="site-state-item site-state-tags">
+            <span class="site-state-item-count">45</span>
+            <span class="site-state-item-name">标签</span>
+        </div>
+        <div class="site-state-item site-state-pages">
+            <span class="site-state-item-count">3</span>
+            <span class="site-state-item-name">页面</span>
+        </div>
+      </div>
+
+      
+        <div class="feed-link motion-element">
+          <a href="/atom.xml">
+            <i class="menu-item-icon icon-feed"></i>
+            RSS
+          </a>
+        </div>
+      
+
+      <div class="social-info motion-element">
+        
+          
+            <span class="social-item">
+              <a href="https://github.com/jiangxy">GitHub</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="http://www.zhihu.com/people/fool-bear">知乎</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="mailto:foolbeargm@gmail.com">邮件</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="http://weibo.com/foolbearwb">微博</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="https://www.linkedin.com/in/jiangxy">LinkedIn</a>
+            </span>
+          
+        
+      </div>
+
+      
+      
+        <div class="cc-license motion-element">
+          <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+            <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+          </a>
+        </div>
+      
+
+    </div>
+
+    
+      <div class="post-toc-wrap sidebar-panel-active">
+        <div class="post-toc-indicator-top post-toc-indicator"></div>
+        <div class="post-toc">
+          
+          
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#关于本书"><span class="nav-number">1.</span> <span class="nav-text">关于本书</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#啥是framework"><span class="nav-number">2.</span> <span class="nav-text">啥是framework</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#流_vs_批"><span class="nav-number">3.</span> <span class="nav-text">流 vs 批</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Stream_vs_Table"><span class="nav-number">4.</span> <span class="nav-text">Stream vs Table</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#状态是万恶之源"><span class="nav-number">5.</span> <span class="nav-text">状态是万恶之源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#exactly-once"><span class="nav-number">6.</span> <span class="nav-text">exactly-once</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他"><span class="nav-number">7.</span> <span class="nav-text">其他</span></a></li></ol></div>
+          
+        </div>
+        <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+      </div>
+    
+
+  </div>
+</div>
+
+
+      </div>
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp;  2015 - 
+  2019
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">foolbear</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT</a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".fancybox").fancybox();
+    });
+  </script>
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '292px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      if ($('.post-toc-content').html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+
+    
+      
+    
+
+    <script type="text/javascript">
+      var disqus_shortname = 'foolbear';
+      var disqus_identifier = '2019/03/07/streaming-system/';
+      var disqus_url = 'http://jxy.me/2019/03/07/streaming-system/';
+
+      (function(){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }());
+    </script>
+  
+
+
+  
+  <script type="text/javascript">
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+        function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-60003547-1');ga('send','pageview');
+  </script>
+
+</body>
+</html>
