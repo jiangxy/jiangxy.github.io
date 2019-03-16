@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2019-03-10T17:06:24.141Z</updated>
+  <updated>2019-03-16T11:01:09.906Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -19,7 +19,7 @@
     <link href="http://jxy.me/2019/03/07/streaming-system/"/>
     <id>http://jxy.me/2019/03/07/streaming-system/</id>
     <published>2019-03-07T11:29:53.000Z</published>
-    <updated>2019-03-10T17:05:55.000Z</updated>
+    <updated>2019-03-16T10:59:06.000Z</updated>
     <content type="html"><![CDATA[<p><a href="/2018/11/25/meta-gossip/">之前</a>就提到过，最近在看<a href="http://streamingsystems.net/" target="_blank" rel="external">《Streaming Systems》</a>这本书。趁着过年期间再加几个周末，终于看完了。自从<a href="/2015/10/12/hadoop-application-architectures/">《Hadoop Application Architectures》</a>之后，很少这样细致的看一本英文大部头了。</p>
 <p>我对流处理并不很熟悉，随便写写感想，可能有错误，也并不全是流处理相关的。</p>
 <a id="more"></a>
@@ -38,7 +38,8 @@
 <p>从这个角度来讲，framework或者说框架，其意义在于屏蔽底层（尤其是infra）的各种细节，把各种脏活累活统一做掉。最典型的脏活就是failover，让用户自己去操心节点失败后如何恢复，闹呢？<br>框架做的越多，应用层需要做的就越少，这个边界其实挺难划的，而且不同时代需要的框架能力也不同。flink由于支持dataflow模型，这条线划的比较高，或者说抽象程度更高一些，恰逢其时。</p>
 <p>不只是数据处理领域，各种JavaEE框架、各种ORM、各种算法框架，甚至于各种library/utils、微服务、RPC、操作系统、编程语言，都是同样的演进过程。所以计算机科学，是不是就是一门关于“抽象”的科学？这在其他学科中好像还是比较少见的。<br>正如本书作者所说：Hooray for layers of abstraction!</p>
 <p>甚至在非技术领域也是如此，比如著名的<a href="https://wiki.mbalib.com/wiki/KISS%E5%8E%9F%E5%88%99" target="_blank" rel="external">KISS原则</a>。我们在设计自己的产品时，是否真的帮用户把所有他不需要关心的事屏蔽掉了？说来惭愧，总是有人吐槽我们的系统不好用/反人类，我觉得就是暴露给用户的、需要用户操心的东西太多了。</p>
-<p>这个道理虽然很简单很朴素，但却很容易被忽略。</p>
+<p>不过话又说回来，过度的封装也可能带来问题。比如spark/flink中user code可能被并行的执行，如果API层面不显式的让用户感知到这一点，用户的理解偏差可能带来各种奇怪的bug。很久之前看过的一篇文章《<a href="https://blog.codingnow.com/2015/11/rpc.html" target="_blank" rel="external">RPC之恶</a>》也表达过类似的观点：过度的抽象看似简化，其实会增加整体的复杂性。</p>
+<p>这些道理虽然很简单很朴素，但却很容易被忽略。</p>
 <h1 id="流_vs_批">流 vs 批</h1>
 <p>一个很本真的问题：流处理和批处理到底差别在哪里？</p>
 <p>因为我们都是搞工程的，所以我们很容易列举出一些区别：</p>
@@ -137,7 +138,13 @@
 <p>很多系统（包括flink的旧版本）宣称提供exactly-once，但实际上只能保证第一个层面，即shuffle。</p>
 <p>shuffle的exactly-once的常用解决方法通俗点说就是去重。at-least-once是如何保证的？一般是上游直接重试，比如storm的ack机制，这种机制也被称作upstream backup，由上游保证消息被正确传递，ack丢失时就可能出现重复。如果在接收端维护一个hashmap之类的结构，给每条消息分配唯一的ID，理论上就可以避免重复。当然实际上肯定没这么简单，书中还提到了graph optimization、bloom filter等策略以提高效率。<br>书中还讨论了另一个有趣的case：部分transformation的结果是nondeterministic的，尤其是用户自己写的代码。比如每次去查一下redis再决定输出什么值。如果发生了失败和retry，很可能每次重跑的结果都是不一样的，虽然理论上讲这个锅和系统本身无关。为了应对这种情况Dataflow会在shuffle前将每个stage的输出的值加上unique id写到stable storage，再发送到下一个stage。发生retry时，直接使用stable storage中的值输出给下游。这种场景大多数框架都不会考虑吧，也许google内部有什么特殊需求，实现中也必然还是有一些优化的。</p>
 <p>除了这种常见的重试（at-least-once）+去重的策略，还有个画风不太一样的就是flink。它通过自身的checkpoint机制（其实就是当前pipeline的状态的快照），当出现错误时直接回滚到上一个checkpoint，而且是全局回滚。理论上来讲这种操作代价还是比较大的？仅适用于错误概率比较小的情况吧。从这个角度来说，flink不是failover，而更像是failback。<br>而且通过对checkpoint机制的扩展，flink衍生出了<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/ops/state/savepoints.html" target="_blank" rel="external">savepoint</a>的概念，可以从任意savepoint重启整个pipeline，还是挺nb的。看了下逻辑上似乎就是一个 &lt; operator-id, state &gt; 的map，只要从这个savepoint重启，就会按照id去恢复状态。甚至拓扑结构完全不一样都可以，只要id能对上。</p>
-<p>source/sink端的exactly-once保证更多要依赖于具体的存储系统，比如kafka。<br>source端为了防止重复消费，常见的策略也是去重。在kafka 0.11之前，都是需要每个source端自己去做去重（应该是根据partition+offset吧）；0.11版本之后引入了幂等和事务特性，理论上不再需要source端处理。sink端似乎更麻烦一点，需要自己去实现各种幂等操作。flink是将kafka的事务特性与checkpoint机制结合（<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/dev/connectors/kafka.html#kafka-producers-and-fault-tolerance" target="_blank" rel="external">Kafka Producers and Fault Tolerance</a>），引入两阶段提交才实现的exactly-once，好像还挺复杂的我也没仔细看。</p>
+<p>source/sink端的exactly-once保证更多要依赖于具体的存储系统，比如kafka。<br>source端为了防止重复消费，常见的策略也是去重。在kafka 0.11之前，都是需要每个source端自己去做去重（应该是根据partition+offset吧）；0.11版本之后引入了幂等和事务特性，理论上不再需要source端处理。<br>sink端似乎是最麻烦的，借用<a href="http://spark.apache.org/docs/latest/streaming-programming-guide.html#semantics-of-output-operations" target="_blank" rel="external">spark的文档</a>中的说法，有两种方式：</p>
+<ul>
+<li>Idempotent updates：sink还是可能重跑，输出多个重复值，但存储系统是幂等方式存储的，比如文件、KV这种每次覆盖；</li>
+<li>Transactional updates：这个比较好理解，如果retry，上一次输出的值其实没有commit；</li>
+</ul>
+<p>理论上来讲，去重策略在这里还是可以用的吧？sink在输出前先查下外部系统，判断是否已经输出，就是代价可能比较大。</p>
+<p>flink是将kafka的事务特性与checkpoint机制结合（<a href="https://ci.apache.org/projects/flink/flink-docs-release-1.7/dev/connectors/kafka.html#kafka-producers-and-fault-tolerance" target="_blank" rel="external">Kafka Producers and Fault Tolerance</a>），引入两阶段提交才实现的exactly-once，好像还挺复杂的我也没仔细看。</p>
 <p>总的来说，感觉exactly-once已经不是那么遥不可及的的一个东西了，之前很多人甚至说exactly-once是不可能的。当然可能他们定义的exactly-once更严格，也许是学术界与工业界的gap？</p>
 <p>参考资料：</p>
 <p><a href="https://bravenewgeek.com/you-cannot-have-exactly-once-delivery/" target="_blank" rel="external">You Cannot Have Exactly-Once Delivery</a><br>文章比较老了，还是可以看看</p>
@@ -151,7 +158,11 @@
 <li>session的计算、window的合并</li>
 <li>不同的Accumulation模式：discarding、accumulating、retracting</li>
 <li>在event-time时间域实现process-time处理逻辑</li>
-<li>StreamJoin的各种实现策略</li>
+<li>StreamJoin的各种实现策略，老大难问题<ul>
+<li>inner join还好，就是在join operator中要保存很多状态</li>
+<li>outer join还会带来额外的retraction成本</li>
+</ul>
+</li>
 <li>所谓的What/Where/When/How等等</li>
 </ul>
 <p>作者在QCon等场合也有一些presentation，可以结合着一起看。</p>
