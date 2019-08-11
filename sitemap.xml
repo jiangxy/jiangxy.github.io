@@ -2,6 +2,11 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://jxy.me/2019/08/01/maybe-a-good-time/</loc>
+    <lastmod>2019-08-11T14:54:36.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/about/index.html</loc>
     <lastmod>2019-06-09T13:02:42.000Z</lastmod>
   </url>
@@ -139,11 +144,6 @@
   <url>
     <loc>http://jxy.me/2015/09/04/some-messy-thought/</loc>
     <lastmod>2015-09-13T06:56:44.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/16/kerberos-tips/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
@@ -307,12 +307,17 @@
   </url>
   
   <url>
+    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/404.html</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
+    <loc>http://jxy.me/2015/04/16/kerberos-tips/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   

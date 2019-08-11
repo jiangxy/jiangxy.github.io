@@ -1,0 +1,927 @@
+<!doctype html>
+<html class="theme-next use-motion">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  <meta name="google-site-verification" content="5xgDjDYDdxdIb-75WSsQSK3Q7DJXJH-lnUsmFYEF2po" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.3.0"/>
+
+
+    <meta name="description" content="思绪偶尔在这里停留" />
+
+
+
+	<meta name="keywords" content="杂谈," />
+
+  <title> 人间好时节 // foolbear的冥想盆 </title>
+</head>
+
+<body>
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+    <a href="/" class="brand">
+        <span class="logo">
+          <i class="icon-logo"></i>
+        </span>
+        <span class="site-title">foolbear的冥想盆</span>
+    </a>
+</h1>
+
+
+  <ul id="menu" class="menu">
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-tags">
+        <a href="/tags">
+          <i class="menu-item-icon icon-tags"></i> <br />
+          标签
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-books">
+        <a href="/2016/04/16/gitbook/">
+          <i class="menu-item-icon icon-books"></i> <br />
+          书目
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+            
+          
+
+          <div id="posts" class="posts-expand">
+            
+  
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              人间好时节
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            发表于 2019-08-01
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2019/08/01/maybe-a-good-time/#comments" >
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/08/01/maybe-a-good-time/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          <center>“若无闲事挂心头，便是人间好时节。”</center>
+
+<a id="more"></a>
+<hr>
+
+<p>这是句颇为自嘲的话，往往只有忙碌才能让人心安。或者说，忙碌才能让人忘却不安。<br>最近各种动荡，事情变来变去，理论上我应该是最头疼的才对，不知为何却奇妙的非常平静，也许这就是所谓的inner peace？<br>随着各种槽点逐渐积累，又可以“敷衍”出一篇文章了。</p>
+<h1 id="啥是中台？">啥是中台？</h1>
+<p>“中台”这个东西，颇为玄妙。就像所谓的teenage sex：每个人都在谈论，但没人做过；每个人都声称自己做过，而且以为其他人都做过。于是我也不能免俗啊，总结下自己的理解。</p>
+<p>我之前做数据平台，对这块还算了解。对平台而言，最重要的是三个字，“标准化”。我们提供通用的、标准化的能力：计算、存储、检索、开发IDE、SDK等，用户可以在此基础上组装自己的业务逻辑，典型的one fits all。平台提供的能力没有任何业务含义，而且往往有一套通用的“业界标准”，照猫画虎去实现就可以了，不同公司做出来骨架都差不多，血肉会有区别。总的来说比较偏技术，边界也比较清晰。</p>
+<p>但平台也有自己的缺点：</p>
+<ul>
+<li>入门的门槛较高。业务方如果真要用这一堆积木搭出自己的系统，需要很多前置知识。SQL你得会吧，调优也得懂吧，跑的慢怎么办，日志怎么看，数据如何治理；</li>
+<li>对业务方而言比较繁琐，而且要遵守很多规范。作为平台方，我们希望用户不要逾矩，按我们的规范（SQL规范、表规范、指标规范、资源使用规范）来做事，但无论是硬性的产品限制，还是软性的规章制度，总是有些“不听话”的用户。个别用户甚至破解了我们的REST API，私自在系统里调用。。。所以我们一直在和用户“斗智斗勇”。这种事情吧，不好说谁对谁错。我作为平台方要维护长远的稳定性和完整性，但也能理解他们的苦衷；</li>
+<li>平台对新需求反应一般比较慢，而且会拒绝掉很多带业务属性的、非通用化的需求，这也是用户经常吐槽的点，“怎么你们做需求这么慢”。对平台而言，最重要的是标准化，其次是稳定和效率，其他的都可以一定程度上牺牲；</li>
+<li>最致命的：业务方搭出的东西，很难复用。下次有另一个业务方需要时，可能还要重新搭一遍，累，而且烦。大多数业务方的数据需求是类似的：用户标签（任何商业模式，只要想做运营，你都要了解自己的用户）、人群分析/透视、渠道归因分析等等，这其中很多模式可以固定下来并复用；</li>
+</ul>
+<p>各种数据应用（GrowingIO/GA之类）会克服平台的一些问题，比如抽象出所谓的“套件”/“解决方案”来实现场景的复用、屏蔽平台的各种细节降低门槛达到开箱即用（终于不用关心SQL调优了）。但由于产品形态相对固定，更像是一杆到底的大包大揽，没有提供可扩展的API，你只能使用它提供的功能，而很难根据自己的业务特性去定制。或者说，这些产品是面向老板or运营的，而不是面向开发的。</p>
+<p>如何弥补平台和应用之间的gap，就是中台的使命了。其实这也不是什么新鲜东西，可能很多公司都有类似的做法，只不过没有抽象出这一层。比如一个开发做类似的功能会在自己的多个应用之间copy and paste，时间长了慢慢就会形成自己的库，更进一步可能形成通用的SDK，这就有点中台的意味了。所以说计算机科学就是一门关于抽象的科学，hooray for the layers of abstraction。</p>
+<p>中台很难是一个单独的系统或者是一个单独的SDK（正如数据平台也不等于hadoop），它应该是多个系统、多个方法论、多个规范的总和。所以很难说它“是什么”，只能描述它“应该具有的特征”：</p>
+<ul>
+<li>面向业务场景，而且这些场景是可复用的，相对平台而言更“具象化”，“表达能力”/“scope”更小。这是核心特征，因为中台的目的就是简化各个业务方的开发代价，从其中抽象出共性并沉淀下来。如果业务场景不够复杂，别搞中台，只会适得其反。典型的复杂业务场景就是电商中的各种玩法，这也是为什么中台战略会是阿里首先提出来的原因；</li>
+<li>提供足够丰富的API/扩展点，让业务开发可以根据自己的需求自由扩展、组合。这也是中台和平台的一个显著不同。平台会提供API，但这些API往往是固定的，如果不满足你的需求，你只能提需求要新的API；而中台提供的API，必须留下业务方自由扩展的空间。比如退货流程，电商中台会提供默认的、标准的退货流程，但如果你的业务场景特殊，完全可以自己覆盖默认的实现。所以说，中台的目标用户是业务开发人员。</li>
+<li>中台未必需要有“界面”，API才是核心；</li>
+<li>和平台不同，中台的边界很模糊。很多东西丢给业务方自己去做似乎可以，沉到中台来做好像也行。越接近上层、离业务越近，边界就越难划分，任何系统都是如此。很多时候也不用太纠结。正如中间件层越做越厚，“向上”侵蚀了很多业务开发的空间一样。</li>
+</ul>
+<p>所以不管是业务中台、数据中台、算法中台，做好的前提是你要去了解你的业务方，了解之后才可能抽象的足够好。想想从他们的角度看来，需要哪些能力，如何才能更省力，比业务更懂业务。很多时候，业务方自己会有思维惯性和死角，也不知道更好的做法是什么，需要我们去push他。如何找业务方聊，多拉一些人背书，推广自己的产品，这又是一门艺术了。</p>
+<p>写这些文字的过程中，总觉得好像模模糊糊摸到了某些更“真理”的东西，却又觉得有些虚无缥缈。大概这就是玄学研究多了的后果吧。。。</p>
+<p>参考资料：</p>
+<p><a href="https://www.infoq.cn/article/J0peu2bQ5jq_6jhBzSOe" target="_blank" rel="external">数据中台不是技术平台，没有标准架构</a></p>
+<p><a href="https://www.infoq.cn/article/4PXxXJ*ZOmPVlAtB2Ttb" target="_blank" rel="external">数据中台已成下一风口，它会颠覆数据工程师的工作吗？</a></p>
+<h1 id="技术平民化">技术平民化</h1>
+<p>入职蚂蚁后，终于见到了PAI的真容。简单训练了一个评分卡模型，用了下分箱、WOE变换、特征分析等组件，真tm方便，我这种算法盲也能很快上手。我也不要求自己深究各个算法的原理和调参，只要会用就很满足了。</p>
+<p>这让我想到，近年来的各种技术热点，什么“AI”、“大数据”、“云”，随着平台化、产品化的推进，门槛真的是越降越低。“算法能力”、“数据能力”慢慢会变成每个工程师的标配，而不应该只依赖于少数“专家”。忘了在哪里看到的，蚂蚁CTO阿玺去google挖人，希望能招到优秀的大数据专家，结果人家很诧异，“我们没有这种职位啊”。因为基础设施已经足够好用，人人都可以发挥自己的想象力，而不需要被职位所限。</p>
+<p>早些年，你懂个lucene都能横着走。。。当时也有一种论调，“我就把一个东西研究透（这个东西可以是oracle、lucene、hadoop、linux之类），死磕，只要搞明白了，我就牛逼”。不能说这种想法错吧，只能说在当今的时代，做到这点越来越难了。纯粹的技术研究、技术创新，只属于一小撮高端的人，对个人素质的要求越来越高，圈子也会越来越小。大多数人所做的，都是“应用开发”；稍微深入一点的，可能是“平台开发”；真正到kernel那种级别的，凤毛麟角。这不光是因为系统越来越复杂，更多是由于大环境“不需要”这么多高端的人。</p>
+<p>想想也对，如果底层系统真的足够完善，留少数人维护就好了，资本家都是很现实的，靠梦想驱动的毕竟还是少数。就像AI一样，如果未来真的替代了人工，可能导致很多人失业，但这个潮流谁也无法阻挡。历史上珍妮机的发明、几次工业革命的进程，都证明了这个道理。<br>这些年来IT从业者越来越多，个人素质却越来越堪忧，培训几个月就能上岗，也是同样的道理，因为“不需要”。</p>
+<p>作为民工，除了被潮流裹挟，我能做点啥嘞，我也一直在思考。好在目前各种技术壁垒还没有那么高，在平民化的过程中，还有很多机会可以挖掘。</p>
+<ul>
+<li>首先别妄图对抗潮流，想自己闭门造个什么极其牛逼的东西，然后一朝成名天下知。这是很多技术人的通病，现实中的关键往往不在于技术如何牛逼，而在于如何把技术推销出去，一个好看的界面可能比一个O(logN)的算法重要。我也一直觉得，产品化、平台化的重要性被很多人忽视，这是一个典型的double yes问题，技术和产品不能有任意一个短板，两手都要硬。</li>
+<li>其次摆正自己的定位，自己适合做什么，想清楚。我觉得我就不适合做最底层的东西，虽然我很感兴趣，也愿意去了解，但比如说想到要研究一辈子数据库，天天读论文，就觉得很无趣。很多理论的东西说的极端点就是空想，<strong>我还是希望看到自己的东西能影响尽可能多的人</strong>。以前做平台，最大的成就感不是把平台搭出来，而是有很多人来用。我也不太适合去直接面向业务，这种事需要的是商业sense和决断力，我好像从来也没展露出这方面的天赋。我更适合的应该还是造铲子，然后卖给其他淘金人。这么说来，在潮流中我扮演的应该不是弄潮儿，而是推波助澜的投机者。。。吃不到肉喝口汤也行对吧。</li>
+</ul>
+<p>但话又说回来，铲子也没那么好造，作为承上启下的纽带，需要对上下游都有了解。正如开头那个PAI的例子：不要求深究各个算法，但要理解基本原理，要会用。</p>
+<h1 id="读后感">读后感</h1>
+<p>我喜欢看到什么有趣的就先记下来，所以有些文章已经比较久了。</p>
+<p><a href="https://yq.aliyun.com/articles/621200" target="_blank" rel="external">java脚本引擎的设计原理浅析</a><br>前段时间一直在研究规则引擎，这篇文章写的非常好，流程引擎/规则引擎/脚本引擎，还是不太一样</p>
+<p><a href="https://www.jianshu.com/p/cd3557b1a474" target="_blank" rel="external">RxJava2.0——从放弃到入门</a><br>似乎android开发中使用rxjava比较多，我觉得其核心价值在于简化异步调用，使程序保持简洁（还记得js中的callback hell么）。异步 + 链式调用，类似js中的promise，但java世界还没有发展出async、await之类的东西。注意异步未必等于并发，协程不也是异步么。<br>Reactive的本质在于事件驱动，类似eventbus，观察者模式也是同样的道理，js的eventloop也是，yarn中的状态机也是。netty中的reactor模式也是同样的原理（有叫做reactive的，也有叫做reactor的，其实都是一个东西）。</p>
+<p><a href="https://infoq.cn/article/kylin-apache-in-meituan-olap-scenarios-practice" target="_blank" rel="external">Apache Kylin 在美团数十亿数据 OLAP 场景下的实践</a><br>关键在于：1. 构建cube的过程如何优化？分层策略；2. cube如何存储，hbase rowkey编码方式；3. SQL查询如何改写成hbase查询；</p>
+<p><a href="https://tech.meituan.com/2016/11/18/disruptor.html" target="_blank" rel="external">高性能队列——Disruptor</a><br>关键词：RingBuffer、无锁（大量利用CAS和volatile）、cache friendly<br>对比ArrayBlockingQueue来看</p>
+<p><a href="https://mp.weixin.qq.com/s/MGHFGWsqFdQGw83AYOHEaw" target="_blank" rel="external">携程金融大数据风控算法实践</a>：A卡原来是这么回事</p>
+<p><a href="https://www.infoq.cn/article/69vGmFcrTwSC_w7RWhwz" target="_blank" rel="external">为什么说流处理即未来？</a><br>很激进的想法，使用流处理的state完全替代db，并在此之上实现事务特性<br>中间事务的那一段描述很简单，但直觉上感觉肯定有问题，不可能这么简单。。。<br>这种东西也不能称作强一致性，必然会被外界看到不一致的中间状态<br>而且啊，流处理的retraction代价这种场景不能不考虑，也许远比带来的好处多，对比db的rollback</p>
+<p><a href="https://zh.wikipedia.org/zh-hans/%E9%80%9A%E7%94%A8%E5%94%AF%E4%B8%80%E8%AF%86%E5%88%AB%E7%A0%81" target="_blank" rel="external">通用唯一识别码</a><br><a href="https://tech.meituan.com/2017/04/21/mt-leaf.html" target="_blank" rel="external">Leaf——美团点评分布式ID生成系统</a><br>面试中常见的问题：如何生成唯一ID？没有标准答案，关键是思考的过程。<br>类似的还有如何设计一个短链系统。</p>
+<p><a href="https://blog.csdn.net/b6ecl1k7bs8o/article/details/85085794" target="_blank" rel="external">SQL 查询优化原理与 Volcano Optimizer 介绍</a><br>前段时间听了tidb的一些分享，介绍了sql执行时的一些优化，向量化/codegen之类的。<br>不过我对这块不太了解，火山模型也只是知道而已，毕竟不是专业搞数据库的，感兴趣的可以参考<a href="https://15721.courses.cs.cmu.edu/spring2019/schedule.html" target="_blank" rel="external">CMU 15-721</a>。</p>
+<p><a href="https://www.infoq.cn/article/an-article-mastering-sql-on-hadoop-core-technology" target="_blank" rel="external">一篇文章掌握 Sql-On-Hadoop 核心技术</a>：比较全，也比较简略</p>
+<p><a href="https://www.infoq.cn/article/MLMyoWNxqs*MzQX7lvzO" target="_blank" rel="external">Apache Kafka 从 0.7 到 1.0：那些年我们踩过的坑</a><br>介绍了kafka的发展历史，正如文中所说：“它的设计理念非常简单，就是一个以 append-only 日志作为核心的数据存储结构”</p>
+<p><a href="https://www.infoq.cn/article/kafka-vs-rabbitmq" target="_blank" rel="external">消息中间件选型分析：从 Kafka 与 RabbitMQ 的对比看全局</a><br>看点不在于kafka，而在于各种MQ特性的总结：优先级队列/延迟队列/重试机制/消费方式/push or pull/持久化/消息过滤/多租户/协议支持/顺序性/事务等等。</p>
+<p><a href="https://www.infoq.cn/article/2018%2F08%2Frocketmq-4.3-release" target="_blank" rel="external">RocketMQ 4.3 正式发布，支持分布式事务</a><br>名义上是讲rocketmq，实际上讲了分布式事务的各种解决方案。SAGA这个东西，第一次听说。<br>消息事务的本质，还是两阶段提交。</p>
+<p><a href="https://stackoverflow.com/questions/34408970/kafka-consumer-offset-max-value" target="_blank" rel="external">Kafka consumer offset max value?</a>：一个好玩的问题，如果offset超过long最大值了咋整</p>
+<p><a href="https://mp.weixin.qq.com/s/ZH5e-ZW1mLnAEelL76wxuA" target="_blank" rel="external">蚂蚁数据分析平台的演进及数据分析方法的应用</a><br>我入职了蚂蚁也没看到这么个平台啊。。。不过大公司内部各种轮子造的真是挺多的。<br>文章讲的还是非常全面，不光是数据分析领域，对数据平台各个组件的介绍也非常有借鉴意义，对数据分析平台的痛点和演进过程分析的也很好，虽然有点抽象。<br>3.0版本虽然看着好像很nb，但从介绍的一些技术来看，似乎还是为了加速查询？</p>
+<p><a href="https://www.infoq.cn/article/yeQU4f_BujTYCMxaXNFc" target="_blank" rel="external">BAT 程序员们常用的开发工具</a><br>似乎最开始有个“阿里程序员常用开发工具”，现在演变出“BAT程序员常用开发工具”了。。。文章内容还是比较实用的。</p>
+<h1 id="碎碎念">碎碎念</h1>
+<ul>
+<li><p>我一直在想数据的价值要如何体现，但不得不悲观的承认从数据中淘金是很难的。如果不是被逼的，没人愿意做这种苦力活。如果还是以前那个流量红利的时代，谁还关心什么数据啊，野蛮成长就好了。<br>虽然大家都承认数据很重要，但数据本身很难作为核心业务（又不能直接卖对吧），更多还是提供一些附加价值。目前看来最主要的价值体现在运营上，比如用户运营、流量运营。而且大多数使用方式还比较初级，属于“验证想法”：我有一个假设，用数据来验证是否正确。而大家一直在探索的，是如何让数据“产生想法”，目前还没有很好的解。</p>
+</li>
+<li><p>在大数据和AI的发展过程中，总会出现所谓的“万能论”。什么东西搞不定了，让算法同学解决下；什么现象解释不了，让数据同学看一下。而且一个很危险的倾向是为了用而用，什么都想往算法上面靠，反而把事情搞得很复杂。正如前几年比特币很火的时候，养个鸡都要用上区块链。很多时候，基于规则的解决方案往往比一个不可解释的算法更好，现实中的大多数系统也是规则+算法的结合。即使是在算法领域，LR这种容易解释的模型也比ANN这种难以解释的应用范围大得多。</p>
+</li>
+</ul>
+
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/杂谈/">
+                #杂谈
+              </a>
+            
+          </div>
+        
+
+        
+          <div class="post-nav">
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/05/29/see-you/">江湖很小，总会再见</a>
+              
+            </div>
+          </div>
+        
+
+        
+        
+      </div>
+    
+  </div>
+
+
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="disqus_thread">
+          <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        </div>
+      
+    </div>
+  
+
+          </div>
+
+          
+        </div>
+
+        
+<div class="sidebar-toggle">
+  <div class="sidebar-toggle-line-wrap">
+    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  </div>
+</div>
+
+<div id="sidebar" class="sidebar">
+  <div class="sidebar-inner">
+
+    
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview">
+          站点概览
+        </li>
+      </ul>
+    
+
+    <div class="site-overview">
+      <div class="site-author motion-element">
+        <img class="site-author-image" src="/about/avatar.jpg" alt="foolbear" />
+        <p class="site-author-name">foolbear</p>
+      </div>
+      <p class="site-description motion-element">思绪偶尔在这里停留</p>
+      <div class="site-state motion-element">
+        <div class="site-state-item site-state-posts">
+          <span class="site-state-item-count">62</span>
+          <span class="site-state-item-name">日志</span>
+        </div>
+        <div class="site-state-item site-state-tags">
+            <span class="site-state-item-count">45</span>
+            <span class="site-state-item-name">标签</span>
+        </div>
+        <div class="site-state-item site-state-pages">
+            <span class="site-state-item-count">3</span>
+            <span class="site-state-item-name">页面</span>
+        </div>
+      </div>
+
+      
+        <div class="feed-link motion-element">
+          <a href="/atom.xml">
+            <i class="menu-item-icon icon-feed"></i>
+            RSS
+          </a>
+        </div>
+      
+
+      <div class="social-info motion-element">
+        
+          
+            <span class="social-item">
+              <a href="https://github.com/jiangxy">GitHub</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="http://www.zhihu.com/people/fool-bear">知乎</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="mailto:foolbeargm@gmail.com">邮件</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="https://maimai.cn/contact/share/card?u=xrnyhwchrnqv">脉脉</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="https://www.linkedin.com/in/jiangxy">LinkedIn</a>
+            </span>
+          
+        
+      </div>
+
+      
+      
+        <div class="cc-license motion-element">
+          <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+            <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+          </a>
+        </div>
+      
+
+    </div>
+
+    
+      <div class="post-toc-wrap sidebar-panel-active">
+        <div class="post-toc-indicator-top post-toc-indicator"></div>
+        <div class="post-toc">
+          
+          
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#啥是中台？"><span class="nav-number">1.</span> <span class="nav-text">啥是中台？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#技术平民化"><span class="nav-number">2.</span> <span class="nav-text">技术平民化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#读后感"><span class="nav-number">3.</span> <span class="nav-text">读后感</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#碎碎念"><span class="nav-number">4.</span> <span class="nav-text">碎碎念</span></a></li></ol></div>
+          
+        </div>
+        <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+      </div>
+    
+
+  </div>
+</div>
+
+
+      </div>
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp;  2015 - 
+  2019
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">foolbear</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT</a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".fancybox").fancybox();
+    });
+  </script>
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '292px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      if ($('.post-toc-content').html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+
+    
+      
+    
+
+    <script type="text/javascript">
+      var disqus_shortname = 'foolbear';
+      var disqus_identifier = '2019/08/01/maybe-a-good-time/';
+      var disqus_url = 'http://jxy.me/2019/08/01/maybe-a-good-time/';
+
+      (function(){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }());
+    </script>
+  
+
+
+  
+  <script type="text/javascript">
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+        function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-60003547-1');ga('send','pageview');
+  </script>
+
+</body>
+</html>
