@@ -2,8 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://jxy.me/2016/04/16/gitbook/</loc>
+    <lastmod>2021-05-23T07:02:19.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2020/11/05/struggle-to-live/</loc>
-    <lastmod>2020-11-15T06:50:51.000Z</lastmod>
+    <lastmod>2020-11-15T07:02:49.000Z</lastmod>
   </url>
   
   <url>
@@ -29,11 +34,6 @@
   <url>
     <loc>http://jxy.me/2015/04/06/java-tips/</loc>
     <lastmod>2018-12-23T09:10:49.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2016/04/16/gitbook/</loc>
-    <lastmod>2018-12-23T08:47:52.000Z</lastmod>
   </url>
   
   <url>
