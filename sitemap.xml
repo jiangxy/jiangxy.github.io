@@ -3,7 +3,17 @@
   
   <url>
     <loc>http://jxy.me/2016/04/16/gitbook/</loc>
-    <lastmod>2021-05-23T07:02:19.000Z</lastmod>
+    <lastmod>2021-10-07T08:52:15.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/about/index.html</loc>
+    <lastmod>2021-10-07T08:32:01.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2021/10/07/sth-about-scheduling/</loc>
+    <lastmod>2021-10-07T08:28:30.000Z</lastmod>
   </url>
   
   <url>
@@ -14,11 +24,6 @@
   <url>
     <loc>http://jxy.me/2019/08/01/maybe-a-good-time/</loc>
     <lastmod>2019-08-11T14:54:36.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/about/index.html</loc>
-    <lastmod>2019-06-09T13:02:42.000Z</lastmod>
   </url>
   
   <url>
@@ -152,12 +157,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/27/hadoop-and-windows/</loc>
+    <loc>http://jxy.me/2015/04/01/nodemanager-suicide/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -167,17 +167,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/05/04/hadoop-2-5-2-min-conf/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/07/hbase-switch-problem/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
+    <loc>http://jxy.me/2015/06/27/hadoop-and-windows/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -187,12 +177,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/01/ha-and-zookeeper/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/08/05/goodbye-netease/</loc>
+    <loc>http://jxy.me/2015/04/30/maven-exlcude-bug/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -202,37 +187,17 @@
   </url>
   
   <url>
+    <loc>http://jxy.me/2015/05/04/hadoop-2-5-2-min-conf/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/01/ha-and-zookeeper/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
     <loc>http://jxy.me/2015/03/07/hexo-and-git/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/01/multiple-namenode/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/05/02/hadoop-resourcemanager-recovery/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/04/01/nodemanager-suicide/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/06/02/funny-federation/</loc>
-    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://jxy.me/2015/07/06/scheduler-diff-2-5-2/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -242,7 +207,42 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/02/23/foolbear-hexo-init/</loc>
+    <loc>http://jxy.me/2015/06/01/multiple-namenode/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/05/04/network-error-fails-RM-HA/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/04/09/hadoop-ha-active-nn/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/03/08/pages-dns/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/08/05/goodbye-netease/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/07/06/scheduler-diff-2-5-2/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/07/19/interview-summary/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/06/02/funny-federation/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -257,7 +257,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/07/19/interview-summary/</loc>
+    <loc>http://jxy.me/2015/03/10/hadoop-lzo-and-snappy/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -267,7 +267,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/04/09/hadoop-ha-active-nn/</loc>
+    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -277,12 +277,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/02/26/endless-tech/</loc>
+    <loc>http://jxy.me/2015/02/23/foolbear-hexo-init/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/14/just-for-fun/</loc>
+    <loc>http://jxy.me/2015/02/26/endless-tech/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -292,7 +292,7 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/06/01/checkpoint-error/</loc>
+    <loc>http://jxy.me/2015/05/02/hadoop-resourcemanager-recovery/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   
@@ -307,7 +307,12 @@
   </url>
   
   <url>
-    <loc>http://jxy.me/2015/03/10/hadoop-lzo-and-snappy/</loc>
+    <loc>http://jxy.me/2015/04/07/hbase-switch-problem/</loc>
+    <lastmod>2015-09-03T15:42:14.000Z</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://jxy.me/2015/06/01/checkpoint-error/</loc>
     <lastmod>2015-09-03T15:42:14.000Z</lastmod>
   </url>
   

@@ -1,0 +1,1107 @@
+<!doctype html>
+<html class="theme-next use-motion">
+<head>
+  
+
+<meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+  <meta name="google-site-verification" content="5xgDjDYDdxdIb-75WSsQSK3Q7DJXJH-lnUsmFYEF2po" />
+
+
+
+  <link rel="stylesheet" type="text/css" href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5"/>
+
+
+<link rel="stylesheet" type="text/css" href="/css/main.css?v=0.3.0"/>
+
+
+    <meta name="description" content="思绪偶尔在这里停留" />
+
+
+
+	<meta name="keywords" content="bigdata,YARN,调度," />
+
+  <title> Something about Scheduling & YARN // foolbear的冥想盆 </title>
+</head>
+
+<body>
+  <div class="container one-column page-post-detail">
+    <div class="headband"></div>
+
+    <div id="header" class="header">
+      <div class="header-inner">
+        <h1 class="site-meta">
+    <a href="/" class="brand">
+        <span class="logo">
+          <i class="icon-logo"></i>
+        </span>
+        <span class="site-title">foolbear的冥想盆</span>
+    </a>
+</h1>
+
+
+  <ul id="menu" class="menu">
+    
+      
+      <li class="menu-item menu-item-home">
+        <a href="/">
+          <i class="menu-item-icon icon-home"></i> <br />
+          首页
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-archives">
+        <a href="/archives">
+          <i class="menu-item-icon icon-archives"></i> <br />
+          归档
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-tags">
+        <a href="/tags">
+          <i class="menu-item-icon icon-tags"></i> <br />
+          标签
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-books">
+        <a href="/2016/04/16/gitbook/">
+          <i class="menu-item-icon icon-books"></i> <br />
+          书目
+        </a>
+      </li>
+    
+      
+      <li class="menu-item menu-item-about">
+        <a href="/about">
+          <i class="menu-item-icon icon-about"></i> <br />
+          关于
+        </a>
+      </li>
+    
+  </ul>
+
+
+      </div>
+    </div>
+
+    <div id="main" class="main">
+      <div class="main-inner">
+        <div id="content" class="content">
+          
+            
+          
+
+          <div id="posts" class="posts-expand">
+            
+  
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
+              Something about Scheduling & YARN
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            发表于 2021-10-07
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2021/10/07/sth-about-scheduling/#comments" >
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2021/10/07/sth-about-scheduling/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          <p>也许应该叫“调度那些事”。</p>
+<a id="more"></a>
+<p>前段时间我司的调度系统发了一篇论文<a href="https://www.usenix.org/system/files/atc21-feng-yihui.pdf" target="_blank" rel="external">《Scaling Large Production Clusters with Partitioned Synchronization》</a>，荣获ATC 2021 best paper，很是让人艳羡。我对YARN比较熟悉，论文跟我现在的工作也算有些关联，所以特意去读了下。结合自己的一些思考，总结下。</p>
+<h2 id="什么是调度">什么是调度</h2>
+<p>在技术领域，提到“调度”这个词，大家第一反应是啥？crontab？内核、时间片、CFS？<br>这个词还是太宽泛了，红绿灯不也是交通调度系统么？我们加一些限定条件：大数据或分布式系统领域。</p>
+<p>借用我司fuxi调度系统的分类，大概有以下几种：</p>
+<ul>
+<li>资源调度：典型的就是YARN和Mesos等分层调度系统，虽然现在提的不多了。这类系统的特点是：无业务逻辑，着眼于资源管理、分配与隔离。最大的意义在于将资源调度逻辑从应用中解耦出去；<ul>
+<li>这种分层调度系统还可以出现一些很好玩的“嵌套”，比如k8s on YARN、YARN on fuxi、fuxi on k8s等等；</li>
+<li>理论上，A on B on C也是可行的，不过禁止套娃；</li>
+</ul>
+</li>
+<li>任务调度：传统意义上的调度系统，也包括各种DAG调度系统。关注任务之间的依赖关系、failover、重跑等；<ul>
+<li>比如早期的jobtracker、spark中的TaskScheduler、presto中的NodeScheduler等；</li>
+<li>也包括各种DAG调度，azkaban/airflow等；</li>
+</ul>
+</li>
+<li>数据调度：这个比较特殊，大意是关注数据的locality，如何在不同的机房/region之间调度数据尽量避免跨region读；<ul>
+<li>可能是特定场景才有用，开源领域没有看到类似的系统；</li>
+<li>有那么点像缓存一致性问题；</li>
+</ul>
+</li>
+<li>单机调度：只有分层调度+混合负载时才会有这类问题，如何做到单机超卖与多种workload的平衡；</li>
+</ul>
+<p>这种分类的方法未必是科学的，比如spark的DAGScheduler如何分类？DAGScheduler严格来说是不是应该叫做DAGPlanner、DAGSplitter，而不是Scheduler？<br>这就已经是玄学的领域了，还是不碰为妙。正如那个TwoHardThings joke: “There are only two hard things in Computer Science: cache invalidation and naming things.”。</p>
+<p>常见的还是资源调度和任务调度。</p>
+<p>我个人理解，所谓的调度，是一个“撮合”的过程。撮合的可以是资源请求与物理资源、可以是task与node、可以是split与task等等等等。这个“撮合”的过程，以YARN为例，被称作“assignment/allocation”，在YARN中这两个术语是混用的。</p>
+<p><img src="/2021/10/07/sth-about-scheduling/1.png" alt=""></p>
+<p>上图可以认为是一个极简的调度系统模型（参考YARN）：</p>
+<ul>
+<li>client提交request给master，每个request有自己的调度约束：需要的资源大小、SLA等等，master汇总所有request的状态；</li>
+<li>worker节点心跳向master汇报状态，master汇总所有node的状态；</li>
+<li>master根据已知的全局状态（request + node），进行撮合（assignment/allocation）；</li>
+</ul>
+<p>另一种理解调度系统的角度，就是把它看做一个决策系统，而决策系统的核心是什么？</p>
+<ul>
+<li>输入：就是上文提到的master所需的全局状态（request + node）；</li>
+<li>决策逻辑：如何撮合，有哪些约束条件？公平？先到先得？是否有抢占？</li>
+<li>输出：最终做出的决策，哪些request分配到哪些node、哪些split分配给哪些task等；</li>
+</ul>
+<p>不管是单一的调度系统、分层调度系统，还是现在糅合了“编排”概念、大有一统天下之势的k8s，其调度过程本质都类似。</p>
+<h3 id="题外话：调度_vs_编排">题外话：调度 vs 编排</h3>
+<p>既然提到了k8s，就不得不聊聊所谓的“编排”，这个翻译还是比较拗口的。我对k8s并不熟，只是写下自己的理解。</p>
+<p>调度（schedule）和编排（orchestration），到底是啥区别？早期的各种文章，会将DAG调度（oozie/airflow）之类也称作orchestration systems。但这种不在讨论范围之内。</p>
+<p>个人理解，调度（schedule）指的是单次决策（上文中的“撮合”）的过程。assignment后，本次调度便结束了。而编排（orchestration），更多是强调“自动化”，通过各种手段，包括但不限于调度，使app保持在特定状态。“调度”是相对原子化的，而“编排”是一个人更上层的、持续的过程。</p>
+<p>以k8s中的Deployment为例，用户需要描述app的最终状态：我要某个服务部署在3个节点上，暴露一个域名，还要LB。k8s master会通过多次的调度行为、各种配置的修改，来满足用户的需求。并持续监控app的状态，如果状态不一致会采用各种手段自动恢复。在这个“编排”的过程中，“调度”行为会发生多次，也是其中最重要的步骤，但不是唯一。</p>
+<h3 id="题外话：推_vs_拉">题外话：推 vs 拉</h3>
+<p>另一个有趣的话题，为何大多数调度系统，甚至说大多数主-从的分布式系统，都是基于心跳的pull模式，而不是master主动去轮询所有节点的状态并推送任务？<br>推模式也不能说少见，没记错的话，spark和presto都是推模式，或者说是推/拉结合（task结束触发新的推送）。但单纯的推模式有些弊端：</p>
+<ol>
+<li>master增加了额外的工作和错误处理逻辑，更容易成为全局的瓶颈；<ul>
+<li>比如有慢节点导致master轮询时卡住了，master是等还是不等？</li>
+</ul>
+</li>
+<li>推模式下，集群规模更受限，毕竟每次都要轮询所有节点；<ul>
+<li>如果每次轮询一部分节点呢？感觉也不是不行，但何必给自己增加难度？</li>
+</ul>
+</li>
+</ol>
+<p>相对的，异步的pull模式能支撑更高的吞吐和规模。</p>
+<h2 id="调度系统的复杂性">调度系统的复杂性</h2>
+<p>综上，“调度”这个行为是很单一的：根据现有的全局状态做出决策。但为啥现有的各种调度系统，无论开源/闭源，都这么复杂？YARN有超过110w行代码，HDFS也不过150w左右。即使刨除各种外围代码，只看核心的调度器部分（scheduler），也是很复杂。<br>很大程度上是因为调度约束（constraint）实在太复杂了（也可以叫做调度策略），或者说在撮合的过程中，要考虑的因素太多了。</p>
+<p>常见的soft constraint（尽量满足）：</p>
+<ul>
+<li>Locality：数据本地性，一般分为NODE_LOCAL/RACK_LOCAL/OFF_SWITCH等几个级别；<ul>
+<li>这也是最常见的soft constraint。调度器会尽量满足每个requset的locality，但不保证；</li>
+<li>话说，现在Locality似乎没有以前重要了，很大程度上是因为带宽资源没那么紧张了；以前有个说法：移动计算比移动数据更经济。因为都是千兆网卡，最多几个千兆做个bond，现在都是万兆起步了；</li>
+</ul>
+</li>
+<li>Fairness/Priority：多租户环境下，如何分配资源；调度器可以根据特定的公平算法，尽量保证公平；</li>
+</ul>
+<p>常见的hard constraint（必须满足）：</p>
+<ul>
+<li>Quota/ResourceLimits：如果超过了quota，一个request是不可能被调度的；<ul>
+<li>quota是有很多层次的，除了常见的队列级别（queue level quota），还可能有user、app、app type等；</li>
+</ul>
+</li>
+<li>Node Label/Partition：根据节点的属性进行调度；包括inclusive/exclusive partition等；<ul>
+<li>YARN里面做的更复杂一点，细分为Node Label和Node Attribute，而且可以用DSL来写约束条件，比如：这个task要放在python版本大于xx并且tensorflow版本小于xx的节点；</li>
+</ul>
+</li>
+<li>Affinity/Anti-Affinity：亲和性与反亲和性，某些task必须调度到同一个节点、或者不能调度到同一个节点；<ul>
+<li>例：hbase的task和zk的task调度到一起；高优先级的、在线服务的task，不能和低优先级、batch的task调度到一起；</li>
+</ul>
+</li>
+<li>Gang Scheduling：all or nothing的调度模式；</li>
+<li>其他：DAG也算是一种约束（上游任务不结束，下游不能调度）；时间（不到特定时间，任务不能调度）；</li>
+</ul>
+<p>为了满足各种调度约束，调度器还会引入一些更复杂的处理机制：抢占（Preemption）、预留（Reservation）等等。</p>
+<p>凡此种种，导致调度器本身的逻辑不断膨胀，代码也同步膨胀。当然不同的调度系统可以选择支持或不支持某些约束。<br>如果不考虑调度约束，那就简单了，只要node还活着，XJB乱调就行了，不如称之为“Monkey Scheduler”，正如排序算法中的猴子排序。</p>
+<p>除了核心的调度器逻辑之外，作为一个完整的调度系统，肯定还要考虑其他一些事情。</p>
+<ul>
+<li>从产品和用户的角度：<ul>
+<li>如何支持多租户？YARN是用队列实现的，但并不是唯一解；</li>
+<li>单一负载 or 混合负载？</li>
+<li>资源如何抽象？slot？mem和vcore？flops？</li>
+<li>如何计量/计费？</li>
+</ul>
+</li>
+<li>从工程实现的角度：<ul>
+<li>调度器决策需要维护大量的全局状态（request+node），这些状态如何同步与持久化？</li>
+<li>状态又会带来failover与HA的一堆问题；</li>
+<li>资源如何隔离？如何超卖？</li>
+<li>资源碎片如何处理？如何提高资源利用率？</li>
+</ul>
+</li>
+</ul>
+<h2 id="调度系统的衡量指标">调度系统的衡量指标</h2>
+<p>借用论文中的总结，调度系统需要关心的指标包括：</p>
+<ul>
+<li>scheduling efficiency：这是一个比较学术的词。从工程的角度来说，就是吞吐：你的系统每秒能支持多少调度请求？换句话说，你的调度器每秒能做出多少assignment决策？</li>
+<li>scheduling quality：不同系统对quality定义可能不同。典型的就是各种soft constraint（比如locality）是否能被满足；<ul>
+<li>quality和efficiency往往是互斥的，如果要精准match每个request，吞吐就上不去；</li>
+</ul>
+</li>
+<li>fairness and priority：我感觉这个也可以算作quality；</li>
+<li>resource utilization：好的调度系统是能尽量将集群资源用满的，可能是通过超卖、碎片整理等手段；</li>
+</ul>
+<p>此外，从工程的角度来说，还要补充个很重要的指标，就是集群规模。实践中的各种系统大多是基于心跳向master汇报状态的，集群规模一大，光是心跳就能将master打挂。</p>
+<p>不同的调度系统，对各个指标的偏向性是不同的。一般来说，短时task、batch的调度系统，更关注吞吐（即使某些soft constraint不能满足，也影响不大，反正任务很快结束）；而长时任务、在线服务的调度系统，更关心调度质量。</p>
+<h2 id="工程实践">工程实践</h2>
+<p>上面讨论的都偏学术、偏抽象，接下来讨论点实际的。以YARN为例，看看它在各方面存在的问题和可能的解法。</p>
+<ul>
+<li>efficiency：YARN的调度器单机吞吐其实一直都不高，通过SLS等模拟可能就1k左右，这可以说是YARN的设计缺陷导致；</li>
+<li>quality：支持的调度约束很丰富。但主要用于batch场景，关注点也不在quality；</li>
+<li>fairness：支持公平算法+抢占；支持各个粒度的quota限制；支持队列级别的优先级；</li>
+<li>resource utilization：一般而言也不高，因为YARN的中心化调度机制导致NM必然有一段时间是空跑的；</li>
+<li>规模：实践中有2k~3k的，再大规模估计也很难，主要还是心跳问题。</li>
+</ul>
+<h3 id="演进1：提升单机吞吐；">演进1：提升单机吞吐；</h3>
+<p>YARN调度器的特点：</p>
+<ol>
+<li>NM周期性向RM汇报心跳，触发NODE_UPDATE事件，调度器会尝试在这个节点上分配container；</li>
+<li>默认配置下，每次心跳只分配一个；</li>
+</ol>
+<p>以hadoop 3.3.1为例，代码截图：<br><img src="/2021/10/07/sth-about-scheduling/2.png" alt=""></p>
+<p>时序图：<br><img src="/2021/10/07/sth-about-scheduling/3.png" alt=""></p>
+<p>这种设计的好处：NM发心跳过来了，至少说明它肯定是活着的，调度器能“看到”这个节点最新的状态，做出的assignment是“明确”的。<br>但弊端也很明显：吞吐受限于NM的心跳，很难提升；如果缩短NM心跳的间隔，又可能会带来其他的问题；</p>
+<p>暂且称这种方式为同步调度。一个很自然的想法，能否在NM没有心跳发过来的时候，调度器自己异步的进行assignment？本质上，心跳是用于更新node state的，和assignment是两个过程，可以解耦。<br>FairScheduler和CapacityScheduler都有这方面的尝试。FairScheduler中叫做ContinuousScheduling，不过已经废弃；以CapacityScheduler中的GlobalScheduling（<a href="https://issues.apache.org/jira/browse/YARN-5139" target="_blank" rel="external">YARN-5139</a>）为例：</p>
+<p><img src="/2021/10/07/sth-about-scheduling/4.png" alt=""></p>
+<p>本质上，类似两阶段提交：</p>
+<ol>
+<li>RM中有多个线程，周期性的、异步的进行assignment；</li>
+<li>由于不等待NM的心跳，所以这些线程看到的状态可能是“不新鲜”的，做出的决策可能也是错误的；<ul>
+<li>一个例子：线程1看到节点A上有空闲资源，分配掉了；但线程2不知道，仍会尝试在节点A上分配任务；</li>
+<li>简单的解法就是加锁，但吞吐又会受影响；</li>
+<li>这是和同步调度最大的区别。同步时，assignment必然是“明确”的；</li>
+</ul>
+</li>
+<li>所以每个线程的决策只是一个提议（proposal），是否能真正提交变为一个assignment，需要有一个全局的committer进行仲裁；<ul>
+<li>这个committer是一个全局单例；</li>
+</ul>
+</li>
+<li>各个线程读取全局状态时需要加readLock，只有NM心跳或committer更新全局状态时，才需要writeLock；</li>
+</ol>
+<p>和所有两阶段系统类似，这种设计也面临几个问题：</p>
+<ol>
+<li>仲裁逻辑是什么？目前的实现就是简单的比较proposal提交时间；</li>
+<li>如何缓解冲突？目前有一些简单的方法，比如错开各个线程的调度时间、错开尝试的节点等；</li>
+</ol>
+<p>结合YARN后续的一些优化（包括assignMultiple、锁粒度优化、序列化相关优化等），社区给出的测试结果是单机吞吐可以达到5k左右。</p>
+<h3 id="演进2：多调度器；">演进2：多调度器；</h3>
+<p>单机吞吐的提升终究有极限，而且也不能解决规模的问题。另一种思路，就是既然一个调度器搞不定，用多个调度器行不行？大体的思路就是放松全局状态的一致性（弱一致并且不在关键的调度路径上），换取吞吐和规模的提升。<br>一个关键问题：状态（request+node）如何拆分？</p>
+<ul>
+<li>request：目前已有的各种实现，request都只会发送到特定的某个scheduler；换句话说，不同的scheduler，只能看到自己的request；</li>
+<li>node：这里就有两个流派了；<ul>
+<li>shared state：每个scheduler看到的node state是相同的，都是全局视角；</li>
+<li>static partitioning：每个scheduler只能看到一部分node state；但这会带来一个问题，scheduler的调度规模受限，需要用其他手段解决；</li>
+</ul>
+</li>
+</ul>
+<h4 id="shared_state">shared state</h4>
+<p>shared state的概念最早是<a href="https://research.google/pubs/pub41684/" target="_blank" rel="external">Google Omega</a>提出的：</p>
+<p><img src="/2021/10/07/sth-about-scheduling/5.png" alt=""></p>
+<p>简言之：</p>
+<ol>
+<li>多个调度器周期性的从某个角色同步node state到本地；</li>
+<li>每个调度器根据自己的local state进行决策；</li>
+</ol>
+<p>跟YARN中GlobalScheduling的问题类似：</p>
+<ol>
+<li>冲突如何解决？全局加锁肯定是不行的，google给出的解法是乐观机制，假设冲突很少；如果出现冲突，理论上应该每个node自己仲裁，scheduler重试；</li>
+<li>如何缓解冲突？论文中没提，各显神通了；</li>
+</ol>
+<p>一个很标准的shared state实现就是<a href="https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-boutin_0.pdf" target="_blank" rel="external">Microsoft Apollo(2014)</a>：</p>
+<p><img src="/2021/10/07/sth-about-scheduling/6.png" alt=""></p>
+<p>标准的不能再标准了。。。</p>
+<h4 id="ParSync">ParSync</h4>
+<p>终于到了那篇ATC best paper的核心内容。它本质解决的是shared state模型中的第二个问题：如何缓解冲突。</p>
+<ol>
+<li>omega假设每个调度器同步node state的时间很短，代价很小；但fuxi实际的观察中，同步代价很高；而且集群规模上去后，这个状态会很大；</li>
+<li>“不新鲜”的状态导致冲突几率增加（论文中有详细论证），问题进一步恶化；<ul>
+<li>这也是很符合直觉的；正如YARN的同步调度为何选择有节点心跳时才触发调度逻辑；</li>
+<li>我猜测这个结论是来自于实际的经验总结，然后才进一步用数学化的方法建模论证；</li>
+</ul>
+</li>
+</ol>
+<p>论文提出了一种被称作ParSync的解法：</p>
+<ol>
+<li>将node state分区，每个调度器每次同步状态时，只同步一个分区的状态，很快就能完成；</li>
+<li>这样，每个调度器看到的状态，有部分是新鲜的，有部分是不新鲜的；</li>
+<li>调度时，调度器优先在状态新鲜的节点上调度，以减少冲突几率；</li>
+<li>但新鲜的节点毕竟是少数，只在这些节点上调度会导致quality下降（比如locality无法满足）；调度器提供几种模式给用户选择，是latency-first还是quality-first；</li>
+</ol>
+<p>其实吧，论文的核心内容就这些。其他的数学公式、实验数据等只是为了支撑这个论点。</p>
+<h4 id="static_partitioning">static partitioning</h4>
+<p>这个流派的代表是YARN Federation。<br>微软2019年发表了基于YARN开发的<a href="https://www.microsoft.com/en-us/research/publication/hydra-a-federated-resource-manager-for-data-center-scale-analytics/" target="_blank" rel="external">Hydra调度系统</a>，将之前的Apollo替换掉了（不知为啥），并将大部分feature回馈给社区。</p>
+<p><img src="/2021/10/07/sth-about-scheduling/7.png" alt=""></p>
+<ol>
+<li>多个sub-cluster组装成一个大的cluster，对外API不变；</li>
+<li>引入一个极其重要的角色AMRMProxy，用于不同sub-cluster之间的路由；<ul>
+<li>单个scheduler是不知道其他sub-cluster的存在的，全靠AMRMProxy透明的代理掉；</li>
+<li>AMRMProxy有点类似微服务中的sidecar模式；</li>
+</ul>
+</li>
+<li>引入另一个角色GPG负责汇总全局状态，但不在调度的关键路径上；</li>
+<li>引入全局的state store用于存储各种路由策略；</li>
+</ol>
+<p>据论文中的披露，微软维护着目前已知最大的YARN集群，单集群5w+节点，由20~30个sub-cluster组成，每个sub-cluster 2k~3k节点。<br>个人感觉，相对于shared state，这种工程实现上要更复杂一些，暂且没有看到特别突出的优点。<br>也许最大的好处是可以尽量复用YARN已有的各种能力。</p>
+<h3 id="演进3：Distributed_Scheduling">演进3：Distributed Scheduling</h3>
+<p>同样来自微软的贡献。YARN中可以开启<a href="http://hadoop.apache.org/docs/r3.3.1/hadoop-yarn/hadoop-yarn-site/OpportunisticContainers.html" target="_blank" rel="external">OpportunisticContainers</a>特性使用。某些情况下，调度行为可以不经过master，直接将任务提交给worker。<br>对于短时的、batch任务效果非常明显，因为省去了中间的调度开销，提升资源利用率和吞吐。</p>
+<p><img src="/2021/10/07/sth-about-scheduling/8.png" alt=""></p>
+<h3 id="其他思路">其他思路</h3>
+<p>最近还看到个画风不太一样的系统：facebook的<a href="https://engineering.fb.com/2020/04/21/data-infrastructure/turbine/" target="_blank" rel="external">流处理调度系统Turbine</a>：</p>
+<p><img src="/2021/10/07/sth-about-scheduling/9.png" alt=""></p>
+<p>论文看下来，这个系统是比较特异化的，估计也只适用于他们的场景，但其中有一个思路很有意思：事中调整替代事前决策（fast scheduling），与其在事前考虑各种约束、资源大小等等，不如事中通过LB/scale-up等方式动态调整。<br>这个思路也只适用于长时任务，对于batch等短时任务，根本没有事中调整的机会。</p>
+<h2 id="一些总结">一些总结</h2>
+<p>本来只是想总结下fuxi那篇论文的读后感，写着写着内容就慢慢越来越多。<br>遗憾的是我对k8s还是不够了解，不能更多的横向对比下。有一个孵化器项目<a href="https://yunikorn.apache.org/" target="_blank" rel="external">yunikorn</a>，稍微看了下，感觉就是将YARN支持的各种调度约束移植到k8s。</p>
+<p>现代的调度系统之所以会成为一个全局的基础设施，很大程度上是因为在云原生的大背景下，混合负载的重要性前所未有的提高了。以前，每个系统自己搞一堆机器，自己玩就行了。现在，我们要弹性、要serverless、要在离线一体化，所以一个大一统管理所有资源的调度框架，提升利用率压低成本，非常迫切。k8s之所以能快速成熟并且流行，很大因素是切中了这个时代趋势。<br>YARN其实也看到了这个趋势，在LRS（long running service）上的努力也一直未停止过，融合了早期的Apache Slider等项目，推出了<a href="http://hadoop.apache.org/docs/r3.3.1/hadoop-yarn/hadoop-yarn-site/yarn-service/Overview.html" target="_blank" rel="external">YARN Services</a>等feature。但不得不说，YARN从基因上就并不适合在线服务，在业界也并没有成功的大规模验证过，更多还是用于离线batch。而k8s是从在线向离线演进，天然与容器技术结合，难度就更小一些，也有了spark on k8s等成功的范例。虽然支持的各种约束/策略没有YARN丰富，但这些可以慢慢完善。</p>
+<p>之前看过一种论调，云原生的未来必定是裸金属+容器，深以为然。以前所谓的“上云”只不过是将服务搬到云上的虚拟机。</p>
+<p>写到最后，聊聊hadoop。最近总是有不少文章宣传着“<a href="https://www.infoq.cn/article/eiUpX33QqDM7LBbRVqNl" target="_blank" rel="external">hadoop已死</a>”，前几年CDH/HDP合并，前段时间又有很多hadoop相关的apache项目退休，有不少我还用过。<br>我11年开始接触hadoop，从0.20.x/1.x/2.x/3.x一路走来，10年了，也算是见证整个生态兴起、蓬勃与沉寂。个人感觉，死倒不至于，但确实式微了：</p>
+<ol>
+<li>hadoop生态本身就过于复杂了，组件太多不是好事，我也觉得很难用。。。随着clickhouse/ES等一站式解决方案兴起，用户都会用脚投票的。这方面的一个正面例子是snowflake：极致的产品易用性，性能反而是其次。</li>
+<li>云的冲击：云化的大趋势是不可逆的，而hadoop本身并不是为云而设计，自然会被后来者超越；</li>
+</ol>
+<p>hadoop本身，以后应该会隐藏的更深，甚至对用户不可见。但hadoop留下的各种标准，会继续被后来者兼容，比如HDFS/HiveMeta等等。</p>
+<p>但话说回来，10年本就是不短的时间了，太多的事情可以改变，hadoop也不过是沧海一粟罢了。我们已经见识了房价飙升、巨头兴起、贫富差距、P2P暴雷等等大事件，这点事算个啥。。。<br>即使是科技界，也从不缺热点，前些年的深度学习、AI、区块链，更远些的ios、移动互联、IOT、微服务，现在的k8s/云原生/serverless，还有更玄幻的“元宇宙”、脑机接口。</p>
+<p>笑看谁主沉浮吧。</p>
+
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/bigdata/">
+                #bigdata
+              </a>
+            
+              <a href="/tags/YARN/">
+                #YARN
+              </a>
+            
+              <a href="/tags/调度/">
+                #调度
+              </a>
+            
+          </div>
+        
+
+        
+          <div class="post-nav">
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2020/11/05/struggle-to-live/">Struggle to live</a>
+              
+            </div>
+          </div>
+        
+
+        
+        
+      </div>
+    
+  </div>
+
+
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="disqus_thread">
+          <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+        </div>
+      
+    </div>
+  
+
+          </div>
+
+          
+        </div>
+
+        
+<div class="sidebar-toggle">
+  <div class="sidebar-toggle-line-wrap">
+    <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+    <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+  </div>
+</div>
+
+<div id="sidebar" class="sidebar">
+  <div class="sidebar-inner">
+
+    
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview">
+          站点概览
+        </li>
+      </ul>
+    
+
+    <div class="site-overview">
+      <div class="site-author motion-element">
+        <img class="site-author-image" src="/about/avatar.jpg" alt="foolbear" />
+        <p class="site-author-name">foolbear</p>
+      </div>
+      <p class="site-description motion-element">思绪偶尔在这里停留</p>
+      <div class="site-state motion-element">
+        <div class="site-state-item site-state-posts">
+          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-name">日志</span>
+        </div>
+        <div class="site-state-item site-state-tags">
+            <span class="site-state-item-count">49</span>
+            <span class="site-state-item-name">标签</span>
+        </div>
+        <div class="site-state-item site-state-pages">
+            <span class="site-state-item-count">3</span>
+            <span class="site-state-item-name">页面</span>
+        </div>
+      </div>
+
+      
+        <div class="feed-link motion-element">
+          <a href="/atom.xml">
+            <i class="menu-item-icon icon-feed"></i>
+            RSS
+          </a>
+        </div>
+      
+
+      <div class="social-info motion-element">
+        
+          
+            <span class="social-item">
+              <a href="https://github.com/jiangxy">GitHub</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="http://www.zhihu.com/people/fool-bear">知乎</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="mailto:foolbeargm@gmail.com">邮件</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="https://maimai.cn/contact/share/card?u=xrnyhwchrnqv">脉脉</a>
+            </span>
+          
+            <span class="social-item">
+              <a href="https://www.linkedin.com/in/jiangxy">LinkedIn</a>
+            </span>
+          
+        
+      </div>
+
+      
+      
+        <div class="cc-license motion-element">
+          <a href="http://creativecommons.org/licenses/by-nc-sa/4.0" class="cc-opacity" target="_blank">
+            <img src="/images/cc-by-nc-sa.svg" alt="Creative Commons" />
+          </a>
+        </div>
+      
+
+    </div>
+
+    
+      <div class="post-toc-wrap sidebar-panel-active">
+        <div class="post-toc-indicator-top post-toc-indicator"></div>
+        <div class="post-toc">
+          
+          
+            <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是调度"><span class="nav-number">1.</span> <span class="nav-text">什么是调度</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#题外话：调度_vs_编排"><span class="nav-number">1.1.</span> <span class="nav-text">题外话：调度 vs 编排</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题外话：推_vs_拉"><span class="nav-number">1.2.</span> <span class="nav-text">题外话：推 vs 拉</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调度系统的复杂性"><span class="nav-number">2.</span> <span class="nav-text">调度系统的复杂性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#调度系统的衡量指标"><span class="nav-number">3.</span> <span class="nav-text">调度系统的衡量指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#工程实践"><span class="nav-number">4.</span> <span class="nav-text">工程实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#演进1：提升单机吞吐；"><span class="nav-number">4.1.</span> <span class="nav-text">演进1：提升单机吞吐；</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#演进2：多调度器；"><span class="nav-number">4.2.</span> <span class="nav-text">演进2：多调度器；</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#shared_state"><span class="nav-number">4.2.1.</span> <span class="nav-text">shared state</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ParSync"><span class="nav-number">4.2.2.</span> <span class="nav-text">ParSync</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#static_partitioning"><span class="nav-number">4.2.3.</span> <span class="nav-text">static partitioning</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#演进3：Distributed_Scheduling"><span class="nav-number">4.3.</span> <span class="nav-text">演进3：Distributed Scheduling</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他思路"><span class="nav-number">4.4.</span> <span class="nav-text">其他思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些总结"><span class="nav-number">5.</span> <span class="nav-text">一些总结</span></a></li></ol></div>
+          
+        </div>
+        <div class="post-toc-indicator-bottom post-toc-indicator"></div>
+      </div>
+    
+
+  </div>
+</div>
+
+
+      </div>
+    </div>
+
+    <div id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy; &nbsp;  2015 - 
+  2021
+  <span class="with-love">
+    <i class="icon-heart"></i>
+  </span>
+  <span class="author">foolbear</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 - <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">NexT</a>
+</div>
+
+
+
+      </div>
+    </div>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function() {
+      $(".fancybox").fancybox();
+    });
+  </script>
+
+  <script type="text/javascript">
+  function hasMobileUA () {
+    var nav = window.navigator;
+    var ua = nav.userAgent;
+    var pa = /iPad|iPhone|Android|Opera Mini|BlackBerry|webOS|UCWEB|Blazer|PSP|IEMobile|Symbian/g;
+
+    return pa.test(ua);
+  }
+
+  function isDesktop () {
+    return screen.width > 991 && !hasMobileUA();
+  }
+
+  function isTablet () {
+    return screen.width < 992 && screen.width > 767 && hasMobileUA();
+  }
+
+  function isMobile () {
+    return screen.width < 767 && hasMobileUA();
+  }
+
+  function escapeSelector (selector) {
+    return selector.replace(/[!"$%&'()*+,.\/:;<=>?@[\\\]^`{|}~]/g, "\\$&")
+  }
+</script>
+
+  
+
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js"></script>
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js"></script>
+
+  
+
+  <script type="text/javascript" id="motion.global">
+  $(document).ready(function () {
+    var body = $('body');
+    var isSidebarVisible = false;
+    var sidebarToggle = $('.sidebar-toggle');
+    var sidebarToggleLine1st = $('.sidebar-toggle-line-first')
+    var sidebarToggleLine2nd = $('.sidebar-toggle-line-middle');
+    var sidebarToggleLine3rd = $('.sidebar-toggle-line-last');
+    var sidebar = $('.sidebar');
+
+    var SIDEBAR_WIDTH = '292px';
+    var SIDEBAR_DISPLAY_DURATION = 300;
+
+    var sidebarToogleLineStatusInit = {width: '100%', opacity: 1, left: 0, rotateZ: 0, top: 0};
+
+    var sidebarToggleLine1stStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine1stStatusArrow = {width: '50%', rotateZ: '-45deg', top: '2px'};
+    var sidebarToogleLine1stStatusClose = {width: '100%', rotateZ: '-45deg', top: '5px'};
+
+    var sidebarToggleLine2ndStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine2ndStatusArrow = {width: '90%'};
+    var sidebarToogleLine2ndStatusClose = {opacity: 0};
+
+    var sidebarToggleLine3rdStatusInit = sidebarToogleLineStatusInit;
+    var sidebarToggleLine3rdStatusArrow = {width: '50%', rotateZ: '45deg', top: '-2px'};
+    var sidebarToogleLine3rdStatusClose = {width: '100%', rotateZ: '45deg', top: '-5px'};
+
+    sidebatToggleMotion();
+    postsListMotion();
+    backToTopMotion();
+
+
+    $(document)
+      .on('sidebar.isShowing', function () {
+        isDesktop() && body.velocity(
+          {paddingRight: SIDEBAR_WIDTH},
+          SIDEBAR_DISPLAY_DURATION
+        );
+        sidebarContentMotion();
+      })
+      .on('sidebar.isHiding', function () {});
+
+
+    function backToTopMotion () {
+      var b2top = $('.back-to-top');
+      b2top.on('click', function () {
+        body.velocity('scroll');
+      });
+    }
+
+    function sidebarShowMotion () {
+
+      sidebarToggleLine1st.velocity(sidebarToogleLine1stStatusClose);
+      sidebarToggleLine2nd.velocity(sidebarToogleLine2ndStatusClose);
+      sidebarToggleLine3rd.velocity(sidebarToogleLine3rdStatusClose);
+
+      sidebar.velocity({width: SIDEBAR_WIDTH}, {
+        display: 'block',
+        duration: SIDEBAR_DISPLAY_DURATION,
+        complete: function () {
+          sidebar.addClass('sidebar-active');
+          sidebar.trigger('sidebar.didShow');
+        }
+      });
+      sidebar.trigger('sidebar.isShowing');
+    }
+
+    function sidebarHideMotion () {
+      isDesktop() && body.velocity({paddingRight: 0});
+      sidebar.velocity('reverse');
+
+      sidebarToggleLine1st.velocity(sidebarToggleLine1stStatusInit);
+      sidebarToggleLine2nd.velocity(sidebarToggleLine2ndStatusInit);
+      sidebarToggleLine3rd.velocity(sidebarToggleLine3rdStatusInit);
+
+      sidebar.removeClass('sidebar-active');
+      sidebar.trigger('sidebar.isHiding');
+    };
+
+    function sidebarContentMotion () {
+      $('.sidebar .motion-element').velocity(
+        'transition.slideRightIn',
+        {stagger: 50, drag: true}
+      );
+    }
+
+    function postsListMotion () {
+      var postMotionOptions = postMotionOptions || {stagger: 300, drag: true};
+      $('.post').velocity('transition.slideDownIn', postMotionOptions);
+    }
+
+    function sidebatToggleMotion () {
+      sidebarToggle.on('click', function () {
+        isSidebarVisible ? sidebarHideMotion() : sidebarShowMotion();
+        isSidebarVisible = !isSidebarVisible;
+      });
+
+      sidebarToggle.hover(function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusArrow);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusArrow);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusArrow);
+      }, function () {
+        if (isSidebarVisible) {return}
+        sidebarToggleLine1st.velocity('stop').velocity(sidebarToggleLine1stStatusInit);
+        sidebarToggleLine2nd.velocity('stop').velocity(sidebarToggleLine2ndStatusInit);
+        sidebarToggleLine3rd.velocity('stop').velocity(sidebarToggleLine3rdStatusInit);
+      });
+    }
+  });
+
+</script>
+
+
+
+
+
+  
+  
+<script type="text/javascript" id="bootstrap.scrollspy.custom">
+  /* ========================================================================
+  * Bootstrap: scrollspy.js v3.3.2
+  * http://getbootstrap.com/javascript/#scrollspy
+  * ========================================================================
+  * Copyright 2011-2015 Twitter, Inc.
+  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
+  * ======================================================================== */
+
+  /**
+   * Custom by iissnan
+   *
+   * - Add a `clear.bs.scrollspy` event.
+   * - Esacpe targets selector.
+   */
+
+
+  +function ($) {
+    'use strict';
+
+    // SCROLLSPY CLASS DEFINITION
+    // ==========================
+
+    function ScrollSpy(element, options) {
+      this.$body          = $(document.body)
+      this.$scrollElement = $(element).is(document.body) ? $(window) : $(element)
+      this.options        = $.extend({}, ScrollSpy.DEFAULTS, options)
+      this.selector       = (this.options.target || '') + ' .nav li > a'
+      this.offsets        = []
+      this.targets        = []
+      this.activeTarget   = null
+      this.scrollHeight   = 0
+
+      this.$scrollElement.on('scroll.bs.scrollspy', $.proxy(this.process, this))
+      this.refresh()
+      this.process()
+    }
+
+    ScrollSpy.VERSION  = '3.3.2'
+
+    ScrollSpy.DEFAULTS = {
+      offset: 10
+    }
+
+    ScrollSpy.prototype.getScrollHeight = function () {
+      return this.$scrollElement[0].scrollHeight || Math.max(this.$body[0].scrollHeight, document.documentElement.scrollHeight)
+    }
+
+    ScrollSpy.prototype.refresh = function () {
+      var that          = this
+      var offsetMethod  = 'offset'
+      var offsetBase    = 0
+
+      this.offsets      = []
+      this.targets      = []
+      this.scrollHeight = this.getScrollHeight()
+
+      if (!$.isWindow(this.$scrollElement[0])) {
+        offsetMethod = 'position'
+        offsetBase   = this.$scrollElement.scrollTop()
+      }
+
+      this.$body
+        .find(this.selector)
+        .map(function () {
+          var $el   = $(this)
+          var href  = $el.data('target') || $el.attr('href')
+          var $href = /^#./.test(href) && $(escapeSelector(href)) // Need to escape selector.
+
+          return ($href
+            && $href.length
+            && $href.is(':visible')
+            && [[$href[offsetMethod]().top + offsetBase, href]]) || null
+        })
+        .sort(function (a, b) { return a[0] - b[0] })
+        .each(function () {
+          that.offsets.push(this[0])
+          that.targets.push(this[1])
+        })
+
+
+    }
+
+    ScrollSpy.prototype.process = function () {
+      var scrollTop    = this.$scrollElement.scrollTop() + this.options.offset
+      var scrollHeight = this.getScrollHeight()
+      var maxScroll    = this.options.offset + scrollHeight - this.$scrollElement.height()
+      var offsets      = this.offsets
+      var targets      = this.targets
+      var activeTarget = this.activeTarget
+      var i
+
+      if (this.scrollHeight != scrollHeight) {
+        this.refresh()
+      }
+
+      if (scrollTop >= maxScroll) {
+        return activeTarget != (i = targets[targets.length - 1]) && this.activate(i)
+      }
+
+      if (activeTarget && scrollTop < offsets[0]) {
+        $(this.selector).trigger('clear.bs.scrollspy')  // Add a custom event.
+        this.activeTarget = null
+        return this.clear()
+      }
+
+      for (i = offsets.length; i--;) {
+        activeTarget != targets[i]
+          && scrollTop >= offsets[i]
+          && (!offsets[i + 1] || scrollTop <= offsets[i + 1])
+          && this.activate(targets[i])
+      }
+    }
+
+    ScrollSpy.prototype.activate = function (target) {
+      this.activeTarget = target
+
+      this.clear()
+
+      var selector = this.selector +
+        '[data-target="' + target + '"],' +
+        this.selector + '[href="' + target + '"]'
+
+      var active = $(selector)
+        .parents('li')
+        .addClass('active')
+
+      if (active.parent('.dropdown-menu').length) {
+        active = active
+          .closest('li.dropdown')
+          .addClass('active')
+      }
+
+      active.trigger('activate.bs.scrollspy')
+    }
+
+    ScrollSpy.prototype.clear = function () {
+      $(this.selector)
+        .parentsUntil(this.options.target, '.active')
+        .removeClass('active')
+    }
+
+
+    // SCROLLSPY PLUGIN DEFINITION
+    // ===========================
+
+    function Plugin(option) {
+      return this.each(function () {
+        var $this   = $(this)
+        var data    = $this.data('bs.scrollspy')
+        var options = typeof option == 'object' && option
+
+        if (!data) $this.data('bs.scrollspy', (data = new ScrollSpy(this, options)))
+        if (typeof option == 'string') data[option]()
+      })
+    }
+
+    var old = $.fn.scrollspy
+
+    $.fn.scrollspy             = Plugin
+    $.fn.scrollspy.Constructor = ScrollSpy
+
+
+    // SCROLLSPY NO CONFLICT
+    // =====================
+
+    $.fn.scrollspy.noConflict = function () {
+      $.fn.scrollspy = old
+      return this
+    }
+
+
+    // SCROLLSPY DATA-API
+    // ==================
+
+    $(window).on('load.bs.scrollspy.data-api', function () {
+      $('[data-spy="scroll"]').each(function () {
+        var $spy = $(this)
+        Plugin.call($spy, $spy.data())
+      })
+    })
+
+  }(jQuery);
+</script>
+
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var $sidebarInner = $('.sidebar-inner');
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.didShow', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+          var self = this;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      $(indicator).velocity('stop').velocity({
+        opacity: action === 'show' ? 0.4 : 0
+      }, { duration: 100 });
+    }
+
+  });
+</script>
+
+
+  <script type="text/javascript" id="sidebar.nav">
+    $(document).ready(function () {
+      var html = $('html');
+
+      $('.sidebar-nav li').on('click', function () {
+        var item = $(this);
+        var activeTabClassName = 'sidebar-nav-active';
+        var activePanelClassName = 'sidebar-panel-active';
+        if (item.hasClass(activeTabClassName)) {
+          return;
+        }
+
+        var currentTarget = $('.' + activePanelClassName);
+        var target = $('.' + item.data('target'));
+
+        currentTarget.velocity('transition.slideUpOut', 200, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', 200)
+            .addClass(activePanelClassName);
+        });
+
+        item.siblings().removeClass(activeTabClassName);
+        item.addClass(activeTabClassName);
+      });
+
+      $('.post-toc a').on('click', function (e) {
+        e.preventDefault();
+        var offset = $(escapeSelector(this.getAttribute('href'))).offset().top;
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        });
+      });
+
+      // Expand sidebar on post detail page by default, when post has a toc.
+      if ($('.post-toc-content').html().trim().length > 0 && isDesktop()) {
+        setTimeout(function () {
+          $('.sidebar-toggle').trigger('click');
+        }, 800);
+      }
+    });
+  </script>
+
+
+
+
+  
+
+  
+  
+
+  
+
+    
+      
+    
+
+    <script type="text/javascript">
+      var disqus_shortname = 'foolbear';
+      var disqus_identifier = '2021/10/07/sth-about-scheduling/';
+      var disqus_url = 'http://jxy.me/2021/10/07/sth-about-scheduling/';
+
+      (function(){
+        var dsq = document.createElement('script');
+        dsq.type = 'text/javascript';
+        dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      }());
+    </script>
+  
+
+
+  
+  <script type="text/javascript">
+    (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+        function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+      e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+      e.src='//www.google-analytics.com/analytics.js';
+      r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+    ga('create','UA-60003547-1');ga('send','pageview');
+  </script>
+
+</body>
+</html>

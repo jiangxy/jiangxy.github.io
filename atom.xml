@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2021-05-23T07:04:59.264Z</updated>
+  <updated>2021-10-07T09:00:20.659Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -13,6 +13,264 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[Something about Scheduling & YARN]]></title>
+    <link href="http://jxy.me/2021/10/07/sth-about-scheduling/"/>
+    <id>http://jxy.me/2021/10/07/sth-about-scheduling/</id>
+    <published>2021-10-07T07:19:34.000Z</published>
+    <updated>2021-10-07T08:28:30.000Z</updated>
+    <content type="html"><![CDATA[<p>也许应该叫“调度那些事”。</p>
+<a id="more"></a>
+<p>前段时间我司的调度系统发了一篇论文<a href="https://www.usenix.org/system/files/atc21-feng-yihui.pdf" target="_blank" rel="external">《Scaling Large Production Clusters with Partitioned Synchronization》</a>，荣获ATC 2021 best paper，很是让人艳羡。我对YARN比较熟悉，论文跟我现在的工作也算有些关联，所以特意去读了下。结合自己的一些思考，总结下。</p>
+<h2 id="什么是调度">什么是调度</h2>
+<p>在技术领域，提到“调度”这个词，大家第一反应是啥？crontab？内核、时间片、CFS？<br>这个词还是太宽泛了，红绿灯不也是交通调度系统么？我们加一些限定条件：大数据或分布式系统领域。</p>
+<p>借用我司fuxi调度系统的分类，大概有以下几种：</p>
+<ul>
+<li>资源调度：典型的就是YARN和Mesos等分层调度系统，虽然现在提的不多了。这类系统的特点是：无业务逻辑，着眼于资源管理、分配与隔离。最大的意义在于将资源调度逻辑从应用中解耦出去；<ul>
+<li>这种分层调度系统还可以出现一些很好玩的“嵌套”，比如k8s on YARN、YARN on fuxi、fuxi on k8s等等；</li>
+<li>理论上，A on B on C也是可行的，不过禁止套娃；</li>
+</ul>
+</li>
+<li>任务调度：传统意义上的调度系统，也包括各种DAG调度系统。关注任务之间的依赖关系、failover、重跑等；<ul>
+<li>比如早期的jobtracker、spark中的TaskScheduler、presto中的NodeScheduler等；</li>
+<li>也包括各种DAG调度，azkaban/airflow等；</li>
+</ul>
+</li>
+<li>数据调度：这个比较特殊，大意是关注数据的locality，如何在不同的机房/region之间调度数据尽量避免跨region读；<ul>
+<li>可能是特定场景才有用，开源领域没有看到类似的系统；</li>
+<li>有那么点像缓存一致性问题；</li>
+</ul>
+</li>
+<li>单机调度：只有分层调度+混合负载时才会有这类问题，如何做到单机超卖与多种workload的平衡；</li>
+</ul>
+<p>这种分类的方法未必是科学的，比如spark的DAGScheduler如何分类？DAGScheduler严格来说是不是应该叫做DAGPlanner、DAGSplitter，而不是Scheduler？<br>这就已经是玄学的领域了，还是不碰为妙。正如那个TwoHardThings joke: “There are only two hard things in Computer Science: cache invalidation and naming things.”。</p>
+<p>常见的还是资源调度和任务调度。</p>
+<p>我个人理解，所谓的调度，是一个“撮合”的过程。撮合的可以是资源请求与物理资源、可以是task与node、可以是split与task等等等等。这个“撮合”的过程，以YARN为例，被称作“assignment/allocation”，在YARN中这两个术语是混用的。</p>
+<p><img src="/2021/10/07/sth-about-scheduling/1.png" alt=""></p>
+<p>上图可以认为是一个极简的调度系统模型（参考YARN）：</p>
+<ul>
+<li>client提交request给master，每个request有自己的调度约束：需要的资源大小、SLA等等，master汇总所有request的状态；</li>
+<li>worker节点心跳向master汇报状态，master汇总所有node的状态；</li>
+<li>master根据已知的全局状态（request + node），进行撮合（assignment/allocation）；</li>
+</ul>
+<p>另一种理解调度系统的角度，就是把它看做一个决策系统，而决策系统的核心是什么？</p>
+<ul>
+<li>输入：就是上文提到的master所需的全局状态（request + node）；</li>
+<li>决策逻辑：如何撮合，有哪些约束条件？公平？先到先得？是否有抢占？</li>
+<li>输出：最终做出的决策，哪些request分配到哪些node、哪些split分配给哪些task等；</li>
+</ul>
+<p>不管是单一的调度系统、分层调度系统，还是现在糅合了“编排”概念、大有一统天下之势的k8s，其调度过程本质都类似。</p>
+<h3 id="题外话：调度_vs_编排">题外话：调度 vs 编排</h3>
+<p>既然提到了k8s，就不得不聊聊所谓的“编排”，这个翻译还是比较拗口的。我对k8s并不熟，只是写下自己的理解。</p>
+<p>调度（schedule）和编排（orchestration），到底是啥区别？早期的各种文章，会将DAG调度（oozie/airflow）之类也称作orchestration systems。但这种不在讨论范围之内。</p>
+<p>个人理解，调度（schedule）指的是单次决策（上文中的“撮合”）的过程。assignment后，本次调度便结束了。而编排（orchestration），更多是强调“自动化”，通过各种手段，包括但不限于调度，使app保持在特定状态。“调度”是相对原子化的，而“编排”是一个人更上层的、持续的过程。</p>
+<p>以k8s中的Deployment为例，用户需要描述app的最终状态：我要某个服务部署在3个节点上，暴露一个域名，还要LB。k8s master会通过多次的调度行为、各种配置的修改，来满足用户的需求。并持续监控app的状态，如果状态不一致会采用各种手段自动恢复。在这个“编排”的过程中，“调度”行为会发生多次，也是其中最重要的步骤，但不是唯一。</p>
+<h3 id="题外话：推_vs_拉">题外话：推 vs 拉</h3>
+<p>另一个有趣的话题，为何大多数调度系统，甚至说大多数主-从的分布式系统，都是基于心跳的pull模式，而不是master主动去轮询所有节点的状态并推送任务？<br>推模式也不能说少见，没记错的话，spark和presto都是推模式，或者说是推/拉结合（task结束触发新的推送）。但单纯的推模式有些弊端：</p>
+<ol>
+<li>master增加了额外的工作和错误处理逻辑，更容易成为全局的瓶颈；<ul>
+<li>比如有慢节点导致master轮询时卡住了，master是等还是不等？</li>
+</ul>
+</li>
+<li>推模式下，集群规模更受限，毕竟每次都要轮询所有节点；<ul>
+<li>如果每次轮询一部分节点呢？感觉也不是不行，但何必给自己增加难度？</li>
+</ul>
+</li>
+</ol>
+<p>相对的，异步的pull模式能支撑更高的吞吐和规模。</p>
+<h2 id="调度系统的复杂性">调度系统的复杂性</h2>
+<p>综上，“调度”这个行为是很单一的：根据现有的全局状态做出决策。但为啥现有的各种调度系统，无论开源/闭源，都这么复杂？YARN有超过110w行代码，HDFS也不过150w左右。即使刨除各种外围代码，只看核心的调度器部分（scheduler），也是很复杂。<br>很大程度上是因为调度约束（constraint）实在太复杂了（也可以叫做调度策略），或者说在撮合的过程中，要考虑的因素太多了。</p>
+<p>常见的soft constraint（尽量满足）：</p>
+<ul>
+<li>Locality：数据本地性，一般分为NODE_LOCAL/RACK_LOCAL/OFF_SWITCH等几个级别；<ul>
+<li>这也是最常见的soft constraint。调度器会尽量满足每个requset的locality，但不保证；</li>
+<li>话说，现在Locality似乎没有以前重要了，很大程度上是因为带宽资源没那么紧张了；以前有个说法：移动计算比移动数据更经济。因为都是千兆网卡，最多几个千兆做个bond，现在都是万兆起步了；</li>
+</ul>
+</li>
+<li>Fairness/Priority：多租户环境下，如何分配资源；调度器可以根据特定的公平算法，尽量保证公平；</li>
+</ul>
+<p>常见的hard constraint（必须满足）：</p>
+<ul>
+<li>Quota/ResourceLimits：如果超过了quota，一个request是不可能被调度的；<ul>
+<li>quota是有很多层次的，除了常见的队列级别（queue level quota），还可能有user、app、app type等；</li>
+</ul>
+</li>
+<li>Node Label/Partition：根据节点的属性进行调度；包括inclusive/exclusive partition等；<ul>
+<li>YARN里面做的更复杂一点，细分为Node Label和Node Attribute，而且可以用DSL来写约束条件，比如：这个task要放在python版本大于xx并且tensorflow版本小于xx的节点；</li>
+</ul>
+</li>
+<li>Affinity/Anti-Affinity：亲和性与反亲和性，某些task必须调度到同一个节点、或者不能调度到同一个节点；<ul>
+<li>例：hbase的task和zk的task调度到一起；高优先级的、在线服务的task，不能和低优先级、batch的task调度到一起；</li>
+</ul>
+</li>
+<li>Gang Scheduling：all or nothing的调度模式；</li>
+<li>其他：DAG也算是一种约束（上游任务不结束，下游不能调度）；时间（不到特定时间，任务不能调度）；</li>
+</ul>
+<p>为了满足各种调度约束，调度器还会引入一些更复杂的处理机制：抢占（Preemption）、预留（Reservation）等等。</p>
+<p>凡此种种，导致调度器本身的逻辑不断膨胀，代码也同步膨胀。当然不同的调度系统可以选择支持或不支持某些约束。<br>如果不考虑调度约束，那就简单了，只要node还活着，XJB乱调就行了，不如称之为“Monkey Scheduler”，正如排序算法中的猴子排序。</p>
+<p>除了核心的调度器逻辑之外，作为一个完整的调度系统，肯定还要考虑其他一些事情。</p>
+<ul>
+<li>从产品和用户的角度：<ul>
+<li>如何支持多租户？YARN是用队列实现的，但并不是唯一解；</li>
+<li>单一负载 or 混合负载？</li>
+<li>资源如何抽象？slot？mem和vcore？flops？</li>
+<li>如何计量/计费？</li>
+</ul>
+</li>
+<li>从工程实现的角度：<ul>
+<li>调度器决策需要维护大量的全局状态（request+node），这些状态如何同步与持久化？</li>
+<li>状态又会带来failover与HA的一堆问题；</li>
+<li>资源如何隔离？如何超卖？</li>
+<li>资源碎片如何处理？如何提高资源利用率？</li>
+</ul>
+</li>
+</ul>
+<h2 id="调度系统的衡量指标">调度系统的衡量指标</h2>
+<p>借用论文中的总结，调度系统需要关心的指标包括：</p>
+<ul>
+<li>scheduling efficiency：这是一个比较学术的词。从工程的角度来说，就是吞吐：你的系统每秒能支持多少调度请求？换句话说，你的调度器每秒能做出多少assignment决策？</li>
+<li>scheduling quality：不同系统对quality定义可能不同。典型的就是各种soft constraint（比如locality）是否能被满足；<ul>
+<li>quality和efficiency往往是互斥的，如果要精准match每个request，吞吐就上不去；</li>
+</ul>
+</li>
+<li>fairness and priority：我感觉这个也可以算作quality；</li>
+<li>resource utilization：好的调度系统是能尽量将集群资源用满的，可能是通过超卖、碎片整理等手段；</li>
+</ul>
+<p>此外，从工程的角度来说，还要补充个很重要的指标，就是集群规模。实践中的各种系统大多是基于心跳向master汇报状态的，集群规模一大，光是心跳就能将master打挂。</p>
+<p>不同的调度系统，对各个指标的偏向性是不同的。一般来说，短时task、batch的调度系统，更关注吞吐（即使某些soft constraint不能满足，也影响不大，反正任务很快结束）；而长时任务、在线服务的调度系统，更关心调度质量。</p>
+<h2 id="工程实践">工程实践</h2>
+<p>上面讨论的都偏学术、偏抽象，接下来讨论点实际的。以YARN为例，看看它在各方面存在的问题和可能的解法。</p>
+<ul>
+<li>efficiency：YARN的调度器单机吞吐其实一直都不高，通过SLS等模拟可能就1k左右，这可以说是YARN的设计缺陷导致；</li>
+<li>quality：支持的调度约束很丰富。但主要用于batch场景，关注点也不在quality；</li>
+<li>fairness：支持公平算法+抢占；支持各个粒度的quota限制；支持队列级别的优先级；</li>
+<li>resource utilization：一般而言也不高，因为YARN的中心化调度机制导致NM必然有一段时间是空跑的；</li>
+<li>规模：实践中有2k~3k的，再大规模估计也很难，主要还是心跳问题。</li>
+</ul>
+<h3 id="演进1：提升单机吞吐；">演进1：提升单机吞吐；</h3>
+<p>YARN调度器的特点：</p>
+<ol>
+<li>NM周期性向RM汇报心跳，触发NODE_UPDATE事件，调度器会尝试在这个节点上分配container；</li>
+<li>默认配置下，每次心跳只分配一个；</li>
+</ol>
+<p>以hadoop 3.3.1为例，代码截图：<br><img src="/2021/10/07/sth-about-scheduling/2.png" alt=""></p>
+<p>时序图：<br><img src="/2021/10/07/sth-about-scheduling/3.png" alt=""></p>
+<p>这种设计的好处：NM发心跳过来了，至少说明它肯定是活着的，调度器能“看到”这个节点最新的状态，做出的assignment是“明确”的。<br>但弊端也很明显：吞吐受限于NM的心跳，很难提升；如果缩短NM心跳的间隔，又可能会带来其他的问题；</p>
+<p>暂且称这种方式为同步调度。一个很自然的想法，能否在NM没有心跳发过来的时候，调度器自己异步的进行assignment？本质上，心跳是用于更新node state的，和assignment是两个过程，可以解耦。<br>FairScheduler和CapacityScheduler都有这方面的尝试。FairScheduler中叫做ContinuousScheduling，不过已经废弃；以CapacityScheduler中的GlobalScheduling（<a href="https://issues.apache.org/jira/browse/YARN-5139" target="_blank" rel="external">YARN-5139</a>）为例：</p>
+<p><img src="/2021/10/07/sth-about-scheduling/4.png" alt=""></p>
+<p>本质上，类似两阶段提交：</p>
+<ol>
+<li>RM中有多个线程，周期性的、异步的进行assignment；</li>
+<li>由于不等待NM的心跳，所以这些线程看到的状态可能是“不新鲜”的，做出的决策可能也是错误的；<ul>
+<li>一个例子：线程1看到节点A上有空闲资源，分配掉了；但线程2不知道，仍会尝试在节点A上分配任务；</li>
+<li>简单的解法就是加锁，但吞吐又会受影响；</li>
+<li>这是和同步调度最大的区别。同步时，assignment必然是“明确”的；</li>
+</ul>
+</li>
+<li>所以每个线程的决策只是一个提议（proposal），是否能真正提交变为一个assignment，需要有一个全局的committer进行仲裁；<ul>
+<li>这个committer是一个全局单例；</li>
+</ul>
+</li>
+<li>各个线程读取全局状态时需要加readLock，只有NM心跳或committer更新全局状态时，才需要writeLock；</li>
+</ol>
+<p>和所有两阶段系统类似，这种设计也面临几个问题：</p>
+<ol>
+<li>仲裁逻辑是什么？目前的实现就是简单的比较proposal提交时间；</li>
+<li>如何缓解冲突？目前有一些简单的方法，比如错开各个线程的调度时间、错开尝试的节点等；</li>
+</ol>
+<p>结合YARN后续的一些优化（包括assignMultiple、锁粒度优化、序列化相关优化等），社区给出的测试结果是单机吞吐可以达到5k左右。</p>
+<h3 id="演进2：多调度器；">演进2：多调度器；</h3>
+<p>单机吞吐的提升终究有极限，而且也不能解决规模的问题。另一种思路，就是既然一个调度器搞不定，用多个调度器行不行？大体的思路就是放松全局状态的一致性（弱一致并且不在关键的调度路径上），换取吞吐和规模的提升。<br>一个关键问题：状态（request+node）如何拆分？</p>
+<ul>
+<li>request：目前已有的各种实现，request都只会发送到特定的某个scheduler；换句话说，不同的scheduler，只能看到自己的request；</li>
+<li>node：这里就有两个流派了；<ul>
+<li>shared state：每个scheduler看到的node state是相同的，都是全局视角；</li>
+<li>static partitioning：每个scheduler只能看到一部分node state；但这会带来一个问题，scheduler的调度规模受限，需要用其他手段解决；</li>
+</ul>
+</li>
+</ul>
+<h4 id="shared_state">shared state</h4>
+<p>shared state的概念最早是<a href="https://research.google/pubs/pub41684/" target="_blank" rel="external">Google Omega</a>提出的：</p>
+<p><img src="/2021/10/07/sth-about-scheduling/5.png" alt=""></p>
+<p>简言之：</p>
+<ol>
+<li>多个调度器周期性的从某个角色同步node state到本地；</li>
+<li>每个调度器根据自己的local state进行决策；</li>
+</ol>
+<p>跟YARN中GlobalScheduling的问题类似：</p>
+<ol>
+<li>冲突如何解决？全局加锁肯定是不行的，google给出的解法是乐观机制，假设冲突很少；如果出现冲突，理论上应该每个node自己仲裁，scheduler重试；</li>
+<li>如何缓解冲突？论文中没提，各显神通了；</li>
+</ol>
+<p>一个很标准的shared state实现就是<a href="https://www.usenix.org/system/files/conference/osdi14/osdi14-paper-boutin_0.pdf" target="_blank" rel="external">Microsoft Apollo(2014)</a>：</p>
+<p><img src="/2021/10/07/sth-about-scheduling/6.png" alt=""></p>
+<p>标准的不能再标准了。。。</p>
+<h4 id="ParSync">ParSync</h4>
+<p>终于到了那篇ATC best paper的核心内容。它本质解决的是shared state模型中的第二个问题：如何缓解冲突。</p>
+<ol>
+<li>omega假设每个调度器同步node state的时间很短，代价很小；但fuxi实际的观察中，同步代价很高；而且集群规模上去后，这个状态会很大；</li>
+<li>“不新鲜”的状态导致冲突几率增加（论文中有详细论证），问题进一步恶化；<ul>
+<li>这也是很符合直觉的；正如YARN的同步调度为何选择有节点心跳时才触发调度逻辑；</li>
+<li>我猜测这个结论是来自于实际的经验总结，然后才进一步用数学化的方法建模论证；</li>
+</ul>
+</li>
+</ol>
+<p>论文提出了一种被称作ParSync的解法：</p>
+<ol>
+<li>将node state分区，每个调度器每次同步状态时，只同步一个分区的状态，很快就能完成；</li>
+<li>这样，每个调度器看到的状态，有部分是新鲜的，有部分是不新鲜的；</li>
+<li>调度时，调度器优先在状态新鲜的节点上调度，以减少冲突几率；</li>
+<li>但新鲜的节点毕竟是少数，只在这些节点上调度会导致quality下降（比如locality无法满足）；调度器提供几种模式给用户选择，是latency-first还是quality-first；</li>
+</ol>
+<p>其实吧，论文的核心内容就这些。其他的数学公式、实验数据等只是为了支撑这个论点。</p>
+<h4 id="static_partitioning">static partitioning</h4>
+<p>这个流派的代表是YARN Federation。<br>微软2019年发表了基于YARN开发的<a href="https://www.microsoft.com/en-us/research/publication/hydra-a-federated-resource-manager-for-data-center-scale-analytics/" target="_blank" rel="external">Hydra调度系统</a>，将之前的Apollo替换掉了（不知为啥），并将大部分feature回馈给社区。</p>
+<p><img src="/2021/10/07/sth-about-scheduling/7.png" alt=""></p>
+<ol>
+<li>多个sub-cluster组装成一个大的cluster，对外API不变；</li>
+<li>引入一个极其重要的角色AMRMProxy，用于不同sub-cluster之间的路由；<ul>
+<li>单个scheduler是不知道其他sub-cluster的存在的，全靠AMRMProxy透明的代理掉；</li>
+<li>AMRMProxy有点类似微服务中的sidecar模式；</li>
+</ul>
+</li>
+<li>引入另一个角色GPG负责汇总全局状态，但不在调度的关键路径上；</li>
+<li>引入全局的state store用于存储各种路由策略；</li>
+</ol>
+<p>据论文中的披露，微软维护着目前已知最大的YARN集群，单集群5w+节点，由20~30个sub-cluster组成，每个sub-cluster 2k~3k节点。<br>个人感觉，相对于shared state，这种工程实现上要更复杂一些，暂且没有看到特别突出的优点。<br>也许最大的好处是可以尽量复用YARN已有的各种能力。</p>
+<h3 id="演进3：Distributed_Scheduling">演进3：Distributed Scheduling</h3>
+<p>同样来自微软的贡献。YARN中可以开启<a href="http://hadoop.apache.org/docs/r3.3.1/hadoop-yarn/hadoop-yarn-site/OpportunisticContainers.html" target="_blank" rel="external">OpportunisticContainers</a>特性使用。某些情况下，调度行为可以不经过master，直接将任务提交给worker。<br>对于短时的、batch任务效果非常明显，因为省去了中间的调度开销，提升资源利用率和吞吐。</p>
+<p><img src="/2021/10/07/sth-about-scheduling/8.png" alt=""></p>
+<h3 id="其他思路">其他思路</h3>
+<p>最近还看到个画风不太一样的系统：facebook的<a href="https://engineering.fb.com/2020/04/21/data-infrastructure/turbine/" target="_blank" rel="external">流处理调度系统Turbine</a>：</p>
+<p><img src="/2021/10/07/sth-about-scheduling/9.png" alt=""></p>
+<p>论文看下来，这个系统是比较特异化的，估计也只适用于他们的场景，但其中有一个思路很有意思：事中调整替代事前决策（fast scheduling），与其在事前考虑各种约束、资源大小等等，不如事中通过LB/scale-up等方式动态调整。<br>这个思路也只适用于长时任务，对于batch等短时任务，根本没有事中调整的机会。</p>
+<h2 id="一些总结">一些总结</h2>
+<p>本来只是想总结下fuxi那篇论文的读后感，写着写着内容就慢慢越来越多。<br>遗憾的是我对k8s还是不够了解，不能更多的横向对比下。有一个孵化器项目<a href="https://yunikorn.apache.org/" target="_blank" rel="external">yunikorn</a>，稍微看了下，感觉就是将YARN支持的各种调度约束移植到k8s。</p>
+<p>现代的调度系统之所以会成为一个全局的基础设施，很大程度上是因为在云原生的大背景下，混合负载的重要性前所未有的提高了。以前，每个系统自己搞一堆机器，自己玩就行了。现在，我们要弹性、要serverless、要在离线一体化，所以一个大一统管理所有资源的调度框架，提升利用率压低成本，非常迫切。k8s之所以能快速成熟并且流行，很大因素是切中了这个时代趋势。<br>YARN其实也看到了这个趋势，在LRS（long running service）上的努力也一直未停止过，融合了早期的Apache Slider等项目，推出了<a href="http://hadoop.apache.org/docs/r3.3.1/hadoop-yarn/hadoop-yarn-site/yarn-service/Overview.html" target="_blank" rel="external">YARN Services</a>等feature。但不得不说，YARN从基因上就并不适合在线服务，在业界也并没有成功的大规模验证过，更多还是用于离线batch。而k8s是从在线向离线演进，天然与容器技术结合，难度就更小一些，也有了spark on k8s等成功的范例。虽然支持的各种约束/策略没有YARN丰富，但这些可以慢慢完善。</p>
+<p>之前看过一种论调，云原生的未来必定是裸金属+容器，深以为然。以前所谓的“上云”只不过是将服务搬到云上的虚拟机。</p>
+<p>写到最后，聊聊hadoop。最近总是有不少文章宣传着“<a href="https://www.infoq.cn/article/eiUpX33QqDM7LBbRVqNl" target="_blank" rel="external">hadoop已死</a>”，前几年CDH/HDP合并，前段时间又有很多hadoop相关的apache项目退休，有不少我还用过。<br>我11年开始接触hadoop，从0.20.x/1.x/2.x/3.x一路走来，10年了，也算是见证整个生态兴起、蓬勃与沉寂。个人感觉，死倒不至于，但确实式微了：</p>
+<ol>
+<li>hadoop生态本身就过于复杂了，组件太多不是好事，我也觉得很难用。。。随着clickhouse/ES等一站式解决方案兴起，用户都会用脚投票的。这方面的一个正面例子是snowflake：极致的产品易用性，性能反而是其次。</li>
+<li>云的冲击：云化的大趋势是不可逆的，而hadoop本身并不是为云而设计，自然会被后来者超越；</li>
+</ol>
+<p>hadoop本身，以后应该会隐藏的更深，甚至对用户不可见。但hadoop留下的各种标准，会继续被后来者兼容，比如HDFS/HiveMeta等等。</p>
+<p>但话说回来，10年本就是不短的时间了，太多的事情可以改变，hadoop也不过是沧海一粟罢了。我们已经见识了房价飙升、巨头兴起、贫富差距、P2P暴雷等等大事件，这点事算个啥。。。<br>即使是科技界，也从不缺热点，前些年的深度学习、AI、区块链，更远些的ios、移动互联、IOT、微服务，现在的k8s/云原生/serverless，还有更玄幻的“元宇宙”、脑机接口。</p>
+<p>笑看谁主沉浮吧。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>也许应该叫“调度那些事”。</p>
+]]>
+    
+    </summary>
+    
+      <category term="bigdata" scheme="http://jxy.me/tags/bigdata/"/>
+    
+      <category term="YARN" scheme="http://jxy.me/tags/YARN/"/>
+    
+      <category term="调度" scheme="http://jxy.me/tags/%E8%B0%83%E5%BA%A6/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[Struggle to live]]></title>
@@ -2780,7 +3038,7 @@
     <link href="http://jxy.me/2016/04/16/gitbook/"/>
     <id>http://jxy.me/2016/04/16/gitbook/</id>
     <published>2016-04-16T05:40:42.000Z</published>
-    <updated>2021-05-23T07:02:19.000Z</updated>
+    <updated>2021-10-07T08:52:15.000Z</updated>
     <content type="html"><![CDATA[<p>这是个大坑。<br>不过挖坑一向是我的优良品德之一，记得填就好。</p>
 <a id="more"></a>
 <p>说到坑，印象最深刻的是高中时看的某期《九州》，封底上用超大的黑色字体印着“<strong>十载巨坑，一朝填平！</strong>”。。。当时就吓尿了，这种挖坑不填的事好意思这么高调宣传的？忘了是哪个大大挖的坑了，好像是碎石。。。一个外星人入侵地球的故事。</p>
@@ -2794,13 +3052,6 @@
 <li>备注：基于java</li>
 </ul>
 <p>其实就是leetcode题解，总结下解题的思路，附加各种吐槽。其实主要是吐槽。。。本职不能忘。<br>但我本身是算法弱鸡，所以也不追求算法速度了，能AC就好，未必是最优的解法。<br>之前只刷了50多道题，还有很多水题，借这个机会，强迫自己把leetcode重刷一遍，复习下算法。</p>
-<h1 id="《Guava豆知识》">《Guava豆知识》</h1>
-<ul>
-<li>地址：<a href="https://www.gitbook.com/book/jiangxy/guava-tips/details" target="_blank" rel="external">https://www.gitbook.com/book/jiangxy/guava-tips/details</a></li>
-<li>进度：0%</li>
-<li>备注：基于18.0版本</li>
-</ul>
-<p><a href="https://github.com/google/guava" target="_blank" rel="external">Guava</a>一直是我最喜欢的java类库，没有之一。但工作中却见得较少。所以打算总结下guava的各种用法。其实guava的很多思想已经被吸收进jdk了吧。<br>我不打算翻译官方文档，首先官方文档本身就不够详细，从google code迁移到github后，wiki的内容好像丢了很多。。。其次很多人已经翻译过官方文档了。我是打算看遍guava的源码，结合自身的一些使用经验，总结下常见的用法。看源码的过程也是自己学习的过程。<br>其实从源码中能翻出很多好玩的东西，很多工具类官方都没有文档。虽然API可能不稳定就是了。<br>如果这次搞guava顺利的话，打算以后把apache commons系列也这么搞一次。<br>基于18.0版本。</p>
 <h1 id="分享一些书籍">分享一些书籍</h1>
 <p>借着开坑的机会，分享我之前看过的一些书吧。书上有我的注释&amp;吐槽，这个是个人习惯。。。也是不定期更新。<br>另外我习惯看最新版的，所以会有很多是英文版的。</p>
 <p>坑爹的是，很多注释是我以前用windows时用foxit reader加的，在mac下显示会有些问题。</p>
@@ -2810,10 +3061,34 @@
 <li><a href="http://pan.baidu.com/s/1kVrkQbl" target="_blank" rel="external">《Hadoop.Application.Architectures》英文版</a></li>
 <li><a href="https://pan.baidu.com/s/1yYZZnPBYADkCob6ZcXeFIg" target="_blank" rel="external">Spark权威指南</a> [提取码qwer]</li>
 </ul>
-<p>以上是比较完整的看过的，注释也比较多，其他的还在整理。<br>另外因为是pirated edition，请低调。。。本来想放在dropbox的，但转念一想会不会被封啊，还是放baidu吧。。。</p>
 <h1 id="一些文档">一些文档</h1>
-<p>顺便分享自己写的一些文档吧，主要是一些内部分享和调研。有些简略，有些详细。</p>
+<h2 id="各种论文">各种论文</h2>
+<ul>
+<li><a href="https://pan.baidu.com/s/1o8DMGbw" target="_blank" rel="external">Spanner论文(2012)</a></li>
+<li><a href="https://pan.baidu.com/s/112rAhWfk26f2Nju51mworw" target="_blank" rel="external">Goods: Organizing Google’s Datasets</a></li>
+<li><a href="https://pan.baidu.com/s/1FK2840lXmaOVKZQLRp-mnA" target="_blank" rel="external">Raft论文</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/18e3jJnkN4-1CPbJVTHQzdg" target="_blank" rel="external">Paxos Made Live</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1uNamXE-eIeKdD5M0TEAJCQ" target="_blank" rel="external">vldb09-Indexing Boolean Expressions</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1oadigZUmog259uF-Uiv0IQ" target="_blank" rel="external">BE-Tree: An Index Structure to Efficiently Match Boolean Expressions over High-dimensional Discrete Space</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1sy-NJZd5ftW-_0spYp1HgA" target="_blank" rel="external">sigmod10-Efficiently Evaluating Complex Boolean Expressions.pdf</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1Po71igDxgyZd-aLk7FweNA" target="_blank" rel="external">Everything you always wanted to know about compiled and vectorized queries but were afraid to ask</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1btYPGbQ53LS0PLqoVKkHZQ" target="_blank" rel="external">Turbine-Facebook-Service-Management-Platform-for-Stream-Processing</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1aywjuOnEIG90DQsbP7A69g" target="_blank" rel="external">Scaling Large Production Clusters with Partitioned Synchronization</a> [提取码n4ir]</li>
+<li><a href="https://pan.baidu.com/s/1s4Fpe2hZVRiCIxtdt5SbPA" target="_blank" rel="external">Hydra: a federated resource manager for data-center scale analytics</a> [提取码urj2]</li>
+<li><a href="https://pan.baidu.com/s/1Mpk_0c5TAvtyO7CUzS-mQA" target="_blank" rel="external">Push vs. Pull-Based Loop Fusion in Query Engines</a> [提取码ea53]</li>
+<li><a href="https://pan.baidu.com/s/1caF1183EkNOLnCzcPWFwKw" target="_blank" rel="external">Evolution of a Compiling Query Engine</a> [提取码cdmq]</li>
+</ul>
+<h2 id="Snowflake_&amp;_Redshift">Snowflake &amp; Redshift</h2>
+<ul>
+<li><a href="https://pan.baidu.com/s/1doLH_akSpdwedsuw2j-Slg" target="_blank" rel="external">redsnow.pptx</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1xDj_DwwPZs3rViX1c-Jt5g" target="_blank" rel="external">Testing with Production Queries on a Cloud Database</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1dbK7YhWKIV0ESWDClaUYnQ" target="_blank" rel="external">Snowflake_SIGMOD</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1t7KNvpsDoFGEoIVRr9LGLQ" target="_blank" rel="external">Fast and Effective Distribution-Key Recommendation for Amazon Redshift</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1BDiXLpzA6N4zEutXGfoWdQ" target="_blank" rel="external">Building An Elastic Query Engine on Disaggregated Storage</a> [提取码qwer]</li>
+<li><a href="https://pan.baidu.com/s/1Q9zFGcgW4qChD3u6VYY-LQ" target="_blank" rel="external">Amazon Redshift and the Case for Simpler Data Warehouses</a> [提取码qwer]</li>
+</ul>
 <h2 id="比较老的">比较老的</h2>
+<p>顺便分享自己写的一些文档吧，主要是一些内部分享和调研。有些简略，有些详细。</p>
 <ul>
 <li><a href="http://pan.baidu.com/s/1mipOESw" target="_blank" rel="external">Hadoop和Mapreduce</a></li>
 <li><a href="http://pan.baidu.com/s/1jIgzsiE" target="_blank" rel="external">YARN代码分析</a></li>
@@ -2826,27 +3101,6 @@
 <li><a href="http://pan.baidu.com/s/1bpDN9uv" target="_blank" rel="external">DNS原理&amp;安全</a></li>
 <li><a href="https://pan.baidu.com/s/1geZkgsb" target="_blank" rel="external">二手前端心得</a></li>
 </ul>
-<h2 id="各种论文">各种论文</h2>
-<ul>
-<li><a href="https://pan.baidu.com/s/1o8DMGbw" target="_blank" rel="external">Spanner论文(2012)</a></li>
-<li><a href="https://pan.baidu.com/s/112rAhWfk26f2Nju51mworw" target="_blank" rel="external">Goods: Organizing Google’s Datasets</a></li>
-<li><a href="https://pan.baidu.com/s/1FK2840lXmaOVKZQLRp-mnA" target="_blank" rel="external">Raft论文</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/18e3jJnkN4-1CPbJVTHQzdg" target="_blank" rel="external">Paxos Made Live</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1uNamXE-eIeKdD5M0TEAJCQ" target="_blank" rel="external">vldb09-Indexing Boolean Expressions</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1oadigZUmog259uF-Uiv0IQ" target="_blank" rel="external">BE-Tree: An Index Structure to Efficiently Match Boolean Expressions over High-dimensional Discrete Space</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1sy-NJZd5ftW-_0spYp1HgA" target="_blank" rel="external">sigmod10-Efficiently Evaluating Complex Boolean Expressions.pdf</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1Po71igDxgyZd-aLk7FweNA" target="_blank" rel="external">Everything you always wanted to know about compiled and vectorized queries but were afraid to ask</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1btYPGbQ53LS0PLqoVKkHZQ" target="_blank" rel="external">Turbine-Facebook-Service-Management-Platform-for-Stream-Processing</a> [提取码qwer]</li>
-</ul>
-<h2 id="Snowflake_&amp;_Redshift">Snowflake &amp; Redshift</h2>
-<ul>
-<li><a href="https://pan.baidu.com/s/1doLH_akSpdwedsuw2j-Slg" target="_blank" rel="external">redsnow.pptx</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1xDj_DwwPZs3rViX1c-Jt5g" target="_blank" rel="external">Testing with Production Queries on a Cloud Database</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1dbK7YhWKIV0ESWDClaUYnQ" target="_blank" rel="external">Snowflake_SIGMOD</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1t7KNvpsDoFGEoIVRr9LGLQ" target="_blank" rel="external">Fast and Effective Distribution-Key Recommendation for Amazon Redshift</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1BDiXLpzA6N4zEutXGfoWdQ" target="_blank" rel="external">Building An Elastic Query Engine on Disaggregated Storage</a> [提取码qwer]</li>
-<li><a href="https://pan.baidu.com/s/1Q9zFGcgW4qChD3u6VYY-LQ" target="_blank" rel="external">Amazon Redshift and the Case for Simpler Data Warehouses</a> [提取码qwer]</li>
-</ul>
 ]]></content>
     <summary type="html">
     <![CDATA[<p>这是个大坑。<br>不过挖坑一向是我的优良品德之一，记得填就好。</p>
@@ -2855,75 +3109,6 @@
     </summary>
     
       <category term="gitbook" scheme="http://jxy.me/tags/gitbook/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[懒癌发作]]></title>
-    <link href="http://jxy.me/2016/03/01/laziness-cancer/"/>
-    <id>http://jxy.me/2016/03/01/laziness-cancer/</id>
-    <published>2016-03-01T12:26:31.000Z</published>
-    <updated>2016-03-13T17:22:23.000Z</updated>
-    <content type="html"><![CDATA[<p>快2个月没写，也是创造了新纪录啊。。。</p>
-<a id="more"></a>
-<p>我曾下定决心下篇文章一定要写纯技术的，不要总是吐槽。结果发现最近也没研究什么新东西，没啥好写的。。。说实话最近技术上进步不大，只是更熟练而已。《Machine Learning in Action》只看了几章。《Spring in Action》出了第四版，想重新看遍，也只是开了个头。发现一个有意思的项目<a href="http://swagger.io" target="_blank" rel="external">Swagger</a>，也没时间仔细研究。由于要自己写后台界面，还想研究下React，发现了一个高逼格的组件库<a href="ant.design">Ant Design</a>，结果也没坚持下来。过年期间还说看下guava的代码，也是搁浅了。不要指望假期能干什么正事。。。</p>
-<p>so，这期间到底在干啥？年前，赶进度，年前必须上线啊汗；去三亚开年会；然后回家过年，在家过着腐败生活；年后回来，长假综合征再磨蹭几天，然后项目开工了，继续赶进度。。。时间就这么不知不觉过去了。</p>
-<p>刚开始写blog的时候，经常一周就能写一篇。不过那时候比较闲，而且写的是纯技术文章，所以能潜心去研究。还能研究很多跟工作无关的东西，自娱自乐一下。现在么，由于有排期，有deadline，有人催，会比以前压力大一些。</p>
-<p>更悲催的是，接投影仪时插了下hdmi线，把mbp主板烧了。。。虽然借了台旧电脑应急，但hexo的工程都放在坏掉的mbp上，没法写blog了，连个备份都没有。。。以前有linode时候还会用git备份下，看来要去搞个私有仓库了。。。</p>
-<p>其实以上都是借口，只是懒而已。。。</p>
-<h1 id="半年有感">半年有感</h1>
-<p>不知不觉已入职半年，老大递给我转正申请表我才反应过来。时间真的是很快。<br>坦白说，这半年技术上成长不多，搞的都是杂七杂八的事，毕竟是打杂工程师嘛。涨了不少见识，但都没什么深入钻研。还是以前搞hadoop、搞大数据听着更NB一点。前段时间接到某HR电话，“我们这边有个大数据相关职位，看你的简历比较符合，请问要不要考虑”，我一边嘴上客气拒绝，一边心里默默念叨：“我都好几个月没碰hadoop了。。。”<br>其实还是挺怀念的。纯搞技术当然不好；但搞业务太多，技术原地踏步也不是好事。<br>我虽然不是原地踏步，但心里还是有点虚的。。。以前是跑车，现在是买菜车。。。<br>离职前刷的那一点算法也快忘光了。。。</p>
-<p>总结下，这半年真正的收获有三个。</p>
-<ol>
-<li>对电商业务有了更多了解。也能出去忽悠几个人了。。。呆在一家电商公司，想不了解也不行。其实电商还是挺复杂的，外行人可能觉得，“不就是卖东西”，但电商可以有很多玩法。都是卖东西，摆地摊和沃尔玛能一样么。。。而如何用一个大的平台去支持这些玩法，出现新的业务模式时能直接用已有的平台实现，就是我们要考虑的问题了。如果出现一个业务就重新做一套，真的会死掉的。好在我们这里有很多阿里的人，很多经验可以照搬，阿里踩过的很多坑就不用踩了；阿里摸索了很多年才总结出的概念、架构，直接用就可以。有老司机带就是不一样啊。也要庆幸遇到了很nice的同事，帮我从一无所知到略知一二。毕竟从1到100很容易，从0到1很难。</li>
-<li>对所谓的“架构”有了更多认识。加引号是因为架构这个词是很模糊的，而且很多时候有水份。“架构师”这种头衔就跟“产品经理”一样，有时候水的令人发指。应届毕业就做产品经理，are you kidding me？同理，没几年一线开发经验就号称架构师，也是醉了。我不否认有天才，只是不相信我运气这么好能碰到，而且做产品不能把希望寄托到几个天才身上。又扯远了。。。我是因为参与了一些系统从无到有的过程，又经历了后期痛苦的迭代过程，深感一个扩展性好的架构是很重要的，不然就只能各种gross hack，到最后只能推倒重来。而且我一直觉得架构分2种，技术架构和业务架构。比如说hadoop的架构，我能说出一堆，比如yarn的RM、NM之类的，这种是纯技术的，只需要从技术角度出发去设计。而且大家都差不多，不都是分布式、高可用、Master-Slave、push/pull之类的。换句话说，是有业界标准的，虽然有时业界标准不那么明确。但如果揉入业务逻辑，就会更复杂，比如设计一个商品管理平台，如何拆分各种模块，如何考虑未来业务扩展。这种架构里扩展性是非常非常重要的，因为业务是变化很快的。而且每家公司业务总是有不同的，只能借鉴不能照抄。用我老大的话说，纯技术的结构都是“伪架构”。。。如何提升架构设计能力？其实跟学棋差不多，多看些棋谱，然后自己去推演。知道好的好在哪里，坏的坏在哪里，就OK了。另外做日常需求时，多想想背后的商业逻辑，想想他们之后可能的用法，这样才能在设计时留有余地，以满足日后需求。如果能像阿尔法狗一样，遍历人类所有棋谱，那就NB了。。。话说阿尔法狗又赢了。。。</li>
-<li>学会了一种积极主动的态度。这个其实是最重要的。以前在网易的时候，安安心心当一颗螺丝钉就好了。像大学里一样，有人找的时候就解决问题，没人找就自己鼓捣hadoop，跟别人接触很少，有种“山中不知岁月”的感觉。。。但现在不同了，一方面是离业务更近，而业务瞬息万变，所以节奏很快；另一方面是制度不像大公司那么完善，没有那么多流程可以遵循。所以很多事情要自己主动去推才能有进展。自己去找各种各种的人、制定计划、监控进度、调度资源。真的要有一种owner的意识，对自己的项目负责。最难的是要主动和各种人撕逼。。。这一直是我的弱项，我也就吐个槽捧个哏还可以，撕逼一般都会输。。。不过也在锻炼。这也是成长必经之路嘛。</li>
-</ol>
-<p>anyway，至少还是向着好的方向前进的。</p>
-<h1 id="去中心化？">去中心化？</h1>
-<p>听了内部某个演讲有感。<br>我们一直在强调“去中心化”，这到底是啥意思。仔细想想，似乎就是社交+电商。就像阿里想做社交，腾讯想做电商一样，巨头们一直想把社交和电商结合起来，但种种原因都没做好。社交+电商到底应该是个什么样？似乎也没人能说清楚。简单的想想似乎就是垂直电商+社区+导购，但这样似乎又太肤浅了。</p>
-<p>有个同事的比喻很精妙，借用一下：淘宝这种平台化电商就是“天上人间模式”，淘宝类似老鸨。。。用户想要买(zhao)东(xiao)西(jie)，必须要经过平台（大多数情况下是搜索和推荐）才能找到特定的卖(xiao)家(jie)，淘宝在这个过程中会收取费用，比如直通车什么的。其实淘宝就是靠卖流量赚钱的。这种模式下，大多数用户是没什么忠诚度的，每次想买东西时都会重新搜索一次。而且排在3页以后的卖家是没什么机会的，转化率低的可怜，卖家想提升自己的排名只能乖乖交钱。而我们要做的是“婚介所模式”，没有一个统一的平台入口，我们帮助卖家和买家认识，然后就没我们什么事了，以后你们爱怎么玩就怎么玩。。。在这个过程中我们鼓励卖家自己去推广、运营，去结识买家。我们只会在幕后推动，提供各种工具和建议，而不会直接给卖家导流量。每个卖家都是一个小小的“中心”。</p>
-<p>为什么会这样？因为社交的一个关键就是“信任”，而信任很容易提升复购。所以我们希望卖家和买家能保持一个长期的关系。或者说，我们鼓励“口碑营销”，鼓励一种“小而美”的模式，而不是淘宝那种“大而全”。</p>
-<p>这种方向上的差别会直接影响我们的工作。比如在淘宝里，运营（小二）的地位非常重要，说是能影响行业趋势也不为过。很多后台项目其实都是为了满足运营需求而存在的。但我们鼓励卖家自己去运营，所以做很多需求的时候还会从卖家的角度去考虑，很多工具要分成运营版/卖家版。<br>题外话，为什么运营这么重要：因为大家的技术同质化，产品同质化太严重了啊。如果能有颠覆性的技术（量子计算机啥的），或者颠覆性的产品形态（facebook刚出来的时候），就不用拼运营了。但在电商领域，大家的技术和产品都太相似了，只能拼谁的运营更精细了。另外据老大说，即使是淘宝，运营直接拉动的成交其实也很少的，个位数的百分比。但运营会带来长尾效应，带来很多潜在的可能性。</p>
-<p>其实社交网络的力量非常可怕的，一旦找对爆点，流量往往会几何级数增长。所谓的病毒式营销，就是这么来的。但怎么利用这种力量，怎么和电商结合，大家都在摸索。</p>
-<p>另外以上都是我的YY，只是个人理解，不负任何责任。。。</p>
-<h1 id="还是项目管理">还是项目管理</h1>
-<p>之前提到的<a href="/2016/01/10/methodology-sc/">那个项目</a>已经成为了我们这里经典的反面教材。。。如果有项目管理的课程必定要拿出来批判一番。。。</p>
-<p>仔细想想还是有些东西要强调下。</p>
-<ol>
-<li>PRD评审/UC评审/TC评审，一个都不能少。这是为了保证产品/技术/测试三方的理解一致，统一思想。评审会议会增加个人的工作量，也确实很费时间，但会提升整个团队的效率。因为评审能暴露出问题，<strong>在需求阶段解决问题是成本最低的</strong>，开发完才发现问题就只能呵呵了。</li>
-<li>要强硬。首先PM要强硬，坚持原则，敢于拍桌子，即使是面对leader，“你有理你怕啥的”。。。千万不要和稀泥，那是对所有人的不负责。PM还要时刻跟踪进度，确保真的进度正常，而不是成员自己说正常就算了。因为很多时候成员不了解全局，没感觉到问题在哪，没意识到风险。其次开发也要强硬，说多少天就是多少天，做不完就加人/加班，而不能因为leader的要求强行缩短工期。</li>
-<li>估工作量时要给自己留有余地。真的不要那么实在。。。毕竟可能有很多种突发情况的。突然被老大叫去帮忙面试，半天就没了。。。</li>
-<li>估时间时要考虑全面，不要只考虑自己开发的时间。还要考虑沟通成本、联调时间、测试时间。针对完整的功能去评估工作量，而不要只考虑主流程。</li>
-<li><strong>不要轻易给出承诺。但给出的承诺一定要实现。</strong></li>
-</ol>
-<p>项目=需求+时间+资源，这是某个同事总结的，影响项目成败最关键的3个因素，还挺有道理的。</p>
-<h1 id="面试の方法论">面试の方法论</h1>
-<p>面试了一些人，总结下。<br>说实话工作以来也面过不少人了，但我其实不太擅长这种活。我大多会问一些确定性的问题，像是项目经验、算法、语言之类的，对就是对错就是错。一些太“虚”的问题我把握不好，关于具体业务领域的更是很少问。像是“你最有成就感的事是什么”这种问题，这辈子估计都不会问。。。所以只能负责第一面的技术面。。。</p>
-<p>总结下套路（当然只是我的套路），特指java开发：</p>
-<ol>
-<li>我一般会先看简历问项目经验。主要关注做过些什么，碰到过哪些问题，是怎么解决的。如果有参与了架构上的设计，做过一些抉择，为什么要做出这些选择？是否有更好的方案？这部分主要是考察学习能力/解决问题的能力/设计能力，看思路是否开阔。<strong>学习能力尤其重要。</strong>如果在项目中只是“跟随”，没有自己的思考，或者做了很多项目但一直重复相同的技术，会减分。就像大学时能用一个“图书管理系统”应付好多课程的大作业。。。但工作中肯定行不通。</li>
-<li>抛出一个/几个实际问题看如何解决。具体是什么问题要看情况的。可能是工作中实际碰到的，也可能是凭空想象的，我有朋友碰到过“设计一个微博系统”这种问题。。。我一般只会问些简单的。很多时候只是算法问题披了一层皮。这种问题答错也没关系，而且很多时候也没标准答案。但必须能讲清楚思考过程和理由。更多考察的是工程经验，考察思考问题是否全面。</li>
-<li>数据结构与算法。这个也是常规项目了。我最近常问的是<a href="https://leetcode.com/problems/invert-binary-tree/" target="_blank" rel="external">Invert Binary Tree</a>，因为我很期待有人能认出这个梗。。。那在我这里会加很多分。但考察算法也不一定只是纯算法，也可能是业务上的，比如负载均衡、调度算法、ML之类的。而且不同职位对算法的要求也是不同的，可能有些要求很高，有些要求熟悉特定领域的算法，看情况。</li>
-<li>java基础。一般就是集合、多线程之类的。深入点可能是JVM、GC。一些更基础的东西应该在笔试中就体现出来的。前提是有笔试。。。</li>
-<li>框架与工具。如果你说熟悉spring，那就问spring。如果用过hibernate，那就问hibernate。如果是面试大数据相关的，一定会问hadoop/spark。反正就是挑你会的往深了挖，不在乎广度而在乎深度，当然深挖的前提是我也会。。。如果能对常用的工具很熟悉，git/maven之类的，就更好了。</li>
-<li>闲聊。真的是随便问了。比如数据库、sql、redis、缓存、nginx、脚本，前端的也可以问。如果能除了工作外，自己去学各种各样的东西，会加很多分。会fan|qiang也会加分。。。</li>
-<li>最后一定会问对方有什么问题要问，能解答的我都会尽量解答。但有些真的回答不了，有人问我“杭州和上海哪里工资高”，这和面试有啥关系么。。。</li>
-</ol>
-<p>当然不会那么死板的。可能有些环节问得多些，有些环节问得少或不问，看情况。<br>技术面试最忌讳的是似乎什么都懂一些，但什么都不深入。至少我对这样的被试者印象会很差。<br>另外，关于简历，有篇blog讲的不错：<a href="http://coolshell.cn/articles/1695.html" target="_blank" rel="external">别的程序员是怎么读你的简历的</a>。</p>
-<p>其实啊，面试很多时候还要看感觉。愿不愿意和面前这个人做同事？当然这里可能有个人主观因素了，这也是没办法避免的。好在搞技术的一般不会太奇葩，当然也有例外。。。我就碰到过一些装B侠，不懂装懂，乱扯一气，也只能呵呵了。。。</p>
-<h1 id="END">END</h1>
-<p>其实不一定要有个结尾的，但我是强迫症。<br>一些不能长篇大论，不足以单独为一节的想法/脑洞，会丢到这里。</p>
-<p>我曾经说想做一些东西让用户发挥自己的创造力，仔细想想，有点类似UGC。<br>但UGC之间也是不同的。就像积木一样，有的积木表现力强（乐高），有的积木表现力差（若干年前有一款叫戴乐魔塔的积木）。想用七巧板拼一个星球大战，可能嘛？<br>但表现力太强就意味着不好设计，不好维护，增加系统复杂度。还是要trade off。</p>
-<p>正好最近在做一个自助建站的项目。如果能鼓励用户分享自己的作品，并让用户基于分享的作品再次创作，就很有意思了。当然想做好也很难。<br>也许以后的项目都可以借鉴这种思路，鼓励用户自己去创作并分享，自己去“制定规则”。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>快2个月没写，也是创造了新纪录啊。。。</p>
-]]>
-    
-    </summary>
-    
-      <category term="杂谈" scheme="http://jxy.me/tags/%E6%9D%82%E8%B0%88/"/>
     
   </entry>
   
