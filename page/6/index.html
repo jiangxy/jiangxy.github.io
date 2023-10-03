@@ -136,6 +136,92 @@
           
           
             
+              <a class="post-title-link" href="/2015/04/09/hadoop-ha-active-nn/">
+                HA集群中如何判断ActiveNN
+              </a>
+            
+          
+        </h1>
+      
+
+      <div class="post-meta">
+        <span class="post-time">
+          
+            发表于 2015-04-09
+          
+        </span>
+        
+          
+            <span class="post-comments-count">
+            &nbsp; | &nbsp;
+            <a href="/2015/04/09/hadoop-ha-active-nn/#comments" >
+              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/04/09/hadoop-ha-active-nn/"></span>
+            </a>
+          </span>
+          
+        
+      </div>
+    </div>
+
+    
+      <div class="post-body">
+
+        
+        
+
+        
+          
+            <p>偶然的机会，想到一个问题，HA的集群中，客户端是如何得知Active NN的地址的？</p>
+
+            <div class="post-more-link text-center">
+              <a class="btn" href="/2015/04/09/hadoop-ha-active-nn/#more">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          
+        
+      </div>
+    
+
+    
+      <div class="post-footer">
+        
+          <div class="post-tags">
+            
+              <a href="/tags/hadoop/">
+                #hadoop
+              </a>
+            
+              <a href="/tags/HA/">
+                #HA
+              </a>
+            
+          </div>
+        
+
+        
+
+        
+        
+          <div class="post-eof"></div>
+        
+      </div>
+    
+  </div>
+
+
+  
+    
+
+  <div class="post post-type-normal ">
+    <div class="post-header">
+
+      
+      
+        <h1 class="post-title">
+          
+          
+            
               <a class="post-title-link" href="/2015/04/07/hbase-switch-problem/">
                 交换机引起的hbase事故
               </a>
@@ -923,97 +1009,6 @@
 
         
         
-          <div class="post-eof"></div>
-        
-      </div>
-    
-  </div>
-
-
-  
-    
-
-  <div class="post post-type-normal ">
-    <div class="post-header">
-
-      
-      
-        <h1 class="post-title">
-          
-          
-            
-              <a class="post-title-link" href="/2015/03/10/hadoop-lzo-and-snappy/">
-                hadoop中的lzo和snappy
-              </a>
-            
-          
-        </h1>
-      
-
-      <div class="post-meta">
-        <span class="post-time">
-          
-            发表于 2015-03-10
-          
-        </span>
-        
-          
-            <span class="post-comments-count">
-            &nbsp; | &nbsp;
-            <a href="/2015/03/10/hadoop-lzo-and-snappy/#comments" >
-              <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2015/03/10/hadoop-lzo-and-snappy/"></span>
-            </a>
-          </span>
-          
-        
-      </div>
-    </div>
-
-    
-      <div class="post-body">
-
-        
-        
-
-        
-          
-            <p>澄清一些相关概念。</p>
-<p>Lempel-Ziv是一种编码方式（类比霍夫曼编码），特点是字典小速度快：<a href="http://zh.wikipedia.org/wiki/LZW" target="_blank" rel="external">http://zh.wikipedia.org/wiki/LZW</a><br>在这个理论的基础上实现了很多压缩算法，包括lzo/lzf/lz4/lzw/snappy等等。snappy特殊，不是lz前缀。<br><a href="http://en.wikibooks.org/wiki/Data_Compression/Dictionary_compression" target="_blank" rel="external">http://en.wikibooks.org/wiki/Data_Compression/Dictionary_compression</a></p>
-<p>这里只考虑lzo和snappy，这两个用的比较广泛。<br>它们的共同特点是压缩比小、压缩/解压快（更注重解压速度）、不耗CPU、会占用一些内存。snappy相对更快。<br>
-            <div class="post-more-link text-center">
-              <a class="btn" href="/2015/03/10/hadoop-lzo-and-snappy/#more">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          
-        
-      </div>
-    
-
-    
-      <div class="post-footer">
-        
-          <div class="post-tags">
-            
-              <a href="/tags/hadoop/">
-                #hadoop
-              </a>
-            
-              <a href="/tags/lzo/">
-                #lzo
-              </a>
-            
-              <a href="/tags/snappy/">
-                #snappy
-              </a>
-            
-          </div>
-        
-
-        
-
-        
-        
       </div>
     
   </div>
@@ -1052,7 +1047,7 @@
       <p class="site-description motion-element">思绪偶尔在这里停留</p>
       <div class="site-state motion-element">
         <div class="site-state-item site-state-posts">
-          <span class="site-state-item-count">64</span>
+          <span class="site-state-item-count">65</span>
           <span class="site-state-item-name">日志</span>
         </div>
         <div class="site-state-item site-state-tags">
@@ -1125,7 +1120,7 @@
         <div class="copyright">
   
   &copy; &nbsp;  2015 - 
-  2021
+  2023
   <span class="with-love">
     <i class="icon-heart"></i>
   </span>
