@@ -4,7 +4,7 @@
   
   <link href="/atom.xml" rel="self"/>
   <link href="http://jxy.me/"/>
-  <updated>2023-10-03T06:04:27.794Z</updated>
+  <updated>2024-04-05T04:33:13.093Z</updated>
   <id>http://jxy.me/</id>
   
   <author>
@@ -13,6 +13,76 @@
   </author>
   
   <generator uri="http://zespia.tw/hexo/">Hexo</generator>
+  
+  <entry>
+    <title><![CDATA[MotherDuck - DuckDB in the cloud and in the client]]></title>
+    <link href="http://jxy.me/2024/04/05/motherduck/"/>
+    <id>http://jxy.me/2024/04/05/motherduck/</id>
+    <published>2024-04-05T03:59:42.000Z</published>
+    <updated>2024-04-05T04:23:06.000Z</updated>
+    <content type="html"><![CDATA[<p>看到一个很奇特的系统，虽然这个名字有些搞笑。。。<br>﻿<br>原文：<a href="https://www.cidrdb.org/cidr2024/papers/p46-atwal.pdf" target="_blank" rel="external">https://www.cidrdb.org/cidr2024/papers/p46-atwal.pdf</a>﻿<br>官网：<a href="https://motherduck.com/" target="_blank" rel="external">https://motherduck.com/</a>﻿</p>
+<a id="more"></a>
+<p>DuckDB是一个嵌入式的OLAP数据库，官方的slogan是：a fast in-process analytical database。某种程度上类似SQLite，但适用的场景不太一样，似乎是为了增强原有的单机数据分析场景，例如R、SPSS、Pandas等，让分析师们能用SQL Like的方式来操作数据。<br>﻿<br>这样的一种产品定位，有必要做成云服务（SaaS）么？“扩展性”这个词，似乎天生就与“嵌入式”相悖。唯一可能的场景是：有大数据集在云上（S3），拉到本地处理太过麻烦（带宽才是最宝贵的资源，而且上传/下载的带宽往往是不对称的）；处理后的结果又要和本地数据进行进一步计算，并且希望在整个过程中能保持用户体验的一致性；同时数据可以在不同用户之间方便的共享。MotherDuck就是瞄准了这样一种场景。<br>看了下创始团队，跟DuckDB似乎是两拨人，虽然有合作。创始人似乎是以前google搞BigQuery的。<br>﻿<br>简言之，MotherDuck就是Serverless DuckDB，但跟通常的分布式数据库不太一样，一些设计选择值得思考：
+﻿</p>
+<ul>
+<li>avoids scale-out：这是有些反直觉的，云数据库可以不需要考虑scalability；MotherDuck给出的理由是，通过分析发现，超过95% 的数据库大小小于1TB，超过95%的查询涉及数据小于10GB；相比scalability带来的复杂性和额外开销（scheduling、shuffle等），scale-up/down是更合理的选择；</li>
+<li>Hybrid Query Processing：查询可以横跨local client与云上，这就是DuckDB的特色了，不是嵌入式数据库的话还真做不到这点；个人感觉这也是从适应数据分析师的使用习惯上考虑的，降低云服务的门槛；换句话说，云只是local client的补充；通过引入一个特殊的bridge算子实现；</li>
+</ul>
+<h2 id="架构">架构</h2>
+<p>无论如何，MotherDuck必然有一个client端的DuckDB实例；即使是使用WebUI，DuckDB实例也会以WebAssembly的方式运行在浏览器中：</p>
+<p><img src="/2024/04/05/motherduck/1.png" alt=""></p>
+<ul>
+<li>控制面：常规的元数据管理、鉴权、监控等；</li>
+<li>计算层：动态分配的duckling容器，每个容器中运行一个DuckDB实例；容器可能随时发生scale-up/down，也会在没有负载时自动关闭，具体的策略没有讲；</li>
+<li>存储层：这个就比较常规了，对象存储 + 本地SSD Cache；可以是parquet、CSV、JSON等格式；<ul>
+<li>当然除了cloud storage，也可以从本地加载数据；</li>
+<li>支持快照、TimeTravel等特性；应该是扩展了DuckDB原有的存储格式，但没有讲细节；
+﻿</li>
+</ul>
+</li>
+</ul>
+<p>从逻辑视图上来说，MotherDuck的数据是以database的形式来组织的，本地的database只能被local client关联，云上的database可以被多个duckling容器以只读模式关联，但只能被一个duckling读写；<br>﻿<br>此外，由于必然有一个client端的实例，result cache就变得比较简单。文中提到基于Web UI的各种自助分析（pivot、filter、agg等），其实都是基于一个client端的临时表：</p>
+<figure class="highlight SQL"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> localMemDb.main.cacheTable1 <span class="keyword">AS</span></span></div><div class="line"><span class="keyword">SELECT</span> * <span class="keyword">FROM</span> ({userQuery})</div><div class="line"><span class="keyword">LIMIT</span> {CLIENT_CACHE_ROW_LIMIT}</div></pre></td></tr></table></figure>
+
+<p>相比服务端的result cache实现，复杂度降低很多。</p>
+<h2 id="Hybrid_Query_Processing">Hybrid Query Processing</h2>
+<p>早在MapReduce时代，就有“移动计算比移动数据更经济”的说法。所谓的Hybrid Query Processing，关键也正是这一点。早些年还流行过“端云一体”，比如推荐引擎的推理模型可能是运行在手机端而不是服务端，大道趋同。<br>﻿<br>﻿﻿<img src="/2024/04/05/motherduck/2.png" alt=""><br>﻿<br>文中给出了一个执行计划的例子，数据从本地上传到云上，云上完成join操作，结果再下载回本地。从计划上来看，所谓的bridge似乎和传统的exchage有些类似？个人猜测：</p>
+<ul>
+<li>所谓的bridge仅用于local和remote之间的数据传递；与MPP不同，并不存在duckling数据再bridge到另一个duckling的情况；毕竟scale-up解一切，也不需要MPP了；</li>
+<li>bridge也不会涉及数据的重分布，就是原样的传递；但文中特意提了下，bridge可以保证sink/source端的顺序一致，a feature expected by dataframe library users；<ul>
+<li>这就有个问题了，某些情况下，是否直接将本地的文件上传到云端后计算更简单？还是取决于local的计算能力，现在一些笔记本的计算能力真未必比ECS差；</li>
+</ul>
+</li>
+<li>bridge可以简单的看做一个“生产者-消费者”模型，为此还引入了相应的流控机制；</li>
+<li>用户可以手动指定每个table scan的运行模式（MD_RUN = REMOTE / LOCAL）；</li>
+<li>优化器的优化目标是：最小数据传输成本；这跟大多数优化器都不太一样；</li>
+</ul>
+<h2 id="DEMO">DEMO</h2>
+<p><img src="/2024/04/05/motherduck/3.png" alt=""></p>
+<p>这个测试case也是很有意思：巨大的事实表在云上、较小的维表在本地。相比将事实表拉到本地来处理，必然是将维表上传到云上更优，无论是从执行时间还是成本的角度来考虑。但这其实发挥不出local client + cloud的优势，因为并没能利用上local的算力；如果local很弱，还不如全在云上计算。<br>﻿<br>比较合理的case是local和cloud都要处理大量复杂计算，但又需要对结果进行一些关联。例如local侧进行一些自有业务敏感数据的分析，cloud上进行一些公开数据集的分析之类。正如官网自述：</p>
+<ul>
+<li>DuckDB：turns your laptop into a personal analytics engine；</li>
+<li>MotherDuck：scales your laptop into the cloud；</li>
+</ul>
+<h2 id="总结">总结</h2>
+<p>总体看下来，关键就两点：1. empower users to use more client-side resources；2. simplifying cloud data system architecture by using a scale-up approach；具体效果不好说，产品似乎也还未上线，官网也是那种涂鸦风，真的不是toy project么。。
+﻿</p>
+<h2 id="附录：Scalability!_But_at_what_COST?">附录：Scalability! But at what COST?</h2>
+<p>文中提到的这篇文章，也比较老了。大意是很多系统看着扩展性很好，但实际上并没有经过充分优化（甚至不如一个单线程实现），扩展性好 ≠ 性能好。<br>﻿﻿<br><img src="/2024/04/05/motherduck/4.png" alt=""><br>﻿<br>当初MapReduce有类似的争议：<a href="https://www.cs.utexas.edu/~rossbach/cs378/papers/dewitt08blog-mapreduce-backwards.pdf" target="_blank" rel="external">MapReduce: A major step backwards</a>。现在看来，更多是一种权衡吧，编程范式的简化必然导致无法达到极致性能。这篇文章也并不是否定所有分布式系统，而是希望在作出各种设计选择前，更多方面考虑一下。</p>
+]]></content>
+    <summary type="html">
+    <![CDATA[<p>看到一个很奇特的系统，虽然这个名字有些搞笑。。。<br>﻿<br>原文：<a href="https://www.cidrdb.org/cidr2024/papers/p46-atwal.pdf" target="_blank" rel="external">https://www.cidrdb.org/cidr2024/papers/p46-atwal.pdf</a>﻿<br>官网：<a href="https://motherduck.com/" target="_blank" rel="external">https://motherduck.com/</a>﻿</p>
+]]>
+    
+    </summary>
+    
+      <category term="bigdata" scheme="http://jxy.me/tags/bigdata/"/>
+    
+      <category term="paper" scheme="http://jxy.me/tags/paper/"/>
+    
+      <category term="分布式" scheme="http://jxy.me/tags/%E5%88%86%E5%B8%83%E5%BC%8F/"/>
+    
+  </entry>
   
   <entry>
     <title><![CDATA[随便写写]]></title>
@@ -2993,69 +3063,6 @@
       <category term="杂谈" scheme="http://jxy.me/tags/%E6%9D%82%E8%B0%88/"/>
     
       <category term="machine learning" scheme="http://jxy.me/tags/machine-learning/"/>
-    
-  </entry>
-  
-  <entry>
-    <title><![CDATA[关于数据库单元测试]]></title>
-    <link href="http://jxy.me/2016/05/06/db-unit-test/"/>
-    <id>http://jxy.me/2016/05/06/db-unit-test/</id>
-    <published>2016-05-06T07:34:43.000Z</published>
-    <updated>2016-05-06T12:05:49.000Z</updated>
-    <content type="html"><![CDATA[<p>一般我们都会用JUnit写单元测试，但是如果测试涉及到数据库，就会有点麻烦。<br>总结下我的一些解决方法，当然未必是最好的。</p>
-<a id="more"></a>
-<p>单元测试的原则是尽量不要有外部依赖，每一个测试都是可独立运行的。“A good test set is self-sufficient and creates all the data it needs”。</p>
-<p>如果测试中要连数据库，目前的做法一般是在配置文件中写死测试数据库的地址。如果我换了一个网络环境，比如说从办公网络切换回家里，就没办法跑测试了。对于项目开发而言这是完全可以接受的，但对于完美主义者而言就很别扭。。。我是希望单元测试能够“write once, run everywhere”。</p>
-<p>如果测试依赖于数据库的状态，就更糟糕了。可能在某一时刻测试能通过，但谁更新了一条记录，就会fail，这种问题排查起来也很麻烦。如果测试代码本身就要修改数据库，但测试结束后没有改回来，可能会引起更多的隐形问题。理论上测试前后所有的状态应该是一致的。</p>
-<p>综上，其实有两个问题：</p>
-<ol>
-<li>测试依赖于具体的数据库实例。这个实例只有在特定条件下能访问（内网/localhost）。</li>
-<li>测试依赖于数据库的状态，而这个状态不可控。</li>
-</ol>
-<p>解决思路也有两种：</p>
-<ol>
-<li>每次测试都搞一个“空白”的数据库。</li>
-<li>mock一个DAO层，将所有对数据库的操作用mock对象模拟。</li>
-</ol>
-<h1 id="Mockito">Mockito</h1>
-<p>关于mock首先想到的就是<a href="http://mockito.org/" target="_blank" rel="external">Mockito</a>，我觉得这是用着最简单的mock框架，可以用来mock各种对象，当然也可以mock DAO。<br>Mockito的用法就不详细说了，而且Mockito的源码可读性很好，碰到问题看源码很方便。</p>
-<p>问题在于，如果要把所有DAO的方法都mock一次，工作量也太大了。。。而且这些代码是不能复用的。<br>能用配置解决的尽量不要写代码。。。</p>
-<h1 id="DBUnit">DBUnit</h1>
-<p><a href="http://dbunit.sourceforge.net/" target="_blank" rel="external">DBUnit</a>是专门用来解决问题2的，用来维护测试前后数据库的状态。它的思路很简单：测试前备份数据库，准备测试需要的数据；测试后，从备份中还原数据库的状态。具体的用法不详细说了。</p>
-<p>DBUnit的问题在于：1.不能解决多个人同时更新状态的问题。官方的最佳实践要求每个开发人员有自己测试数据库。2.没解决网络环境的问题。3.要写很多xml配置文件，很烦。。。</p>
-<h1 id="HSQLDB">HSQLDB</h1>
-<p>这个要重点说说。其实刚开始碰到数据库单元测试的问题时，我的想法很简单，问题的根源就在于所有的测试共用同一个数据库实例，那就搞个嵌入式数据库好了啊，每个测试初始化自己“专用”的数据库，自己创建schema/创建测试数据。这样可以保证这个测试在任何时间、任何地方都可以执行。正好以前调研WhiteElephant知道了hsqldb，就拿来试试。</p>
-<p>其实嵌入式数据库有很多，最出名的应该是SQLite。还有derby，用过hive的人应该都知道。还有一个叫H2的。但<a href="http://hsqldb.org/" target="_blank" rel="external">HSQLDB</a>的优势在于：1.纯java写的，兼容性好；2.内存模式很强大，类似一个沙盒，很适合用于测试。</p>
-<p>首先在maven中引入依赖：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="title">dependency</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="title">groupId</span>&gt;</span>org.hsqldb<span class="tag">&lt;/<span class="title">groupId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="title">artifactId</span>&gt;</span>hsqldb<span class="tag">&lt;/<span class="title">artifactId</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="title">version</span>&gt;</span>2.3.2<span class="tag">&lt;/<span class="title">version</span>&gt;</span></div><div class="line">	<span class="tag">&lt;<span class="title">scope</span>&gt;</span>test<span class="tag">&lt;/<span class="title">scope</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="title">dependency</span>&gt;</span></div></pre></td></tr></table></figure>
-
-<p>用hsqldb创建一个内存数据库非常简单，只要写入一个特殊的jdbc url即可：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Class.forName(<span class="string">"org.hsqldb.jdbc.JDBCDriver"</span>);</div><div class="line"><span class="comment">// 注意url中的syntax_mys参数，会让hsqldb兼容mysql的语法，虽然兼容的不完全。。。</span></div><div class="line"><span class="comment">// 对于oracle也有一个类似的参数，可以让hsqldb兼容oracle的varchar2之类的</span></div><div class="line">DriverManager.getConnection(<span class="string">"jdbc:hsqldb:mem:db;sql.syntax_mys=true"</span>,<span class="string">"sa"</span>,<span class="string">""</span>);</div></pre></td></tr></table></figure>
-
-<p>拿到了Connection对象，就可以做自己的事了，可以任意按自己的业务逻辑操作。</p>
-<p>我是把建表语句写到一个文件里，然后在测试用例初始化时加载：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> ApplicationContext ctx;</div><div class="line"></div><div class="line"><span class="annotation">@BeforeClass</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setup</span>() <span class="keyword">throws</span> SQLException, IOException {</div><div class="line">    ctx = <span class="keyword">new</span> ClassPathXmlApplicationContext(<span class="string">"spring/applicationContext.xml"</span>);</div><div class="line"></div><div class="line">    createSchema();  <span class="comment">// 创建schema</span></div><div class="line">    createData();   <span class="comment">// 创建本次测试需要的数据</span></div><div class="line">}</div><div class="line"></div><div class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">createSchema</span>() <span class="keyword">throws</span> IOException, SQLException {</div><div class="line">    Object obj = ctx.getBean(<span class="string">"dataSource"</span>);</div><div class="line">    <span class="comment">// 我们测试环境用了bonecp连接池，线上环境用了另一个连接池。。。</span></div><div class="line">    <span class="keyword">if</span> (!(obj <span class="keyword">instanceof</span> BoneCPDataSource)) {</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    }</div><div class="line"></div><div class="line">    <span class="annotation">@SuppressWarnings</span>(<span class="string">"resource"</span>)</div><div class="line">    BoneCPDataSource ds = (BoneCPDataSource) obj;</div><div class="line">    String driver = ds.getDriverClass();</div><div class="line">    <span class="comment">// 如果不是hsqldb，就跳过创建schema的步骤。如果用mysql测试，应该是事先建好表的。</span></div><div class="line">    <span class="keyword">if</span> (!driver.toLowerCase().contains(<span class="string">"hsqldb"</span>)) {</div><div class="line">        System.out.println(<span class="string">"not hsqldb. skip createSchema."</span>);</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    }</div><div class="line"></div><div class="line">    Connection conn = ds.getConnection(); <span class="comment">// 直接取出数据库连接</span></div><div class="line">    <span class="comment">// 创建schema，注意hsqldb建表语句和mysql有些不同</span></div><div class="line">    Reader reader = Resources.getResourceAsReader(<span class="string">"hsqldb_schema.sql"</span>);  <span class="comment">// 建表语句都存在这个文件中</span></div><div class="line">    ScriptRunner runner = <span class="keyword">new</span> ScriptRunner(conn);  <span class="comment">// 利用了mybatis的ScriptRunner工具</span></div><div class="line">    runner.setLogWriter(<span class="keyword">null</span>);</div><div class="line">    runner.runScript(reader);</div><div class="line">    reader.close();</div><div class="line">}</div><div class="line"></div><div class="line"><span class="comment">// 数据库初始化完毕，接下来写自己的测试逻辑</span></div><div class="line"><span class="comment">// spring中所有涉及到数据操作的bean都是引用的同一个dataSource</span></div><div class="line"></div><div class="line"><span class="annotation">@Test</span></div><div class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testExpireRule</span>(){</div><div class="line">	<span class="comment">// 省略</span></div><div class="line">}</div></pre></td></tr></table></figure>
-
-<p>hsqldb_schema.sql例子：</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">-- hsqldb的语法跟mysql有些不同，建表语句必须要修改下才能用</span></div><div class="line"><span class="comment">-- 不支持字段级别的comment</span></div><div class="line"><span class="comment">-- 字段名、表名不能用`</span></div><div class="line"><span class="comment">-- 不支持engine、charset之类的语法</span></div><div class="line"><span class="comment">-- 加索引的语法也不一样</span></div><div class="line"></div><div class="line"><span class="comment">-- 有效期规则</span></div><div class="line"><span class="operator"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> expire_rule (</span></div><div class="line">  <span class="comment">-- 基础字段</span></div><div class="line">  id <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> AUTO_INCREMENT,</div><div class="line">  type <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  <span class="keyword">status</span> <span class="built_in">int</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  tag <span class="built_in">varchar</span>(<span class="number">64</span>) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line">  comment <span class="built_in">varchar</span>(<span class="number">256</span>),</div><div class="line">  extend_map <span class="built_in">text</span>,</div><div class="line"></div><div class="line">  <span class="comment">-- 其他</span></div><div class="line">  update_time <span class="built_in">bigint</span> <span class="keyword">NOT</span> <span class="literal">NULL</span> <span class="keyword">DEFAULT</span> <span class="number">0</span>,</div><div class="line">  create_time <span class="built_in">bigint</span> <span class="keyword">NOT</span> <span class="literal">NULL</span>,</div><div class="line"></div><div class="line">  <span class="keyword">PRIMARY</span> <span class="keyword">KEY</span> (id)</div><div class="line">) COMMENT <span class="string">'有效期规则'</span>;</div></pre></td></tr></table></figure>
-
-<p>这样每个测试都不会互相干扰，有自己专用的数据库，自己维护状态。感觉还是比较方便的。</p>
-<h1 id="Liquibase">Liquibase</h1>
-<p><a href="http://www.liquibase.org/" target="_blank" rel="external">Liquibase</a>其实跟单元测试没啥关系，只是我觉得比较有用，顺便记录下以备忘。<br>liquibase的本质就是一个数据库的版本管理工具。我们在项目中，经常涉及数据表schema的变更，比如加个字段/加个索引之类的，所以数据库也是有版本的概念的。以前的管理方法是直接保存所有的sql语句到一个文件中，然后不断追加，比如：</p>
-<figure class="highlight sql"><figcaption><span>dbschema.sql</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"># 先是一堆<span class="operator"><span class="keyword">create</span> <span class="keyword">table</span>语句</span></div><div class="line"></div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> XXX ...</div><div class="line">cretae <span class="keyword">table</span> YYY ...</div><div class="line"></div><div class="line"># 然后记录每次的修改</div><div class="line"></div><div class="line"># <span class="number">2016</span>-<span class="number">05</span>-<span class="number">01</span> modified <span class="keyword">by</span> xxx</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> XXX <span class="keyword">add</span> <span class="keyword">column</span> yyy</div><div class="line"></div><div class="line"># <span class="number">2016</span>-<span class="number">05</span>-<span class="number">02</span> modified <span class="keyword">by</span> xxx</div><div class="line"><span class="keyword">alter</span> <span class="keyword">table</span> YYY ad <span class="keyword">column</span> zzz</div><div class="line"></div><div class="line"># <span class="number">2016</span>-<span class="number">05</span>-<span class="number">03</span> modified <span class="keyword">by</span> jjj</div><div class="line"><span class="keyword">create</span> <span class="keyword">table</span> ZZZ ...</div></pre></td></tr></table></figure>
-
-<p>显然这种管理方式比较麻烦，很容易出错。更关键的是没有rollback过程。如果新版本上线了有bug，要回滚到旧版本，数据库也要回滚到旧版，就只能手动操作。</p>
-<p>liquibase就是用来解决这种问题的，它使用一个changelog文件跟踪数据库的变化，每次变化可以抽象为一个changeset。通过changelog实现对数据库schema的管理，用户可以update到任意版本，可以回滚，也可以在不同版本之间diff。changelog一般是个xml文件，但也可以直接写sql语句，很方便。详细的用法参考官方文档，这里不列出了。</p>
-]]></content>
-    <summary type="html">
-    <![CDATA[<p>一般我们都会用JUnit写单元测试，但是如果测试涉及到数据库，就会有点麻烦。<br>总结下我的一些解决方法，当然未必是最好的。</p>
-]]>
-    
-    </summary>
-    
-      <category term="java" scheme="http://jxy.me/tags/java/"/>
-    
-      <category term="unit test" scheme="http://jxy.me/tags/unit-test/"/>
     
   </entry>
   
